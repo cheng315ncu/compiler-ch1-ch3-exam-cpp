@@ -1,0 +1,1284 @@
+{
+  "checks": 82,
+  "programs": 8,
+  "variant_builds": 40,
+  "results": [
+    {
+      "stem": "html_check",
+      "source_sha256": "d2b41a8e34f6b8723d3b409b4821af18c5658f7d94b9b3882afccdcb313b9e69",
+      "samples": [
+        {
+          "input": "",
+          "output": "VALID\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "<P>x</p><br>",
+          "output": "VALID\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "<a><b></a></b>",
+          "output": "INVALID\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "<p a=\"a>b\">x</p>",
+          "output": "VALID\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "<p a=x/>",
+          "output": "INVALID\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "<p a=x />",
+          "output": "VALID\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "<!-- unclosed",
+          "output": "INVALID\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "<script>if(a<b){}</SCRIPT >",
+          "output": "VALID\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ],
+      "fixture": {
+        "input": "<div id=\"main\"><p title=\"a>b\">Hello <b>world</b></p><br><img src=x><!--ok--></div>\n",
+        "output": "VALID\n",
+        "stderr": "",
+        "exit": 0
+      },
+      "variants": [
+        {
+          "title": "輸出 YES / NO",
+          "edits": [
+            {
+              "lines": [
+                127
+              ],
+              "action": "replace",
+              "before": "    cout << (valid ? \"VALID\\n\" : \"INVALID\\n\");",
+              "after": "    cout << (valid ? \"YES\\n\" : \"NO\\n\");"
+            }
+          ],
+          "example": {
+            "input": "<p/>",
+            "output": "YES\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "a6e1962a74ebf30cfa4556bfd75bb0d3f117a6abb2feeb00f5dc4bee4c8a56f7"
+        },
+        {
+          "title": "一行一案",
+          "edits": [
+            {
+              "lines": [
+                121,
+                127
+              ],
+              "action": "block",
+              "before": "    s.assign(istreambuf_iterator<char>(cin), {});\n    // 讀取裝置失敗與文件語法非法不同：前者才用 exit 1。\n    if (cin.bad()) { cerr << \"input error\\n\"; return 1; }\n    bool valid = false;\n    // 語法錯誤也是分類結果 INVALID，所以這裡捕捉例外，不把它當程式崩潰。\n    try { valid = check(); } catch (const runtime_error&) {}\n    cout << (valid ? \"VALID\\n\" : \"INVALID\\n\");",
+              "after": "while (getline(cin, s)) {\n    p = 0; bool valid = false;\n    try { valid = check(); } catch (const runtime_error&) {}\n    cout << (valid ? \"VALID\\n\" : \"INVALID\\n\");\n}\nif (cin.bad()) return 1;"
+            }
+          ],
+          "example": {
+            "input": "<p/>\n<p>\n",
+            "output": "VALID\nINVALID\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "76f9731bb9160222cc606b37581a1abe4f954db01171873bf354728a39175b30"
+        },
+        {
+          "title": "XML 式：br 等也須配對關閉",
+          "edits": [
+            {
+              "lines": [
+                32,
+                33
+              ],
+              "action": "block",
+              "before": "    const set<string> empty{\"area\",\"base\",\"br\",\"col\",\"embed\",\"hr\",\"img\",\"input\",\n                            \"link\",\"meta\",\"source\",\"track\",\"wbr\"};",
+              "after": "const set<string> empty{};"
+            }
+          ],
+          "example": {
+            "input": "<br></br>",
+            "output": "VALID\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "87e2494a50056694a4264a2f698d1fa307825d7b6338effd4f3bb338c2bfe208"
+        },
+        {
+          "title": "求最大巢狀深度",
+          "edits": [
+            {
+              "lines": [
+                11
+              ],
+              "action": "after",
+              "before": "size_t p = 0;",
+              "after": "size_t deepest = 0;"
+            },
+            {
+              "lines": [
+                101
+              ],
+              "action": "after",
+              "before": "        stack.push_back(tag);",
+              "after": "if (stack.size() > deepest) deepest = stack.size();"
+            },
+            {
+              "lines": [
+                127
+              ],
+              "action": "replace",
+              "before": "    cout << (valid ? \"VALID\\n\" : \"INVALID\\n\");",
+              "after": "if (valid) cout << deepest << \"\\n\"; else cout << \"INVALID\\n\";"
+            }
+          ],
+          "example": {
+            "input": "<a><b></b></a>",
+            "output": "2\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "2ea12973e94eeac442ef6ed36b56c89deb3af82028212f26ed1049a1aee9dee8"
+        },
+        {
+          "title": "首行 T，其後一行一案",
+          "edits": [
+            {
+              "lines": [
+                121,
+                127
+              ],
+              "action": "block",
+              "before": "    s.assign(istreambuf_iterator<char>(cin), {});\n    // 讀取裝置失敗與文件語法非法不同：前者才用 exit 1。\n    if (cin.bad()) { cerr << \"input error\\n\"; return 1; }\n    bool valid = false;\n    // 語法錯誤也是分類結果 INVALID，所以這裡捕捉例外，不把它當程式崩潰。\n    try { valid = check(); } catch (const runtime_error&) {}\n    cout << (valid ? \"VALID\\n\" : \"INVALID\\n\");",
+              "after": "int T; if (!(cin >> T) || T < 0) return 1;\ngetline(cin, s);\nif (s.find_first_not_of(\" \\t\\r\") != string::npos) return 1;\nfor (int tc = 0; tc < T; ++tc) {\n    if (!getline(cin, s)) return 1;\n    p = 0; bool valid = false;\n    try { valid = check(); } catch (const runtime_error&) {}\n    cout << (valid ? \"VALID\\n\" : \"INVALID\\n\");\n}\nif (cin.bad()) return 1;"
+            }
+          ],
+          "example": {
+            "input": "2\n<p/>\n<p>\n",
+            "output": "VALID\nINVALID\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "8fd84076bae19c57d8bbfe2e2db92d23cab04877f3b7a5613ced707b8a808a62"
+        }
+      ]
+    },
+    {
+      "stem": "expression",
+      "source_sha256": "24ae4131c59e55424d274a489c7076ba24591be0e623c5b208d25db54aafa21e",
+      "samples": [
+        {
+          "input": "1+2*3",
+          "output": "7\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "(2+3)*4",
+          "output": "20\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "100-30-1",
+          "output": "69\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "8/2/2",
+          "output": "2\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "-2*-3",
+          "output": "6\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": ".5+1e-2",
+          "output": "0.51\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "1/0",
+          "output": "",
+          "stderr": "invalid expression\n",
+          "exit": 1
+        },
+        {
+          "input": "2(3)",
+          "output": "",
+          "stderr": "invalid expression\n",
+          "exit": 1
+        }
+      ],
+      "fixture": {
+        "input": "(2+3)*4\n100-30-1\n8/2/2\n-2*-3\n.5 + 1e-2\n",
+        "output": "20\n69\n2\n6\n0.51\n",
+        "stderr": "",
+        "exit": 0
+      },
+      "variants": [
+        {
+          "title": "只輸出 postfix",
+          "edits": [
+            {
+              "lines": [
+                12
+              ],
+              "action": "replace",
+              "before": "const string MODE = \"eval\";",
+              "after": "const string MODE = \"postfix\";"
+            }
+          ],
+          "example": {
+            "input": "a+b*c",
+            "output": "a b c * +\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "b9ab3031abf5070312ec06a2afbdc8cec66cc6d9c14f2fd2dca0c3ef4484ad65"
+        },
+        {
+          "title": "只輸出 AST",
+          "edits": [
+            {
+              "lines": [
+                12
+              ],
+              "action": "replace",
+              "before": "const string MODE = \"eval\";",
+              "after": "const string MODE = \"ast\";"
+            }
+          ],
+          "example": {
+            "input": "a+b*c",
+            "output": "(+ a (* b c))\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "37dd59ec14fa0da7684b6f398960b9d6aa4081c7decf7a970efbd3966a22bb28"
+        },
+        {
+          "title": "固定小數點後 2 位",
+          "edits": [
+            {
+              "lines": [
+                106
+              ],
+              "action": "replace",
+              "before": "    ostringstream out; out << setprecision(15);",
+              "after": "ostringstream out; out << fixed << setprecision(2);"
+            }
+          ],
+          "example": {
+            "input": "1/4",
+            "output": "0.25\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "1111fe3f04f46b4deb80c4d5608f10a5aa86a6305f2e209d8e0dc9a626aa4614"
+        },
+        {
+          "title": "所有模式均禁止變數",
+          "edits": [
+            {
+              "lines": [
+                51
+              ],
+              "action": "after",
+              "before": "    bool id = letter(c);",
+              "after": "if (id) fail();"
+            }
+          ],
+          "example": {
+            "input": "x+1",
+            "output": "",
+            "stderr": "invalid expression\n",
+            "exit": 1
+          },
+          "args": [],
+          "changed_sha256": "00ab21ca3839234e1fd9a86fbbf5b1af097d4bcd7f0e2a907daa064912706874"
+        },
+        {
+          "title": "每次除法結果向零截斷",
+          "edits": [
+            {
+              "lines": [
+                85
+              ],
+              "action": "replace",
+              "before": "        if (op == '/') { if (b.number == 0) fail(); a.number /= b.number; }",
+              "after": "        if (op == '/') { if (b.number == 0) fail(); a.number = trunc(a.number / b.number); }"
+            }
+          ],
+          "example": {
+            "input": "-7/2",
+            "output": "-3\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "ec35b65561cc7a767784f5a43de7aab4fe13ab67f8b392a007cdf41f35f1e3e9"
+        }
+      ]
+    },
+    {
+      "stem": "lexer",
+      "source_sha256": "3763b207074e71d1ad00f489a31747296d58f4f74e8c0d2c1f5269fcd5ef046d",
+      "samples": [
+        {
+          "input": "intx >>= 2",
+          "output": "ID \"intx\"\nOP \">>=\"\nNUM \"2\"\nEOF\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "int x; // hi\n",
+          "output": "KW \"int\"\nID \"x\"\nPUNCT \";\"\nEOF\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "\"//x\"",
+          "output": "STRING \"\\\"//x\\\"\"\nEOF\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "1e+",
+          "output": "",
+          "stderr": "error: missing exponent digits\n",
+          "exit": 1
+        },
+        {
+          "input": "/* unfinished",
+          "output": "",
+          "stderr": "error: unclosed block comment\n",
+          "exit": 1
+        }
+      ],
+      "fixture": {
+        "input": "int sum=12; // skip\nfloat x=1.2e-3; /*skip*/ sum+=2; print(\"a>b\");\n",
+        "output": "KW \"int\"\nID \"sum\"\nOP \"=\"\nNUM \"12\"\nPUNCT \";\"\nKW \"float\"\nID \"x\"\nOP \"=\"\nNUM \"1.2e-3\"\nPUNCT \";\"\nID \"sum\"\nOP \"+=\"\nNUM \"2\"\nPUNCT \";\"\nKW \"print\"\nPUNCT \"(\"\nSTRING \"\\\"a>b\\\"\"\nPUNCT \")\"\nPUNCT \";\"\nEOF\n",
+        "stderr": "",
+        "exit": 0
+      },
+      "variants": [
+        {
+          "title": "增加保留字",
+          "edits": [
+            {
+              "lines": [
+                23
+              ],
+              "action": "replace",
+              "before": "        const std::set<std::string> keywords{\"int\",\"float\",\"double\",\"char\",\"bool\",\"void\",\"if\",\"else\",\"while\",\"for\",\"return\",\"print\"};",
+              "after": "        const std::set<std::string> keywords{\"switch\",\"case\",\"int\",\"float\",\"double\",\"char\",\"bool\",\"void\",\"if\",\"else\",\"while\",\"for\",\"return\",\"print\"};"
+            }
+          ],
+          "example": {
+            "input": "switch case",
+            "output": "KW \"switch\"\nKW \"case\"\nEOF\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "02ac1e92f699eba86b8d094b24300dcd31171ebe2f62a5c86cac98f36b03372d"
+        },
+        {
+          "title": "增加多字元運算子",
+          "edits": [
+            {
+              "lines": [
+                25
+              ],
+              "action": "replace",
+              "before": "        const std::vector<std::string> ops{\"<<=\",\">>=\",\"++\",\"--\",\"==\",\"!=\",\"<=\",\">=\",\"&&\",\"||\",\"+=\",\"-=\",\"*=\",\"/=\",\"%=\",\"<<\",\">>\",\"->\",\"&=\",\"|=\",\"^=\",\"::\"};",
+              "after": "        const std::vector<std::string> ops{\"<<=\",\">>=\",\"**\",\"++\",\"--\",\"==\",\"!=\",\"<=\",\">=\",\"&&\",\"||\",\"+=\",\"-=\",\"*=\",\"/=\",\"%=\",\"<<\",\">>\",\"->\",\"&=\",\"|=\",\"^=\",\"::\"};"
+            }
+          ],
+          "example": {
+            "input": "a**b",
+            "output": "ID \"a\"\nOP \"**\"\nID \"b\"\nEOF\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "df73410c56db125c62044167084e2b5a468dab85adc904be773e01dfe65c07dd"
+        },
+        {
+          "title": "lexeme 不加引號",
+          "edits": [
+            {
+              "lines": [
+                87
+              ],
+              "action": "replace",
+              "before": "            output << kind << ' ' << std::quoted(s.substr(start, p - start)) << '\\n';",
+              "after": "output << kind << ' ' << s.substr(start, p - start) << '\\n';"
+            }
+          ],
+          "example": {
+            "input": "int x",
+            "output": "KW int\nID x\nEOF\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "e0ce83c7fe4660bf069a4e6ea7d1758adfc6b7e51f772d730d2a9bf3b25cf9ee"
+        },
+        {
+          "title": "不要印 EOF",
+          "edits": [
+            {
+              "lines": [
+                90
+              ],
+              "action": "replace",
+              "before": "        output << \"EOF\\n\";",
+              "after": ""
+            }
+          ],
+          "example": {
+            "input": "int",
+            "output": "KW \"int\"\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "add4d467d56e20ebb868f6135f0c7c6c79d9ce31b702a0871c3c94b90433b1e4"
+        },
+        {
+          "title": "不區分 keyword，全部列為 ID",
+          "edits": [
+            {
+              "lines": [
+                44
+              ],
+              "action": "replace",
+              "before": "                kind = keywords.count(s.substr(start, p - start)) ? \"KW\" : \"ID\";",
+              "after": "kind = \"ID\";"
+            }
+          ],
+          "example": {
+            "input": "int x",
+            "output": "ID \"int\"\nID \"x\"\nEOF\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "af6490dcc3ad9b85d4f08481148083f3fbabc7c8a6022670fadea0b485ee9056"
+        }
+      ]
+    },
+    {
+      "stem": "nfa_check",
+      "source_sha256": "4f8700108bb99836b2006e0e3bf752dd7cd51b43287a48223135349b6c15dac8",
+      "samples": [
+        {
+          "input": "3 2 0 1\n2\na\n0 # 1\n1 a 2\na\n\naa\nz\n",
+          "output": "ACCEPT\nREJECT\nREJECT\nREJECT\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ],
+      "fixture": {
+        "input": "6 7 0 1\n5\nbcd\n0 # 1\n0 # 4\n1 b 2\n2 c 3\n3 # 1\n3 # 4\n4 d 5\nd\nbcd\nbcbcd\n\nbc\nbd\nbcdd\n",
+        "output": "ACCEPT\nACCEPT\nACCEPT\nREJECT\nREJECT\nREJECT\nREJECT\n",
+        "stderr": "",
+        "exit": 0
+      },
+      "variants": [
+        {
+          "title": "state 編號從 1 開始",
+          "edits": [
+            {
+              "lines": [
+                31
+              ],
+              "action": "replace",
+              "before": "        auto valid = [n](int state) { return state >= 0 && state < n; };",
+              "after": "auto valid = [n](int state) { return state >= 1 && state <= n; };"
+            },
+            {
+              "lines": [
+                40
+              ],
+              "action": "replace",
+              "before": "        edges.resize(n);",
+              "after": "edges.resize(n + 1);"
+            }
+          ],
+          "example": {
+            "input": "2 1 1 1\n2\na\n1 a 2\na\nb\n",
+            "output": "ACCEPT\nREJECT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "e4ea2025ef6e0f006da01ed10d30ddcbc78997260e47cc10677b4121fadfa139"
+        },
+        {
+          "title": "epsilon 用 @",
+          "edits": [
+            {
+              "lines": [
+                20
+              ],
+              "action": "replace",
+              "before": "        for (int to : edges[from]['#']) if (states.insert(to).second) todo.push_back(to);",
+              "after": "        for (int to : edges[from]['@']) if (states.insert(to).second) todo.push_back(to);"
+            },
+            {
+              "lines": [
+                37
+              ],
+              "action": "replace",
+              "before": "        if (!(cin >> alphabet) || alphabet.find('#') != string::npos ||",
+              "after": "        if (!(cin >> alphabet) || alphabet.find('@') != string::npos ||"
+            },
+            {
+              "lines": [
+                44
+              ],
+              "action": "replace",
+              "before": "                (symbol != \"#\" && alphabet.find(symbol[0]) == string::npos)) fail();",
+              "after": "                (symbol != \"@\" && alphabet.find(symbol[0]) == string::npos)) fail();"
+            }
+          ],
+          "example": {
+            "input": "3 2 0 1\n2\na\n0 @ 1\n1 a 2\na\n",
+            "output": "ACCEPT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "62b5c48b88863133ea0144978df1387a7d3316f2c34665278eca629f4e98c110"
+        },
+        {
+          "title": "輸出 YES / NO",
+          "edits": [
+            {
+              "lines": [
+                68
+              ],
+              "action": "replace",
+              "before": "            cout << (accepted ? \"ACCEPT\\n\" : \"REJECT\\n\");",
+              "after": "            cout << (accepted ? \"YES\\n\" : \"NO\\n\");"
+            }
+          ],
+          "example": {
+            "input": "2 1 0 1\n1\na\n0 a 1\na\n",
+            "output": "YES\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "28731a842f9744c99e4bfe11c2e671316b7223290323dbd24a7a3d6fc5f8cee6"
+        },
+        {
+          "title": "印初始及每讀一字元後的 state 集合",
+          "edits": [
+            {
+              "lines": [
+                55
+              ],
+              "action": "after",
+              "before": "            States states = closure({start});",
+              "after": "for (int state : states) cout << state << ' ';\ncout << '\\n';"
+            },
+            {
+              "lines": [
+                63
+              ],
+              "action": "after",
+              "before": "                states = closure(next);",
+              "after": "for (int state : states) cout << state << ' ';\ncout << '\\n';"
+            }
+          ],
+          "example": {
+            "input": "3 2 0 1\n2\na\n0 # 1\n1 a 2\na\n",
+            "output": "0 1 \n2 \nACCEPT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "cefc34190e48c142625ffdb8b1e6456b34b043e4f63abf4079270185d14159b1"
+        },
+        {
+          "title": "忽略字串前後空白",
+          "edits": [
+            {
+              "lines": [
+                53
+              ],
+              "action": "replace",
+              "before": "            if (!word.empty() && word.back() == '\\r') word.pop_back();",
+              "after": "size_t first = word.find_first_not_of(\" \\t\\r\");\nword = first == string::npos ? \"\" : word.substr(first, word.find_last_not_of(\" \\t\\r\") - first + 1);"
+            }
+          ],
+          "example": {
+            "input": "2 1 0 1\n1\na\n0 a 1\n  a \n",
+            "output": "ACCEPT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "139d83d99d68a55093d86541d21d2ef49ae4d99356e94deda74a6f8c7245d510"
+        }
+      ]
+    },
+    {
+      "stem": "hw5_check",
+      "source_sha256": "4859447c26a2b1f36cba5c5da4b7ba1418bb6c4e96c6899cb2cd43982172bd73",
+      "samples": [
+        {
+          "input": "\na\nd\nad\nbcd\nbc\ndd\nz\n",
+          "output": "REJECT\nACCEPT\nACCEPT\nACCEPT\nACCEPT\nREJECT\nACCEPT\nREJECT\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ],
+      "fixture": {
+        "input": "\na\nd\nad\nbcd\nbcbcd\nabcbcdad\nb\nbc\nabca\nbcdd\n",
+        "output": "REJECT\nACCEPT\nACCEPT\nACCEPT\nACCEPT\nACCEPT\nACCEPT\nREJECT\nREJECT\nREJECT\nACCEPT\n",
+        "stderr": "",
+        "exit": 0
+      },
+      "variants": [
+        {
+          "title": "改解 HW5(d)",
+          "edits": [
+            {
+              "lines": [
+                6
+              ],
+              "action": "replace",
+              "before": "const bool HW5A = true;",
+              "after": "const bool HW5A = false;"
+            }
+          ],
+          "example": {
+            "input": "d\ndd\nbcd\n",
+            "output": "ACCEPT\nREJECT\nACCEPT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "180b8c526ce8c9eb57ce59656253807df6c916c3ceef8d0696ed7fbec35b698f"
+        },
+        {
+          "title": "輸出 YES / NO",
+          "edits": [
+            {
+              "lines": [
+                30
+              ],
+              "action": "replace",
+              "before": "        cout << (state == 3 ? \"ACCEPT\\n\" : \"REJECT\\n\");",
+              "after": "        cout << (state == 3 ? \"YES\\n\" : \"NO\\n\");"
+            }
+          ],
+          "example": {
+            "input": "a\nb\n",
+            "output": "YES\nNO\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "4673fd857d4b73bcb1d48845203515fa7ee1fbf75a785176cad67b51e4755c64"
+        },
+        {
+          "title": "HW5(a) 外層 + 改成 *",
+          "edits": [
+            {
+              "lines": [
+                30
+              ],
+              "action": "replace",
+              "before": "        cout << (state == 3 ? \"ACCEPT\\n\" : \"REJECT\\n\");",
+              "after": "        cout << ((state == 3 || word.empty()) ? \"ACCEPT\\n\" : \"REJECT\\n\");"
+            }
+          ],
+          "example": {
+            "input": "\na\nbc\n",
+            "output": "ACCEPT\nACCEPT\nREJECT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "88c017b9fb1e0724f0f7bc6fa5a7c54b91b684629233d14728121b7a6b5002e9"
+        },
+        {
+          "title": "ASCII 大小寫不敏感",
+          "edits": [
+            {
+              "lines": [
+                13
+              ],
+              "action": "after",
+              "before": "        if (!word.empty() && word.back() == '\\r') word.pop_back();",
+              "after": "for (char& c : word) if (c >= 'A' && c <= 'Z') c += 'a' - 'A';"
+            }
+          ],
+          "example": {
+            "input": "BCD\nA\n",
+            "output": "ACCEPT\nACCEPT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "495e650fae75b2bd1be72cd336dfc9c25c42579b27484dba544aa7d8ffa5565b"
+        },
+        {
+          "title": "輸出 Case 1: 結果",
+          "edits": [
+            {
+              "lines": [
+                9
+              ],
+              "action": "after",
+              "before": "    string word;",
+              "after": "int case_no = 0;"
+            },
+            {
+              "lines": [
+                30
+              ],
+              "action": "replace",
+              "before": "        cout << (state == 3 ? \"ACCEPT\\n\" : \"REJECT\\n\");",
+              "after": "        cout << \"Case \" << ++case_no << \": \" << (state == 3 ? \"ACCEPT\\n\" : \"REJECT\\n\");"
+            }
+          ],
+          "example": {
+            "input": "a\nb\n",
+            "output": "Case 1: ACCEPT\nCase 2: REJECT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "7ef3258e949401decee0e47954f4bca7295d1ebfc63e90c680dd06a257d06c24"
+        }
+      ]
+    },
+    {
+      "stem": "ac_dc",
+      "source_sha256": "4f1cc415e2cb0442f75517e1cd1d4ba246370b2cf54062837c70fc0c7f517260",
+      "samples": [
+        {
+          "input": "i x x=2 px",
+          "output": "2\nsx\n0 k\nlx\np\nsi\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "f x x=1e-2 px",
+          "output": "0.01\nsx\n0 k\nlx\np\nsi\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "i x x=1.2",
+          "output": "",
+          "stderr": "invalid ac program\n",
+          "exit": 1
+        },
+        {
+          "input": "p x",
+          "output": "",
+          "stderr": "invalid ac program\n",
+          "exit": 1
+        },
+        {
+          "input": "i x i x",
+          "output": "",
+          "stderr": "invalid ac program\n",
+          "exit": 1
+        }
+      ],
+      "fixture": {
+        "input": "i x\nx=100\nx=x+30+1\np x\n",
+        "output": "100\nsx\n0 k\nlx\n30\n+\n1\n+\nsx\n0 k\nlx\np\nsi\n",
+        "stderr": "",
+        "exit": 0
+      },
+      "variants": [
+        {
+          "title": "只允許 i / f 短宣告",
+          "edits": [
+            {
+              "lines": [
+                43
+              ],
+              "action": "replace",
+              "before": "            if (kind == 'f' && s.compare(start, 5, \"float\") == 0) j = start + 5;",
+              "after": ""
+            },
+            {
+              "lines": [
+                44
+              ],
+              "action": "replace",
+              "before": "            else if (kind == 'i' && s.compare(start, 3, \"int\") == 0) j = start + 3;",
+              "after": ""
+            },
+            {
+              "lines": [
+                45
+              ],
+              "action": "replace",
+              "before": "            else if ((kind >= 'a' && kind <= 'z') || kind == '=' || kind == '+' || kind == '-') {}",
+              "after": "            if ((kind >= 'a' && kind <= 'z') || kind == '=' || kind == '+' || kind == '-') {}"
+            }
+          ],
+          "example": {
+            "input": "i x x=1 px",
+            "output": "1\nsx\n0 k\nlx\np\nsi\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "aeb00980310821afd88641448527016f73136f7461e81c70f50d1d15e25ee6c0"
+        },
+        {
+          "title": "科學記號也接受 E",
+          "edits": [
+            {
+              "lines": [
+                35
+              ],
+              "action": "replace",
+              "before": "            if (j < s.size() && s[j] == 'e') {",
+              "after": "if (j < s.size() && (s[j] == 'e' || s[j] == 'E')) {"
+            },
+            {
+              "lines": [
+                57
+              ],
+              "action": "replace",
+              "before": "    size_t e = text.find('e');",
+              "after": "size_t e = text.find_first_of(\"eE\");"
+            },
+            {
+              "lines": [
+                98
+              ],
+              "action": "replace",
+              "before": "    return {decimal(text) + \"\\n\", text.find_first_of(\".e\") != string::npos};",
+              "after": "    return {decimal(text) + \"\\n\", text.find_first_of(\".eE\") != string::npos};"
+            }
+          ],
+          "example": {
+            "input": "f x x=1E-2 px",
+            "output": "0.01\nsx\n0 k\nlx\np\nsi\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "183ca17f8790f1dedf446d74acd5bcd09c681ba3d23c7bc39b71a357ab167e51"
+        },
+        {
+          "title": "浮點運算 scale 改成 10",
+          "edits": [
+            {
+              "lines": [
+                128
+              ],
+              "action": "replace",
+              "before": "                if (!left.second && right.second) out << \"5 k\\n\";",
+              "after": "                if (!left.second && right.second) out << \"10 k\\n\";"
+            },
+            {
+              "lines": [
+                131
+              ],
+              "action": "replace",
+              "before": "                if (left.second && !right.second) out << \"5 k\\n\";",
+              "after": "                if (left.second && !right.second) out << \"10 k\\n\";"
+            },
+            {
+              "lines": [
+                136
+              ],
+              "action": "replace",
+              "before": "            if (target_float && !left.second) out << \"5 k\\n\";",
+              "after": "            if (target_float && !left.second) out << \"10 k\\n\";"
+            }
+          ],
+          "example": {
+            "input": "f x x=1 px",
+            "output": "1\n10 k\nsx\n0 k\nlx\np\nsi\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "f04003d3777b036c43d4eae83d9f7a1764923cb9583697905b5e347498e47acb"
+        },
+        {
+          "title": "合法程式只輸出 OK",
+          "edits": [
+            {
+              "lines": [
+                140
+              ],
+              "action": "replace",
+              "before": "        cout << out.str(); return cout ? 0 : 1;",
+              "after": "cout << \"OK\\n\"; return cout ? 0 : 1;"
+            }
+          ],
+          "example": {
+            "input": "i x x=2 px",
+            "output": "OK\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "3c275e0a1e9ee1194229e3a0dc4b45732c479764e016524d1477039290c71a0e"
+        },
+        {
+          "title": "assignment 後不要產生 scale reset",
+          "edits": [
+            {
+              "lines": [
+                138
+              ],
+              "action": "replace",
+              "before": "            out << 's' << target << \"\\n0 k\\n\";",
+              "after": "            out << 's' << target << \"\\n\";"
+            }
+          ],
+          "example": {
+            "input": "i x x=2 px",
+            "output": "2\nsx\nlx\np\nsi\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "7fe016faa53fdc2292f3527c2d9e0c53a60941b3bc1d81ef273f34ffc1b776f2"
+        }
+      ]
+    },
+    {
+      "stem": "stack_vm",
+      "source_sha256": "5858e7a1067b2c8eab1afc84dae2aad03d30188c648fe4556779e1ee0a4fa3b1",
+      "samples": [
+        {
+          "input": "PUSH 8\nPUSH 2\nSUB\nPRINT\n",
+          "output": "6\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "PUSH 2\nDUP\nMUL\nNEG\nPRINT\n",
+          "output": "-4\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "input": "PUSH 1\nPUSH 0\nDIV\nPRINT\n",
+          "output": "",
+          "stderr": "error: division by zero\n",
+          "exit": 1
+        },
+        {
+          "input": "LOAD x\n",
+          "output": "",
+          "stderr": "error: undefined variable x\n",
+          "exit": 1
+        },
+        {
+          "input": "PRINT\n",
+          "output": "",
+          "stderr": "error: stack underflow\n",
+          "exit": 1
+        }
+      ],
+      "fixture": {
+        "input": "PUSH 100\nSTORE x\nLOAD x\nPUSH 30\nPUSH 1\nADD\nADD\nSTORE x\nLOAD x\nPRINT\n",
+        "output": "131\n",
+        "stderr": "",
+        "exit": 0
+      },
+      "variants": [
+        {
+          "title": "PRINT 保留 stack 頂端",
+          "edits": [
+            {
+              "lines": [
+                54
+              ],
+              "action": "replace",
+              "before": "            } else if (op == \"PRINT\") { const auto value = pop(); output << (value == 0 ? 0 : value) << '\\n'; }",
+              "after": "} else if (op == \"PRINT\") {\n    if (stack.empty()) throw std::runtime_error(\"stack underflow\");\n    const auto value = stack.back();\n    output << (value == 0 ? 0 : value) << '\\n';\n}"
+            }
+          ],
+          "example": {
+            "input": "PUSH 2\nPRINT\nPRINT\n",
+            "output": "2\n2\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "cb67b48859af74fe5b32f16acb6f61f910ff37a7f2551e2806de7bac53e01ea9"
+        },
+        {
+          "title": "固定小數點後 2 位",
+          "edits": [
+            {
+              "lines": [
+                29
+              ],
+              "action": "replace",
+              "before": "        std::ostringstream output; output.imbue(std::locale::classic()); output << std::setprecision(15);",
+              "after": "        std::ostringstream output; output.imbue(std::locale::classic()); output << std::fixed << std::setprecision(2);"
+            }
+          ],
+          "example": {
+            "input": "PUSH .25\nPRINT\n",
+            "output": "0.25\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "a384f4d111e9b54ebb694c23fb9e13b9950224de90b985c755767589a083b9a3"
+        },
+        {
+          "title": "PRINT 指令改名為 OUT",
+          "edits": [
+            {
+              "lines": [
+                54
+              ],
+              "action": "replace",
+              "before": "            } else if (op == \"PRINT\") { const auto value = pop(); output << (value == 0 ? 0 : value) << '\\n'; }",
+              "after": "            } else if (op == \"OUT\") { const auto value = pop(); output << (value == 0 ? 0 : value) << '\\n'; }"
+            }
+          ],
+          "example": {
+            "input": "PUSH 8\nOUT\n",
+            "output": "8\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "748449d09d7b8b70de342b424e419ac178ba37e88d3c481435bccc6a3077b3e6"
+        },
+        {
+          "title": "指令名稱忽略 ASCII 大小寫",
+          "edits": [
+            {
+              "lines": [
+                38
+              ],
+              "action": "after",
+              "before": "            if (!(input >> op)) continue;",
+              "after": "for (char& c : op) if (c >= 'a' && c <= 'z') c -= 'a' - 'A';"
+            }
+          ],
+          "example": {
+            "input": "push 2\nprint\n",
+            "output": "2\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "32b2e14e22ba393976c3882efc38ba4de4747853aab7143a34d860237f6e9ac3"
+        },
+        {
+          "title": "PRINT 不移除值，DUP 後連續列印",
+          "edits": [
+            {
+              "lines": [
+                54
+              ],
+              "action": "replace",
+              "before": "            } else if (op == \"PRINT\") { const auto value = pop(); output << (value == 0 ? 0 : value) << '\\n'; }",
+              "after": "} else if (op == \"PRINT\") {\n    if (stack.empty()) throw std::runtime_error(\"stack underflow\");\n    const auto value = stack.back();\n    output << (value == 0 ? 0 : value) << '\\n';\n}"
+            }
+          ],
+          "example": {
+            "input": "PUSH 2\nDUP\nPRINT\nPRINT\n",
+            "output": "2\n2\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "cb67b48859af74fe5b32f16acb6f61f910ff37a7f2551e2806de7bac53e01ea9"
+        }
+      ]
+    },
+    {
+      "stem": "ll1",
+      "source_sha256": "d6a65ce98c502339c53400c5cf2f9e2139629ef385e70f33b2633a2740843840",
+      "samples": [
+        {
+          "input": "2\nS -> a S\nS -> #\n",
+          "output": "FIRST(S)={#,a} FOLLOW(S)={$}\nSELECT(1)={a}\nSELECT(2)={$}\nM[S,$]=2\nM[S,a]=1\nLL1 YES\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ],
+      "fixture": {
+        "input": "4\nE -> T R\nR -> + T R\nR -> #\nT -> num\n",
+        "output": "FIRST(E)={num} FOLLOW(E)={$}\nFIRST(R)={#,+} FOLLOW(R)={$}\nFIRST(T)={num} FOLLOW(T)={$,+}\nSELECT(1)={num}\nSELECT(2)={+}\nSELECT(3)={$}\nSELECT(4)={num}\nM[E,num]=1\nM[R,$]=3\nM[R,+]=2\nM[T,num]=4\nLL1 YES\n",
+        "stderr": "",
+        "exit": 0
+      },
+      "variants": [
+        {
+          "title": "judge 不傳參數，只判定字串",
+          "edits": [
+            {
+              "lines": [
+                35
+              ],
+              "action": "replace",
+              "before": "        const std::string mode = argc == 1 ? \"--table\" : argv[1];",
+              "after": "const std::string mode = argc == 1 ? \"--check\" : argv[1];"
+            }
+          ],
+          "example": {
+            "input": "2\nS -> a S\nS -> #\na a\n\nb\n",
+            "output": "ACCEPT\nACCEPT\nREJECT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "cd7580812b9999c2eefce14760e7ab36b12b7aff1f580884f9f2896fc2982a30"
+        },
+        {
+          "title": "只印 FIRST 與 FOLLOW",
+          "edits": [
+            {
+              "lines": [
+                96,
+                103
+              ],
+              "action": "block",
+              "before": "            for (std::size_t i = 0; i < rules.size(); ++i) { std::cout << \"SELECT(\" << i + 1 << \")=\"; print_set(select[i]); std::cout << '\\n'; }\n            for (const auto& cell : table) {\n                std::cout << \"M[\" << cell.first.first << ',' << cell.first.second << \"]=\";\n                for (std::size_t i = 0; i < cell.second.size(); ++i) std::cout << (i ? \",\" : \"\") << cell.second[i] + 1;\n                if (cell.second.size() > 1) std::cout << \" CONFLICT\";\n                std::cout << '\\n';\n            }\n            std::cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");",
+              "after": ""
+            }
+          ],
+          "example": {
+            "input": "2\nS -> a S\nS -> #\n",
+            "output": "FIRST(S)={#,a} FOLLOW(S)={$}\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "43e79744fdb98b3a9581634a710fffbdf687ad7ae041fa0b3da1e01613bec0e8"
+        },
+        {
+          "title": "字串判定輸出 YES / NO",
+          "edits": [
+            {
+              "lines": [
+                129
+              ],
+              "action": "replace",
+              "before": "                std::cout << (accepted && pos == words.size() ? \"ACCEPT\\n\" : \"REJECT\\n\");",
+              "after": "                std::cout << (accepted && pos == words.size() ? \"YES\\n\" : \"NO\\n\");"
+            }
+          ],
+          "example": {
+            "input": "2\nS -> a S\nS -> #\na\nb\n",
+            "output": "YES\nNO\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [
+            "--check"
+          ],
+          "changed_sha256": "2c11a01752ec30dd8236c4ddc0946e165269e40522cb080fd1c5f319f428f215"
+        },
+        {
+          "title": "指定 S 為 start，不使用第一個 LHS",
+          "edits": [
+            {
+              "lines": [
+                68
+              ],
+              "action": "replace",
+              "before": "        follow[rules[0].lhs].insert(\"$\");",
+              "after": "        follow[\"S\"].insert(\"$\");"
+            },
+            {
+              "lines": [
+                112
+              ],
+              "action": "replace",
+              "before": "                words.push_back(\"$\"); std::vector<std::string> stack{\"$\", rules[0].lhs}; std::size_t pos = 0, steps = 0;",
+              "after": "                words.push_back(\"$\"); std::vector<std::string> stack{\"$\", \"S\"}; std::size_t pos = 0, steps = 0;"
+            }
+          ],
+          "example": {
+            "input": "2\nA -> b\nS -> a\na\nb\n",
+            "output": "ACCEPT\nREJECT\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [
+            "--check"
+          ],
+          "changed_sha256": "4052936723ad811a58f4e8fbc9c5febe5a3ac8462cd96f5faaad18f024067328"
+        },
+        {
+          "title": "只輸出是否為 LL(1)",
+          "edits": [
+            {
+              "lines": [
+                93,
+                103
+              ],
+              "action": "block",
+              "before": "            for (const auto& nt : nonterminals) {\n                std::cout << \"FIRST(\" << nt << \")=\"; print_set(first[nt]); std::cout << \" FOLLOW(\" << nt << \")=\"; print_set(follow[nt]); std::cout << '\\n';\n            }\n            for (std::size_t i = 0; i < rules.size(); ++i) { std::cout << \"SELECT(\" << i + 1 << \")=\"; print_set(select[i]); std::cout << '\\n'; }\n            for (const auto& cell : table) {\n                std::cout << \"M[\" << cell.first.first << ',' << cell.first.second << \"]=\";\n                for (std::size_t i = 0; i < cell.second.size(); ++i) std::cout << (i ? \",\" : \"\") << cell.second[i] + 1;\n                if (cell.second.size() > 1) std::cout << \" CONFLICT\";\n                std::cout << '\\n';\n            }\n            std::cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");",
+              "after": "std::cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");"
+            }
+          ],
+          "example": {
+            "input": "2\nS -> a S\nS -> #\n",
+            "output": "LL1 YES\n",
+            "stderr": "",
+            "exit": 0
+          },
+          "args": [],
+          "changed_sha256": "a7d488edf917c49b4bcdf3f28e2c00e3b01863ee401e9554b85906650483fdd4"
+        }
+      ]
+    }
+  ]
+}

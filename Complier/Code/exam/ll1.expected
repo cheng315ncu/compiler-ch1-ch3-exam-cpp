@@ -1,0 +1,12 @@
+FIRST(E)={num} FOLLOW(E)={$}
+FIRST(R)={#,+} FOLLOW(R)={$}
+FIRST(T)={num} FOLLOW(T)={$,+}
+SELECT(1)={num}
+SELECT(2)={+}
+SELECT(3)={$}
+SELECT(4)={num}
+M[E,num]=1
+M[R,$]=3
+M[R,+]=2
+M[T,num]=4
+LL1 YES

@@ -1,0 +1,2 @@
+int sum=12; // skip
+float x=1.2e-3; /*skip*/ sum+=2; print("a>b");

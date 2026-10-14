@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>編譯器 Ch1 濃縮筆記｜導論</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.min.js"
+        integrity="sha384-EOXBFmc3gx5mb+vn0vPvvGqACToJD24hhacX5Yx+8NUUQrHIle/Qi5Bg9o3zKwW2"
+        crossorigin="anonymous"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    themeVariables: { fontSize: '13px', fontFamily: '"PingFang TC","Hiragino Sans GB",sans-serif' },
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'linear' }
+  });
+</script>
+<style>
+  @page { size: A4; margin: 10mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "PingFang TC", "Hiragino Sans GB", "Noto Sans TC", "Helvetica Neue", sans-serif;
+    font-size: 8.8pt; line-height: 1.45; color: #1a1a2e; margin: 0;
+  }
+  header.top {
+    border-bottom: 2.5px solid #2d4a8f; padding-bottom: 4px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  header.top h1 { font-size: 15pt; margin: 0; color: #2d4a8f; }
+  header.top .meta { font-size: 7.5pt; color: #666; text-align: right; }
+  section { break-inside: avoid; margin-bottom: 9px; }
+  section.wide { break-inside: auto; }
+  h2 {
+    font-size: 10.5pt; color: #fff; background: #2d4a8f; margin: 0 0 5px 0;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  h3 { font-size: 9.2pt; margin: 6px 0 2px 0; color: #2d4a8f; }
+  p { margin: 2px 0; }
+  ul, ol { margin: 2px 0; padding-left: 16px; }
+  li { margin: 1.5px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 3px 0; font-size: 8pt; }
+  th, td { border: 0.6pt solid #9aa7c7; padding: 2.5px 5px; vertical-align: top; text-align: left; }
+  th { background: #e8edf8; color: #22335e; }
+  tr:nth-child(even) td { background: #f6f8fc; }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 7.8pt;
+    background: #f0f2f8; padding: 0 2px; border-radius: 2px;
+  }
+  pre {
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 7.6pt; line-height: 1.32;
+    background: #f6f7fb; border: 0.6pt solid #c9d2e8; border-left: 3px solid #2d4a8f;
+    padding: 4px 7px; margin: 3px 0; white-space: pre-wrap;
+  }
+  .term {
+    background: #eef3ff; border-left: 3px solid #2d4a8f; padding: 3px 7px; margin: 3px 0;
+  }
+  .term b.dt { color: #22335e; }
+  .warn { background: #fff6e5; border-left: 3px solid #e0a020; padding: 3px 7px; margin: 3px 0; }
+  .ans  { background: #edf9f0; border-left: 3px solid #2f9e5f; padding: 3px 7px; margin: 3px 0; }
+  .tag {
+    display: inline-block; font-size: 6.8pt; padding: 0 4px; border-radius: 2px;
+    background: #2d4a8f; color: #fff; vertical-align: 1px; margin-right: 3px;
+  }
+  .tag.hw { background: #b03a2e; }
+  .tag.supp { background: #7d6608; }
+  .mermaid { text-align: center; margin: 4px 0; }
+  .mermaid svg { max-width: 100%; }
+  .qa { margin: 2.5px 0; }
+  .qa .q { font-weight: 700; color: #22335e; }
+  .qa .a { color: #1e5c38; }
+  .small { font-size: 7.6pt; color: #555; }
+  .twocol { column-count: 2; column-gap: 6mm; }
+  footer.end {
+    border-top: 1px solid #9aa7c7; margin-top: 6px; padding-top: 3px;
+    font-size: 7pt; color: #777; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>編譯器 Chapter 1 濃縮筆記 — 導論</h1>
+  <div class="meta">課程用書：Fischer・Cytron・LeBlanc《Crafting a Compiler》<br>整理 2026-09-23｜A4 列印版</div>
+</header>
+
+<!-- ============ 1. 編譯器是什麼 ============ -->
+<section>
+  <h2>1｜編譯器是什麼？</h2>
+  <div class="term">
+    <b class="dt">編譯器（compiler）</b>：一支「翻譯程式」的程式。輸入是<b>原始語言（source language）</b>寫成的程式文字，輸出是<b>目標語言（target language）</b>的程式文字——課程先假設目標是<b>組合語言（assembly language）</b>，之後再由<b>組譯器（assembler）</b>翻成 CPU 真正能執行的<b>機器語言（machine language）</b>。這整個翻譯過程叫 <b>compilation</b>。
+  </div>
+  <pre class="mermaid">
+flowchart LR
+  S["原始碼文字<br/>source program"] --> C["編譯器 Compiler"]
+  C --> A["組合語言<br/>assembly"]
+  A --> AS["組譯器 Assembler"]
+  AS --> M["機器碼<br/>machine code"]
+  </pre>
+  <ul>
+    <li><b>使用者視角</b>會把上面收成一格：「程式語言進去、機器語言出來」，因為編譯＋組譯通常一個指令做完。但嚴格說編譯器只走到組合語言。</li>
+    <li>編譯器<b>翻譯程式，不負責執行</b>。執行是組譯、連結、載入之後的事（或交給直譯器，見 §4）。</li>
+    <li>目標語言不一定是組合語言：也可以是虛擬機指令（§3）或甚至 C（習題 11），都仍算編譯。</li>
+  </ul>
+</section>
+
+<!-- ============ 2. 前端與後端 ============ -->
+<section>
+  <h2>2｜前端（Front-end）與後端（Back-end）</h2>
+  <pre class="mermaid">
+flowchart LR
+  S["原始碼"] --> FE["前端 Front-end<br/>分析 analysis"]
+  FE --> IR["IR 中介表示"]
+  IR --> BE["後端 Back-end<br/>合成 synthesis"]
+  BE --> T["目標碼"]
+  </pre>
+  <div class="term">
+    <b class="dt">IR（intermediate representation，中介表示）</b>：編譯器內部用來表示程式的資料結構，不是給人看的程式碼。前端把原始碼「分析」成 IR；後端把 IR「合成（synthesis）」成目標碼。
+  </div>
+  <ul>
+    <li><b>前端</b>依賴來源語言（文法、型別、語意規則）；<b>後端</b>依賴目標機器（暫存器、指令集、呼叫慣例）。</li>
+    <li><b>為什麼要這樣切？</b>換 CPU 只要重寫後端；換語言只要重寫前端。<span class="small">（補充：M 種語言 × N 種機器，只需寫 M 個前端＋N 個後端，而非 M×N 套完整編譯器。）</span></li>
+    <li>本課後半的 scanner、parser、type checker、translator 屬前端；optimizer 與 code generator 屬（中）後端。符號表跨兩端（§5）。</li>
+  </ul>
+  <div class="warn"><b>易混</b>：這裡的 front／back 跟「使用者介面」無關——front 是<b>分析端</b>、back 是<b>生成端</b>。</div>
+</section>
+
+<!-- ============ 3. 三種目標碼 ============ -->
+<section>
+  <h2>3｜三種目標碼：編譯器可以產出什麼？</h2>
+  <table>
+    <tr><th>種類</th><th>產出內容</th><th>用在哪裡</th></tr>
+    <tr>
+      <td><b>Pure machine code</b><br>純機器碼</td>
+      <td>只有該 CPU 的指令集，<b>不假設作業系統或函式庫存在</b>——沒有 read、沒有視窗 API、沒有 malloc，I/O 與記憶體管理全部自己用指令做</td>
+      <td>實作作業系統、開機載入程式、無 OS 的微控制器（所謂 system implementation languages）</td>
+    </tr>
+    <tr>
+      <td><b>Augmented machine code</b><br>擴充機器碼</td>
+      <td>同一個指令集，但編譯器可以額外發出「呼叫服務」的碼，服務分兩類：<br>① <b>OS routines</b>：system calls、window APIs（作業系統提供）<br>② <b>runtime support routines</b>：語言自帶的執行期支援（啟動碼、例外處理、垃圾回收）</td>
+      <td>一般使用者空間的 C／C++ 程式——用到 <code>printf</code> 就是這類</td>
+    </tr>
+    <tr>
+      <td><b>Virtual machine code</b><br>虛擬機碼</td>
+      <td>全部由<b>虛擬機（VM）</b>的指令組成（例：Java 的 <b>bytecode</b> 就是 JVM 的指令集）。任何裝了 <b>VM interpreter</b> 的電腦都能跑同一份 bytecode</td>
+      <td>Java 這類重視可攜性的語言</td>
+    </tr>
+  </table>
+  <div class="term">
+    <b class="dt">虛擬機的可攜性從哪來？</b>兩句話一起讀：①「只需寫一份 VM interpreter」＝bytecode 格式與編譯器全世界只做一次；②「不同平台需要不同的 VM interpreter」＝每種真實 CPU／OS 還是各要一支能執行 VM 指令的程式。省下的是「每個平台各寫一套完整的 Java→native 後端」。這條路現在划算，是因為 CPU 夠快，多一層解譯的成本負擔得起。
+  </div>
+  <div class="warn"><b>易混</b>：① augmented 不是第三種 CPU，是「同一指令集＋約定好可呼叫的例程」；OS 例程與語言 runtime 是兩類，不要混。② 有了 JVM interpreter <b>仍然需要 javac</b>：interpreter 吃的是 bytecode，不是原始碼。</div>
+</section>
+
+<!-- ============ 4. Compiler vs Interpreter ============ -->
+<section>
+  <h2>4｜編譯器 vs 直譯器</h2>
+  <div class="term">
+    <b class="dt">直譯器（interpreter）</b>：不產生獨立的目標程式，而是<b>直接執行原始碼</b>——邊讀程式的輸入資料、邊產出執行結果。它不是「沒有翻譯」，而是把翻譯攤到執行期間做。
+  </div>
+  <div class="twocol">
+    <pre class="mermaid">
+flowchart LR
+  S["原始碼"] --> C["Compiler"]
+  C --> T["目標程式"]
+  T --> E["執行"]
+  D["輸入資料"] --> E
+  E --> O["輸出結果"]
+    </pre>
+    <pre class="mermaid">
+flowchart LR
+  S["原始碼"] --> I["Interpreter"]
+  D["輸入資料"] --> I
+  I --> O["輸出結果"]
+    </pre>
+  </div>
+  <table>
+    <tr><th></th><th>編譯器</th><th>直譯器</th></tr>
+    <tr><td>階段</td><td><b>compilation</b>（翻譯）與 <b>execution</b>（執行）兩段分開</td><td>一段：邊翻譯邊執行</td></tr>
+    <tr><td>輸入</td><td>只有原始碼</td><td>原始碼 <b>＋</b> 程式的輸入資料</td></tr>
+    <tr><td>輸出</td><td>另一支程式（之後可重複執行）</td><td>該次執行的結果</td></tr>
+    <tr><td>時間觀</td><td>編譯一次、執行很多次</td><td>每次執行都從原始碼重新走</td></tr>
+  </table>
+  <h3>直譯器的三種執行策略</h3>
+  <ol>
+    <li><b>直接執行原始碼</b>：最單純也最慢。例：LISP、早期 BASIC。</li>
+    <li><b>先譯成較有效率的中介表示、立刻執行</b>：例：Perl、Python、MATLAB、Ruby。</li>
+    <li><b>執行「直譯系統內建編譯器」事先編好的碼</b>：例：UCSD Pascal。</li>
+  </ol>
+  <p><b>Java 是 2＋3 的混合</b>：<code>javac</code> 先把原始碼編成可儲存的 bytecode（像策略 3 的「事先編好」），JVM 執行時拿到的是中介表示而非原始碼（像策略 2）。</p>
+  <div class="warn"><b>易混</b>：語言名稱不能當實作分類——同一個語言可以同時存在編譯實作與直譯實作。</div>
+</section>
+
+<!-- ============ 5. 編譯器內部管線 ============ -->
+<section class="wide">
+  <h2>5｜編譯器內部管線：語法導向編譯器（syntax-directed compiler）</h2>
+  <pre class="mermaid">
+flowchart LR
+  SC["Scanner<br/>掃描器"] -->|"tokens"| PA["Parser<br/>剖析器"]
+  PA -->|"AST"| TC["Type Checker<br/>型別檢查器"]
+  TC -->|"decorated AST"| TR["Translator<br/>轉譯器"]
+  TR -->|"IR"| OP["Optimizer<br/>最佳化器"]
+  OP -->|"IR"| CG["Code Generator<br/>代碼產生器"]
+  CG --> OUT["目標碼"]
+  TC -.-> ST[("Symbol Tables<br/>符號表")]
+  TR -.-> ST
+  OP -.-> ST
+  CG -.-> ST
+  </pre>
+  <p class="small">實線箭頭＝主鏈資料流（箭頭上是資料單位）；虛線＝對符號表的讀寫。Optimizer 另有「可整個繞過」的捷徑（不最佳化也能生碼）。粗分：Scanner→Translator 是前端（分析），Optimizer、Code Generator 是後端（合成）。</p>
+  <table>
+    <tr><th>階段</th><th>吃</th><th>吐</th><th>在做什麼＋名詞解釋</th></tr>
+    <tr><td><b>Scanner</b><br>掃描器</td><td>字元</td><td><b>Tokens</b></td><td>把字元聚成<b>詞法單位 token</b>：<code>foo_1</code> 是 1 個 identifier（不是 5 個字元）、<code>42</code> 是 1 個 integer。空白通常直接丟掉，不當 token。</td></tr>
+    <tr><td><b>Parser</b><br>剖析器</td><td>Tokens</td><td><b>AST</b></td><td>依 <b>CFG（context-free grammar，上下文無關文法）</b>檢查結構，通常建出 <b>AST（abstract syntax tree，抽象語法樹）</b>——比 parse tree 精簡：丟掉括號、中間非終端等只為語法存在的節點，留下運算與結構。</td></tr>
+    <tr><td><b>Type Checker</b><br>型別檢查器</td><td>AST</td><td><b>Decorated AST</b></td><td>又稱 semantic analyzer（語意分析器）。<b>Decorate（裝飾）</b>＝在原樹節點上附加型別、常數值、符號表條目等資訊，不是另做一棵樹。檢查型別正確性、reachability（有沒有走不到的碼）、termination、例外處理。</td></tr>
+    <tr><td><b>Translator</b><br>轉譯器</td><td>Decorated AST</td><td><b>IR</b></td><td><b>語意檢查通過才翻譯</b>成 IR（例：bytecode、三地址碼）。要求是「意義正確」——IR 的執行效果對應來源語意，不求快。</td></tr>
+    <tr><td><b>Optimizer</b><br>最佳化器</td><td>IR</td><td>較好的 IR</td><td>改善效能，<b>語意必須保持不變</b>；實例見 §7。可以被繞過。</td></tr>
+    <tr><td><b>Code Generator</b><br>代碼產生器</td><td>IR（或直接 AST）</td><td>目標碼</td><td>把 IR 對應成組合語言（或 VM 指令）。主鏈最後一格。</td></tr>
+    <tr><td><b>Symbol Tables</b><br>符號表</td><td colspan="2">被右四階段讀寫</td><td>記錄每個名稱的型別、位址等資訊。圖上只有 Type Checker、Translator、Optimizer、Code Generator 有虛線連到它；<span class="small">（補充：許多實作在 Scanner 掃到識別字時就會建表，只是圖沒畫。）</span></td></tr>
+  </table>
+  <div class="warn"><b>易混</b>：parser 接受只代表「合乎 CFG」，不代表型別正確。<code>int x = "hi";</code> 可能掃得過、parse 得過，到 type checker 才被擋下。</div>
+
+  <h3>Scanner 的 C 實作重點（課程補充碼，已驗證可編譯執行）</h3>
+  <ul>
+    <li><code>int c = getchar()</code>：刻意用 <code>int</code> 不用 <code>char</code>，因為要多留一個負值 <code>EOF</code> 表示「讀完」。若用有號 <code>char</code>，位元組 <code>0xFF</code> 會跟 EOF 撞在一起。</li>
+    <li>送進 <code>isspace()</code>／<code>isalpha()</code> 前一律先轉 <code>unsigned char</code>——負值直接傳入是<b>未定義行為</b>（可能查到陣列外面）。</li>
+    <li>詞素放 64 bytes 堆疊陣列，<b>寫入前</b>先檢查長度上限，超長就報錯離開，不會緩衝區溢位。</li>
+    <li>「向前看一個字元」靠變數 <code>c</code> 保存：每個分支結束時 <code>c</code> 已是下一個未處理字元，所以不需要 <code>ungetc</code>。</li>
+    <li>實測行為：<code>foo@</code> → 印 <code>IDENT foo</code> 後報 illegal character；<code>1foo</code> → 切成 <code>INT 1</code> 和 <code>IDENT foo</code>（這是詞法規則的結果，不是 parser 的問題）；連續 64 個字母 → 報 lexeme too long。</li>
+  </ul>
+</section>
+
+<!-- ============ 6. Bootstrapping ============ -->
+<section>
+  <h2>6｜Bootstrapping：編譯器編譯自己</h2>
+  <div class="term">
+    <b class="dt">Bootstrapping（自我編譯）</b>：當「來源語言＝實作語言」，而且被編譯的原始碼就是這套編譯器本身，這個過程叫 bootstrapping。描述每個編譯器用 <b>T 圖三欄</b>：source language（編譯誰）／target language（產出什麼碼）／implementation language（編譯器本身用什麼跑）。
+  </div>
+  <h3>例 A：把 x86 上的 C 編譯器移植到 ARM</h3>
+  <p>情境：手上有一個跑在 x86 的 C 編譯器 X，它是用 C 寫的（原始碼 P）。ARM 機器上還沒有任何 C 編譯器。做法：把 P 的 code generation 改成產生 ARM 組合語言，再「餵給自己」。</p>
+  <table>
+    <tr><th>步驟</th><th>在哪台機器跑</th><th>輸入</th><th>產出（source／target／impl）</th></tr>
+    <tr><td>1. 現況</td><td>x86</td><td>—（X 已是二元檔）</td><td>可跑的 X（C／x86／C）</td></tr>
+    <tr><td>2. 改 P 的 code generator</td><td>只改原始碼，還沒編譯</td><td>P</td><td>P′：會發 ARM 碼的編譯器原始碼（C／ARM／C，<b>還不能跑</b>）</td></tr>
+    <tr><td>3. 把 P′ 餵給 X<br>（＝「餵給自己」）</td><td>x86</td><td>P′</td><td>X′：<b>cross-compiler</b>（在 x86 上跑、產出 ARM 碼）（C／ARM／<b>x86</b>）</td></tr>
+    <tr><td>4. 再把 P′ 餵給 X′</td><td>x86</td><td>P′</td><td>能在 ARM 上跑的 C 編譯器（C／ARM／<b>ARM</b>）</td></tr>
+  </table>
+  <p class="small"><span class="tag supp">補充</span><b>cross-compiler（交叉編譯器）</b>：在 A 機器上跑、卻產生 B 機器碼的編譯器。若目標是「ARM 上能跑的編譯器」，只到第 3 步是不夠的——X′ 仍是 x86 二元檔，必須做第 4 步。</p>
+  <div class="warn"><b>易混</b>：只改了 P 的 code generator、還沒重新編譯前，正在跑的 X 發出的仍是 <b>x86</b> 碼——跑的是舊二元檔。</div>
+
+  <h3>例 B：借別的語言跨過第一次（VM 路線）</h3>
+  <pre class="mermaid">
+flowchart TD
+  LK["用語言 K 寫的「L 編譯器」原始碼"] --> KC["現成的 K 編譯器<br/>（已可執行）"]
+  KC --> FI["L 編譯器的第一個實例<br/>First Instance"]
+  RL["用語言 L 寫的「L 編譯器」原始碼<br/>（reference compiler）"] --> FI
+  FI --> VMC["L 編譯器的 VM 指令"]
+  VMC --> VI["VM Interpreter<br/>在任何有 VM 的機器上執行"]
+  RL -. "自我編譯" .-> VMC
+  </pre>
+  <ol>
+    <li>先用<b>已存在的 K 編譯器</b>，把「用 K 寫的 L 編譯器」編出來 → 得到 L 的第一個可執行編譯器。這一步跨過「雞生蛋」問題。</li>
+    <li>再用它編譯「用 L 自己寫的 reference compiler」→ 得到 L 編譯器的 VM 指令。</li>
+    <li>VM 指令交給 VM interpreter 執行——「VM 指令＋interpreter」合起來就是一個<b>可攜的 L 編譯器</b>，任何支援該 VM 的架構都能跑，而且它能編譯自己。</li>
+  </ol>
+  <p><b>K 什麼時候退場？</b>做出第一個實例之後就不需要了；之後只用 L 自己的編譯器與 VM interpreter。這正是「Chicken &amp; Egg」漫畫的答案：第一個編譯器用另一種已存在的語言寫（或先做極小的手寫翻譯器再逐步放大）。</p>
+</section>
+
+<!-- ============ 7. Optimizer 實例 ============ -->
+<section>
+  <h2>7｜Optimizer 實例：矩陣乘法 A = B × C 的三步改造</h2>
+  <div class="term">
+    名詞先備：<b class="dt">過載運算子（overloaded operator）</b>＝讓 <code>×</code>、<code>=</code> 這種符號對自訂型別（矩陣）有意義，底層其實是函式呼叫。<b class="dt">內聯（inlining）</b>＝把函式本體展開貼到呼叫點，省掉呼叫開銷。<b class="dt">迴圈融合（loop fusion）</b>＝把兩個跑同樣範圍的迴圈合併成一個。<b class="dt">別名（alias）</b>＝兩個名字指到同一塊記憶體。
+  </div>
+  <pre class="mermaid">
+flowchart LR
+  F1["第 1 步：高層寫法<br/>A = B × C<br/>兩次方法呼叫＋暫存矩陣"] --> F2["第 2 步：內聯 × 和 =<br/>呼叫消失<br/>仍有暫存矩陣 Result"]
+  F2 --> F3["第 3 步：迴圈融合<br/>直接寫進 A<br/>Result 消失"]
+  </pre>
+  <h3>第 1 步：原本的樣子（工作藏在過載運算子裡）</h3>
+  <pre>A = B × C                     // 高層一行，實際呼叫兩個方法
+
+×(Y, Z)：if Y.cols ≠ Z.rows then 丟例外      ← ① 先查維度
+         for i, for j：Result[i,j] ← 0
+             for k：Result[i,j] += Y[i,k] × Z[k,j]
+         return Result                      // 多一塊暫時矩陣
+
+=(To, From)：if 維度不合 then 丟例外          ← ② 再逐元素拷貝
+             for i, for j：To[i,j] ← From[i,j]</pre>
+  <p class="small">代價：兩次方法呼叫開銷＋一塊額外的 Result 儲存。</p>
+  <h3>第 2 步：內聯 ①②（呼叫消失）</h3>
+  <pre>for i = 1..N, for j = 1..N          // 乘法巢
+    Result[i,j] ← 0
+    for k = 1..N：Result[i,j] += B[i,k] × C[k,j]
+for i = 1..N, for j = 1..N          // 拷貝巢（還在！）
+    A[i,j] ← Result[i,j]</pre>
+  <p class="small">維度檢查在展開圖裡沒畫出來，不代表被刪掉——內聯討論的是熱迴圈。</p>
+  <h3>第 3 步：融合兩個迴圈巢（Result 消失）</h3>
+  <pre>for i = 1..N
+    for j = 1..N
+        A[i,j] ← 0
+        for k = 1..N
+            A[i,j] += B[i,k] × C[k,j]     // 直接寫進 A</pre>
+  <ul>
+    <li>被融合的是「乘法巢」與「拷貝巢」<b>這兩組</b>都跑 i、j 的迴圈——<b>不是</b>把 i、j 併成單層；i、j、k 三層都還在。</li>
+    <li>Result 沒了；<b>j 迴圈還在</b>，少掉的是第二組 i、j 拷貝迴圈。</li>
+  </ul>
+  <div class="warn"><b>易混</b>：這是編譯器對 IR 做的迴圈融合與暫存矩陣消除，<b>沒有改矩陣乘法的數學定義</b>。前提是 A、B、C 互為不同物件；若有別名（例如 <code>A = A * C</code>），直接寫 A 可能蓋掉還沒讀完的值。</div>
+</section>
+
+<!-- ============ 8. HW 標準解答 ============ -->
+<section>
+  <h2>8｜HW 標準解答（習題 4・8・11）</h2>
+
+  <h3><span class="tag hw">HW</span>習題 4：編譯期錯誤 vs 執行期錯誤</h3>
+  <div class="term">
+    名詞：<b class="dt">compile-time error（編譯期錯誤）</b>＝翻譯階段就能發現的錯，整支程式直接不合法；<b class="dt">run-time error（執行期錯誤）</b>＝實際執行到那一行才爆的錯。對比例子：<code>a = b/0;</code>（除數是常數 0，編譯期就看得出）vs <code>c = 0; a = b/c;</code>（要到執行才發現）。
+  </div>
+  <p><b>題目</b>：該不該讓「含編譯期錯誤的程式」照樣執行、只在真的跑到非法碼時才停？讓程式因為「可能執行到」的非法片段整個不合法，有沒有好處？</p>
+  <div class="ans"><span class="tag">教材解答</span>
+    ① Compile-time error is a better approach.<br>
+    ② A program with compiler-time errors SHOULD NOT be allowed to execute.<br>
+    ③ The advantage is that it ensures all the source codes are syntactically correct.</div>
+  <p class="small"><span class="tag supp">補充</span>解答③把好處說成「語法正確」，但除零其實比較接近語意／執行期約束，不一定是 CFG 語法錯。另外注意：題目說 <code>b/0</code> 會被標成非法是<b>題目設定</b>——C 語言裡整數除零是未定義行為，clang 預設只給 warning 照樣產生執行檔；Java 也要加 <code>-Xlint:divzero</code> 才警告，執行期才丟 <code>ArithmeticException</code>。不要用工具的警告政策改寫教材立場。</p>
+
+  <h3><span class="tag hw">HW</span>習題 8：為什麼做 JVM interpreter 比較容易？</h3>
+  <div class="term">
+    背景：C／C++ 通常直接編成真實 CPU 的機器碼（Intel x86、Sparc）；Java 編成 JVM 的機器碼（bytecode），而 JVM 不是真的處理器——它是在既有處理器上被解譯執行的，所以平台獨立。題中的「完整 Java compiler」指「直接對真實 CPU 生碼」的那種，不是 javac。
+  </div>
+  <p><b>題目</b>：為什麼為 JVM 做 interpreter 比做完整的 Java compiler 更容易、更快？虛擬機途徑的缺點是什麼？</p>
+  <div class="ans"><span class="tag">教材解答</span>Building an interpreter for a virtual machine is easier than building a complete Java compiler is that there are <b>fewer phases</b> in developing interpreters. The disadvantages of this virtual machine approach is that the source code must be compiled to byte code, and then a java interpreter can execute it. <b>This takes more time</b>.</div>
+  <p class="small"><span class="tag supp">補充</span>「少的 phases」對照 §5 管線：完整 native 後端還要做目標指令選擇、暫存器配置、呼叫慣例；VM interpreter 只需實作一組規則的虛擬指令。時間代價＝多一層 bytecode 解譯，跟 §3「CPU 夠快才划算」同一件事。</p>
+
+  <h3><span class="tag hw">HW</span>習題 11：把 C 當「萬用組合語言」</h3>
+  <div class="term">
+    名詞：<b class="dt">universal assembly language</b>＝C 的綽號，因為幾乎每種架構上都有高效率的 C 編譯器。於是有些編譯器乾脆<b>輸出 C 程式碼</b>當目標語言，再交給各平台的 C 編譯器走完最後一哩。
+  </div>
+  <p><b>題目</b>：編譯器輸出 C（而非特定機器語言）的優點與缺點？</p>
+  <div class="ans"><span class="tag">教材解答</span>Generating C code is <b>more portable</b> than generating an assembly code for a particular machine language. However, the source code will be translated into C code, and then to assembly code. This is <b>time-consuming</b>.</div>
+  <p class="small"><span class="tag supp">補充</span>可攜性來自「每台機器早就有 C 編譯器」；代價是多一次 C→assembly 的翻譯，而且 C 的語意（整數寬度、未定義行為、呼叫慣例）會變成你的 IR 必須遵守的邊界。注意：這是把 C 當<b>目標語言</b>，跟本課作業「用 C 寫編譯器本身」是兩回事。</p>
+</section>
+
+<!-- ============ 9. 自我檢查 ============ -->
+<section>
+  <h2>9｜自我檢查速答（考前掃一遍）</h2>
+  <div class="twocol">
+    <div class="qa"><span class="q">Q：編譯器輸出 bytecode，還算編譯器嗎？</span><br>
+    <span class="a">A：算。廣義上編譯器＝「翻譯到較低階、不再當原始碼改」的翻譯器；目標是 VM 指令或 C 都可以。</span></div>
+    <div class="qa"><span class="q">Q：使用者視角圖（語言→編譯器→機器碼）看得出前端／後端分界嗎？</span><br>
+    <span class="a">A：不能，它把編譯器當不透明方塊，還順手合併了組譯器。</span></div>
+    <div class="qa"><span class="q">Q：只換 CPU、語言不變，要重寫哪一端？</span><br>
+    <span class="a">A：後端（code generator＋部分 runtime）；前端與 IR 留用。</span></div>
+    <div class="qa"><span class="q">Q：管線圖上哪幾個方塊有虛線連到符號表？</span><br>
+    <span class="a">A：Type Checker、Translator、Optimizer、Code Generator 四個；Scanner、Parser 沒有。</span></div>
+    <div class="qa"><span class="q">Q：編譯器的「執行階段」跑的是 source 還是 target？</span><br>
+    <span class="a">A：target。source 只在 compilation phase 出現。</span></div>
+    <div class="qa"><span class="q">Q：<code>foo1</code> 是幾個 token？<code>1foo</code> 呢？</span><br>
+    <span class="a">A：<code>foo1</code>＝1 個 identifier；<code>1foo</code>＝<code>INT 1</code>＋<code>IDENT foo</code> 兩個 token（詞法規則問題）。</span></div>
+    <div class="qa"><span class="q">Q：迴圈融合後還有 Result 嗎？還有 j 迴圈嗎？</span><br>
+    <span class="a">A：Result 沒了；j 還在，少掉的是第二組 i、j 拷貝迴圈。</span></div>
+    <div class="qa"><span class="q">Q：VM 路線 bootstrapping 中，哪一步之後就不再需要語言 K 的編譯器？</span><br>
+    <span class="a">A：做出「L 的第一個實例」之後；之後只用 L 自己的編譯器與 VM interpreter。</span></div>
+  </div>
+</section>
+
+<!-- ============ 10. 名詞速查 ============ -->
+<section>
+  <h2>10｜名詞速查表</h2>
+  <table>
+    <tr><th>名詞</th><th>一句話解釋</th><th>名詞</th><th>一句話解釋</th></tr>
+    <tr><td>compiler 編譯器</td><td>把程式從來源語言翻成目標語言的程式</td><td>interpreter 直譯器</td><td>不產出目標程式，直接執行原始碼</td></tr>
+    <tr><td>assembler 組譯器</td><td>把組合語言翻成機器碼</td><td>compilation</td><td>「原始碼→目標碼」的翻譯過程</td></tr>
+    <tr><td>front-end 前端</td><td>分析原始碼、建出 IR 的那半</td><td>back-end 後端</td><td>把 IR 合成成目標碼的那半</td></tr>
+    <tr><td>IR 中介表示</td><td>編譯器內部的程式表示，不給人看</td><td>symbol table 符號表</td><td>記錄名稱的型別、位址等資訊的表</td></tr>
+    <tr><td>token</td><td>詞法單位（identifier、integer…）</td><td>CFG</td><td>上下文無關文法，描述語法結構</td></tr>
+    <tr><td>AST 抽象語法樹</td><td>去掉括號等語法雜物後的程式樹</td><td>decorated AST</td><td>節點附上型別等語意資訊的 AST</td></tr>
+    <tr><td>pure machine code</td><td>不假設 OS／函式庫存在的純機器碼</td><td>augmented machine code</td><td>機器碼＋約定可呼叫的 OS／runtime 例程</td></tr>
+    <tr><td>VM / bytecode</td><td>虛擬機／它的指令集（如 JVM bytecode）</td><td>runtime support</td><td>語言自帶的執行期支援（啟動碼、GC…）</td></tr>
+    <tr><td>bootstrapping</td><td>編譯器編譯「自己」的原始碼</td><td>cross-compiler</td><td>在 A 機跑、產 B 機碼的編譯器</td></tr>
+    <tr><td>inlining 內聯</td><td>把函式本體展開到呼叫點</td><td>loop fusion 迴圈融合</td><td>合併範圍相同的迴圈，省暫存</td></tr>
+    <tr><td>compile-time error</td><td>編譯期即可發現的錯誤</td><td>run-time error</td><td>執行到該行才出現的錯誤</td></tr>
+    <tr><td>undefined behavior</td><td>語言不定義後果的行為（如 C 除零）</td><td>universal assembly language</td><td>C 的綽號：到處都有它的編譯器</td></tr>
+  </table>
+</section>
+
+<footer class="end">編譯器 Chapter 1 濃縮筆記｜教材解答照錄原書，補充說明另標｜來源：Complier/Lessons/Chapter 1</footer>
+
+</body>
+</html>

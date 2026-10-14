@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compiler Ch3｜Scanning｜Openbook Cheatsheet</title><style>
+@page{size:A4;margin:10mm}*{box-sizing:border-box}html{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+body{margin:0;color:#1a1a2e;background:#e9edf3;font:8.7pt/1.43 "PingFang TC","Noto Sans TC","Helvetica Neue",sans-serif}
+.sheet{width:190mm;height:276mm;margin:8mm auto;background:#fff;position:relative;break-inside:avoid}
+header{display:flex;align-items:baseline;justify-content:space-between;border-bottom:2.5px solid #2d4a8f;padding-bottom:4px;margin-bottom:7px}
+h1{color:#2d4a8f;font-size:15pt;margin:0}.meta{text-align:right;font-size:7.2pt;color:#555;white-space:nowrap}
+h2{font-size:10.3pt;color:white;background:#2d4a8f;margin:0 0 4px;padding:3px 7px;border-radius:3px}
+h2 small{float:right;font-size:7.1pt;font-weight:400;margin-top:2px}h3{color:#22335e;font-size:9.3pt;margin:6px 0 2px}
+section{margin-bottom:7px;break-inside:avoid}p{margin:3px 0}table{width:100%;border-collapse:collapse;margin:4px 0;font-size:8pt}
+th,td{border:.6pt solid #9aa7c7;padding:3px 5px;text-align:left;vertical-align:top}th{background:#e8edf8;color:#22335e}
+tr:nth-child(even) td{background:#f6f8fc}code,pre{font-family:Menlo,Consolas,monospace;font-size:7.8pt}
+code{background:#f0f2f8;padding:0 2px}pre{background:#f6f7fb;border-left:3px solid #2d4a8f;padding:6px 8px;margin:4px 0;white-space:pre-wrap;line-height:1.38}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:6mm}.term,.ans,.warn{padding:5px 7px;margin:4px 0;border-left:3px solid}
+.term{background:#eef3ff;border-color:#2d4a8f}.ans{background:#edf9f0;border-color:#2f9e5f}.warn{background:#fff6e5;border-color:#d49315}
+.q{font-weight:700;color:#22335e;margin-top:5px}.en{color:#1e5c38}.small{font-size:7.6pt;color:#555}ul,ol{margin:3px 0;padding-left:17px}li{margin:2px 0}
+footer{position:absolute;left:0;right:0;bottom:0;padding-top:3px;border-top:1px solid #9aa7c7;color:#666;font-size:7pt;display:flex;justify-content:space-between}
+a{color:#2d4a8f;text-decoration:none}nav{position:sticky;top:0;z-index:10;background:#22335e;color:white;padding:9px;text-align:center;font-size:10pt}
+nav a{color:white;margin:0 8px}button{cursor:pointer}svg{display:block;width:100%;height:auto}svg text{font-family:Menlo,"PingFang TC",sans-serif;fill:#22335e}
+svg path{stroke:#8998b5;stroke-width:1.5;fill:none}svg rect{fill:#eef3ff;stroke:#9aa7c7}svg circle{fill:white;stroke:#6a7fa6;stroke-width:1.5}
+.tight td,.tight th{padding:2px 4px}.formula{font-size:10pt;text-align:center;background:#f4f6fb;padding:7px;margin:4px 0}
+.diagram-note{font-size:7.5pt;color:#555;margin:2px 0}.key{font-weight:700;color:#22335e}main{padding-bottom:0}
+@media print{body{background:white}nav{display:none}.sheet{margin:0;break-after:page}.sheet:last-child{break-after:auto}}
+@media screen{.sheet{padding:6mm;width:202mm;height:288mm;box-shadow:0 3px 18px #26375522}footer{left:6mm;right:6mm;bottom:6mm}}
+
+.dictionary{table-layout:fixed;line-height:1.25}.dictionary th,.dictionary td{padding:1px 4px}.dictionary th:nth-child(1){width:23%}.dictionary th:nth-child(2){width:43%}.dictionary th:nth-child(3){width:34%}.dictionary td:nth-child(2){color:#1e5c38}
+</style></head><body>
+<nav aria-label="頁面導覽"><a href="#p1">1 名詞</a><a href="#p2">2 流程</a><a href="#p3">3 CFG</a><a href="#p4">4 AST</a><a href="#p5">5 RE</a><a href="#p6">6 掃描</a><a href="#p7">7 NFA</a><a href="#p8">8 Subset</a><a href="#p9">9 abb</a><a href="#p10">10 習題</a><button onclick="window.print()">列印 / 存 PDF</button></nav>
+<article class="sheet" id="p1">
+<header><h1>本單元名詞｜考場直接查</h1><div class="meta">OPENBOOK · 01 / 10<br>英文一句定義＋中文對照｜不用先讀後文</div></header>
+<main>
+<div class="term"><b>Explain / Define：</b>寫中欄英文；例子看右欄。<b>How：</b>照 p.2 流程。<b>Why CFG / AST：</b>詳解 p.3／p.4。本頁為 Ch3 術語與前兩次小考補充。</div>
+<section><h2>A｜字元、token 與文法 <small>Ch3 PPT 2–5、31、51；Ch2＋補充</small></h2>
+<table class="tight dictionary"><tr><th>名詞 / notation</th><th>English definition（可作短答）</th><th>中文辨析 / 例子</th></tr><tr><td>Scanner / lexer</td><td>Groups source characters into tokens.</td><td>掃描器：字元流 → token 流。</td></tr><tr><td>Token / token type</td><td>A lexical unit / its category used by the parser.</td><td>type 如 ID、NUM；不是字元數。</td></tr><tr><td>Lexeme</td><td>The actual source character sequence matched.</td><td>詞素：ID 的 lexeme 可為 count。</td></tr><tr><td>Pattern / regular expression</td><td>Pattern: valid lexemes. RE: a description of a regular language.</td><td>RE 是規格；lexeme 是實例。</td></tr><tr><td>Attribute / transducer</td><td>Attribute: token data. Transducer: a recognizer that also produces output.</td><td>如 007 的數值 7；不只判合法。</td></tr><tr><td>Parser / CFG</td><td>Parser: checks token structure. CFG: each rule has one nonterminal on its left.</td><td>CFG 左側是一個 nonterminal。</td></tr><tr><td>Terminal / nonterminal</td><td>Terminals are not rewritten; nonterminals are expanded by productions.</td><td>parser 文法的 terminal 通常是 token type。</td></tr><tr><td>Production / start symbol</td><td>A rewrite rule / the symbol from which derivation begins.</td><td>如 S→aSb；從 S 開始推導。</td></tr><tr><td>AST / parse tree</td><td>An AST keeps essential structure; a parse tree records grammar expansions.</td><td>AST 留運算／敘述，省語法包裝。</td></tr></table></section>
+<section><h2>B｜語言集合與 RE operators <small>PPT 5–16</small></h2>
+<table class="tight dictionary"><tr><th>名詞 / notation</th><th>English definition（可作短答）</th><th>中文辨析 / 例子</th></tr><tr><td>Alphabet Σ / string / language</td><td>A finite symbol set / a finite sequence / a set of strings.</td><td>符號集合／一串符號／字串集合。</td></tr><tr><td>Empty string λ or ε / ∅</td><td>λ is a zero-length string; ∅ contains no strings.</td><td>{λ}≠∅；λ 不消耗輸入。</td></tr><tr><td>Regular language</td><td>A language recognizable by a finite automaton.</td><td>RE、NFA、DFA 表達同類語言。</td></tr><tr><td>Literal / metacharacter</td><td>A literal denotes itself; a metacharacter controls the pattern.</td><td>字面 a；* 是 RE 操作符。</td></tr><tr><td>Alternation A | B</td><td>The union of the two languages.</td><td>選 A 或 B；不是串接。</td></tr><tr><td>Concatenation AB</td><td>Strings from A followed by strings from B.</td><td>順序重要；通常 AB≠BA。</td></tr><tr><td>Kleene A* / positive A+</td><td>Zero-or-more / one-or-more concatenated repetitions.</td><td>* 一定含 λ；A 含 λ 時 + 也可含 λ。</td></tr><tr><td>Optional A? / Aᵏ</td><td>Zero or one occurrence / exactly k concatenated copies.</td><td>A?=A|λ；A⁰=λ。</td></tr><tr><td>Character class / Not(C)</td><td>A set of single characters / its complement within Σ.</td><td>Not(C)=Σ\C；非任意語言補集。</td></tr></table></section>
+<section><h2>C｜Finite automata 與子集構造 <small>PPT 23–50</small></h2>
+<table class="tight dictionary"><tr><th>名詞 / notation</th><th>English definition（可作短答）</th><th>中文辨析 / 例子</th></tr><tr><td>DFA / NFA</td><td>DFA: one successor per symbol. NFA: multiple choices or epsilon moves.</td><td>能力相同；NFA 接受看存在路徑。</td></tr><tr><td>State Q / q₀ / F</td><td>Q is the finite state set; q₀ starts; F accepts.</td><td>M=(Q,Σ,δ,q₀,F)；雙圈表示 F。</td></tr><tr><td>Transition δ / Δ</td><td>A DFA successor / a set of NFA successors.</td><td>轉移表：row=state，col=輸入。</td></tr><tr><td>Epsilon transition</td><td>A move that consumes no input character.</td><td>λ 邊不代表讀一個 λ 字元。</td></tr><tr><td>λ-closure close(S)</td><td>States reachable from S by zero or more epsilon moves.</td><td>包含 S 本身；沿 λ 走到固定點。</td></tr><tr><td>move(S,c)</td><td>All successors after consuming one c from states in S.</td><td>先聯集，之後才做 close。</td></tr><tr><td>Subset construction</td><td>Uses sets of NFA states as DFA states.</td><td>集合 S 含任一接受 state 即接受。</td></tr><tr><td>Dead state / sink</td><td>Dead: no acceptance is reachable. Sink: every input loops there.</td><td>本課 X=∅ 是拒絕 sink。</td></tr><tr><td>Worklist / seen</td><td>Unprocessed discovered subsets / all discovered subsets.</td><td>新集合只入隊一次；按內容去重。</td></tr></table></section>
+<section><h2>D｜掃描行為與錯誤 <small>教材整理＋補充辨析</small></h2>
+<table class="tight dictionary"><tr><th>名詞 / notation</th><th>English definition（可作短答）</th><th>中文辨析 / 例子</th></tr><tr><td>Maximal munch / tie priority</td><td>Take the longest match; flex breaks equal-length ties by rule order.</td><td>floatx 選整個 ID；同長才比先後。</td></tr><tr><td>Lookahead / backtracking</td><td>Inspect upcoming input / return to a saved input position.</td><td>PEEK 不吃；ADVANCE 吃；記最後接受。</td></tr><tr><td>Recognize / tokenize</td><td>Test a whole string / split input into successive tokens.</td><td>完整 NUM 拒 12e；仍可能切 NUM+ID。</td></tr><tr><td>EOF / EOL</td><td>End of input / end of line.</td><td>檔尾≠換行；教材 // 註解要求 EOL。</td></tr><tr><td>Semantic action / semantic analysis</td><td>An action attached to a rule / checks of declarations and types.</td><td>本課 action 建 AST；型別另檢查。</td></tr></table></section>
+<p class="small"><b>三個判定句：</b>Lexical error: no valid token match. Syntax error: the token sequence violates the grammar. Static semantic error: valid syntax violates declaration or type rules.　<b>注意：</b>接受整串必須讀完；scanner 切 token 則取合法前綴。</p>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>01 / 10</span></footer></article>
+
+<article class="sheet" id="p2">
+<header><h1>常見流程｜看到題目就照步驟做</h1><div class="meta">OPENBOOK · 02 / 10<br>題目關鍵字 → 作法 → 最小例子 → 英文句型</div></header>
+<main>
+<div class="term"><b>直接定位：</b>Define／Difference → p.1；scanner 如何建立 → F1；切 token → F2；RE→NFA → F3；NFA→DFA → F4；畫 AST → F5；判 error／Why CFG → F6。本頁為課程流程摘要與補充微型例題。</div>
+<section><h2>F1｜建 scanner 與跑 compiler：兩條流程 <small>PPT 2、33；Ch2＋補充串連</small></h2>
+<p><b>建立時：</b>用 token patterns 建 NFA，子集構造成 DFA，再輸出表或控制程式。</p>
+<svg viewBox="0 0 720 44" role="img" aria-label="Scanner產生流程：正規表示式到NFA，到DFA，最後產生轉移表或scanner程式">
+<defs><marker id="flow-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#8998b5"/></marker></defs>
+<path d="M137 22 H203" marker-end="url(#flow-arrow)"/><path d="M317 22 H383" marker-end="url(#flow-arrow)"/><path d="M497 22 H563" marker-end="url(#flow-arrow)"/>
+<rect x="25" y="7" width="110" height="30" rx="5"/><text x="80" y="27" text-anchor="middle" font-size="13">RE patterns</text>
+<rect x="205" y="7" width="110" height="30" rx="5"/><text x="260" y="27" text-anchor="middle" font-size="13">NFA</text>
+<rect x="385" y="7" width="110" height="30" rx="5"/><text x="440" y="27" text-anchor="middle" font-size="13">DFA</text>
+<rect x="565" y="7" width="140" height="30" rx="5"/><text x="635" y="27" text-anchor="middle" font-size="13">Table / code</text>
+</svg>
+<p><b>執行時：</b>scanner 依 pattern 切字元；parser 依 CFG 組 token，建 AST。</p>
+<svg viewBox="0 0 720 44" role="img" aria-label="執行時資料流：字元由scanner切成tokens，再由parser依CFG建出AST">
+<path d="M117 22 H153" marker-end="url(#flow-arrow)"/><path d="M262 22 H298" marker-end="url(#flow-arrow)"/><path d="M407 22 H443" marker-end="url(#flow-arrow)"/><path d="M552 22 H598" marker-end="url(#flow-arrow)"/>
+<rect x="15" y="7" width="100" height="30" rx="5"/><text x="65" y="27" text-anchor="middle" font-size="13">Characters</text>
+<rect x="155" y="7" width="105" height="30" rx="5"/><text x="207" y="27" text-anchor="middle" font-size="13">Scanner</text>
+<rect x="300" y="7" width="105" height="30" rx="5"/><text x="352" y="27" text-anchor="middle" font-size="13">Tokens</text>
+<rect x="445" y="7" width="105" height="30" rx="5"/><text x="497" y="27" text-anchor="middle" font-size="13">Parser</text>
+<rect x="600" y="7" width="105" height="30" rx="5"/><text x="652" y="27" text-anchor="middle" font-size="13">AST</text>
+</svg>
+<p class="small">後續：AST ＋ symbol table → 檢查宣告／型別 → decorated AST → 產碼。圖為本課主線摘要；<b>RE→NFA 是建立工具，characters→tokens 是處理來源程式</b>。</p></section>
+<div class="cols"><div>
+<section><h2>F2｜給短字串，列 tokens <small>詳 p.6</small></h2>
+<p><b>①</b> 看題目 token 規格／語言。<b>②</b> 從當前位置找最長合法前綴。<b>③</b> flex 同長取先列 rule。<b>④</b> 回 type，附必要 attribute；略過空白／註解。<b>⑤</b> 移到下一 token，直到 EOF。</p>
+<div class="ans"><b>例：</b>keyword=float，ID=本章 identifier：<br><code>float x=12;</code> → FLOAT、ID(x)、ASSIGN、NUM(12)、SEMICOLON。<code>floatx</code> → 一個 ID。</div>
+<p><b>長候選失敗：</b>回最後接受位置；沒有接受前綴才無 token 可回。<span class="en">Choose the longest valid prefix; resolve equal-length matches by rule priority.</span></p></section>
+<section><h2>F3｜給 RE，畫 NFA <small>模板／完整例 p.7</small></h2>
+<p><b>①</b> 先拆 (…)、*／+、串接、|。<b>②</b> literal 畫一條字元邊。<b>③</b> | 加 λ 分支；AB 接 A 出口到 B 入口。<b>④</b> * 加零次旁路及重複邊；+ 去掉外部零次旁路。<b>⑤</b> 標整體 start、F、Σ。</p>
+<div class="ans"><code>(bc)*d</code>：先 b 串 c → 對 bc 加 * → 再串 d。測 <b>d ✓、bcd ✓、λ ✗、bc ✗</b>。</div>
+<p><b>交卷檢查：</b>所有邊有 label；只把完整表達式出口標接受。若內層 A 含 λ，A+ 仍可收 λ。</p></section>
+<section><h2>F5｜給短程式，畫 AST <small>4 棵完整樹 p.4</small></h2>
+<p><b>①</b> 確認語言及結合性。<b>②</b> 按來源順序列敘述。<b>③</b> 指定句先畫 assign（目標，RHS）。<b>④</b> RHS 按括號／優先序／結合性遞迴拆。<b>⑤</b> 不畫純語法包裝，保留識別字與常數。</p>
+<div class="ans">一般 C-like <code>x=a+b*c;</code>：<br><code>assign(x, plus(a, times(b,c)))</code>。<br><b>整句根=assign，RHS 根=plus</b>，不可把 + 畫在 * 的下面。</div>
+<p>以還原括號式驗算。題目要 AST，就畫節點與邊；未要求時不先常數摺疊。<b>教材 ac 的右結合差異見 p.4</b>。</p></section>
+</div><div>
+<section><h2>F4｜給 NFA，轉 DFA <small>完整演算 p.8</small></h2>
+<p><b>①</b> 起始 A=close({q₀})。<b>②</b> 對 A 的每種 c：聯集 move(A,c)，再 close。<b>③</b> 新集合命名並入 worklist；相同集合沿用名稱。<b>④</b> 重複直到 worklist 空。<b>⑤</b> 含任一 NFA 接受 state 的集合標接受；補 ∅ sink。</p>
+<div class="formula">δ<sub>D</sub>(S,c)=close(move(S,c))<br>S 接受 ⇔ S∩F<sub>N</sub>≠∅</div>
+<p><b>微型題（自編）：</b>Q={1,2,3}、Σ={a}，start=1、F={3}；只有 1─λ→2、2─a→3，其餘無邊。</p>
+<p>A=close({1})={1,2}；move(A,a)={3}，再 close 得 B={3}；B 讀 a 得 X=∅。</p>
+<table class="tight" id="mini-dfa"><tr><th>DFA / NFA 集合</th><th>a</th><th>接受？</th></tr><tr><td>→A={1,2}</td><td>B</td><td>否</td></tr><tr><td>★B={3}</td><td>X</td><td>是</td></tr><tr><td>X=∅</td><td>X</td><td>否</td></tr></table>
+<p><b>a ✓：</b>A→B。<b>λ ✗：</b>停 A。<b>aa ✗：</b>A→B→X。判整串要讀完；NFA 是<b>存在</b>成功路徑。<span class="en">Move on one symbol, take epsilon closure, and reuse equal subsets.</span></p>
+<p class="small">閉包可走零條 λ 邊，包含起點；∅ 若不可達就不列進可達集合。最小化：先分接受／拒絕，再按後繼組別反覆拆；補充例 p.9。</p></section>
+<section><h2>F6｜判錯誤／解釋 Why CFG <small>詳 p.3</small></h2>
+<p><b>先逐層判：</b>字元能切 token？→ token 符合 grammar？→ 宣告／型別符合規則？判定需依題目所給語言。</p>
+<table class="tight"><tr><th>C-like 假設例</th><th>第一個問題</th></tr><tr><td>@ 無合法 token pattern</td><td>Lexical</td></tr><tr><td>x = ; 缺 RHS</td><td>Syntax</td></tr><tr><td>x 未宣告但 x=1 文法合法</td><td>Static semantic</td></tr></table>
+<p><span class="en">The input violates the token pattern / grammar / declaration or type rules.</span> 作答要補<b>具體原因</b>，不要只寫 error 名稱。</p>
+<div class="ans"><b>Why CFG：</b>任意深度巢狀 → RE／有限狀態不夠 → CFG 可遞迴描述 → 實用 parser；宣告與型別交 semantic analysis。<br><span class="en">CFGs describe recursive, nested syntax beyond regular languages and support practical parsing.</span></div></section>
+</div></div>
+<p class="small"><b>交卷前 10 秒：</b>token type≠lexeme；λ≠∅；字元≠token；NFA state≠DFA 子集；closure 不吃字元；接受完整字串要讀完；AST 的左右／敘述順序要保留。<b>看不懂題目名詞先查 p.1，數學構造直接照 F3／F4。</b></p>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>02 / 10</span></footer></article>
+
+<article class="sheet" id="p3">
+<header><h1>Chapter 3｜Scanning 考場速查</h1><div class="meta">OPENBOOK · 03 / 10<br>概念短答 × Why CFG｜CFG 長短答｜AST 詳解 p.4</div></header>
+<main>
+<div class="term"><b>找答案：</b>名詞 → p.1；流程 → p.2；CFG → p.3；AST → p.4；RE → p.5；掃描 → p.6；RE→NFA → p.7；子集構造 → p.8；abb／最小化 → p.9；綜合題 → p.10。<br><b>題型依據：</b>第一次：Explain、Difference、情境判斷；第二次：Why CFG、短程式 AST。以下是<b>複習用作答範本與自編練習</b>，不代表本次考題或教師標準答案。</div>
+<section><h2>1｜Why use a context-free grammar instead of others? <small>Quiz 2；Ch3 PPT 51–52＋補充</small></h2>
+<p class="en"><b>可直接寫：</b>Context-free grammars can describe recursive and nested syntax, such as balanced parentheses, which regular grammars cannot express in general. They offer a useful balance between expressive power and practical parsing. More powerful grammar classes make general parsing harder, while declaration and type constraints are usually checked separately during semantic analysis.</p>
+<p><b>中文抓分：</b>① 足以表達無上限巢狀／遞迴結構；② 比 regular grammar／RE 強；③ 比更強文法容易設計實用 parser；④ 語法與型別／宣告檢查分工。<b>不要只寫「CFG 比較快」</b>，RE 的 DFA 掃描通常反而很有效率。</p>
+<table class="tight"><tr><th>規格</th><th>擅長什麼</th><th>作答時的界限</th></tr><tr><td>RE / regular grammar</td><td>identifier、number、keyword 等 token 形狀</td><td>有限狀態；不能一般性地配對任意深度括號</td></tr><tr><td>CFG</td><td>expression、statement、program 的遞迴結構</td><td>A → α：左側只有一個 nonterminal；不保證無歧義或 LL(1)</td></tr><tr><td>Context-sensitive / unrestricted grammar</td><td>可描述更廣的字串限制</td><td>一般剖析更複雜；日常 compiler 多將相關限制交 semantic analysis</td></tr></table>
+<div class="ans"><b>最短版：</b><span class="en">CFGs express nested program structure beyond regular languages and support practical parsing; semantic analysis handles declaration and type constraints.</span></div></section>
+<div class="cols"><div>
+<section><h2>2｜Scanner / Parser / Semantics</h2>
+<table class="tight"><tr><th>階段</th><th>輸入 → 輸出／任務</th></tr><tr><td>Scanner / lexer</td><td>characters → tokens；RE 辨認詞素</td></tr><tr><td>Parser</td><td>tokens → syntax structure / AST；依 CFG</td></tr><tr><td>Semantic analysis</td><td>AST ＋ symbol table；宣告／型別檢查</td></tr><tr><td>Code generation</td><td>checked representation → target code</td></tr></table>
+<p class="en">The scanner groups characters into tokens. The parser checks token structure using a CFG and builds a syntax representation. Semantic analysis checks meaning-related constraints such as declarations and types.</p>
+<p><b>建 scanner：</b>RE → NFA → DFA → table／code。<br><b>跑 scanner：</b>source characters → tokens。<br>兩條流程不可倒混；scanner <b>不負責畫 AST</b>。</p></section>
+<section><h2>3｜Token / Lexeme / Attribute <small>PPT 3、31</small></h2>
+<p class="en">A token has a type and, when needed, an attribute. The lexeme is the actual source character sequence matched by the token pattern.</p>
+<p><code>count</code>：type=ID，lexeme="count"，attribute 可為符號表索引。<code>007</code>：lexeme="007"，數值 attribute 可為 7。</p>
+<p><b>Pattern</b> 是規格；<b>lexeme</b> 是實際字串；<b>token type</b> 是 parser 用來分類的名稱。不同 lexemes 可屬同一 type。</p></section>
+</div><div>
+<section><h2>4｜CFG 強在哪？一個可寫的例子</h2>
+<p>令 L = { a<sup>n</sup>b<sup>n</sup> | n ≥ 0 }，CFG：</p><div class="formula">S → aSb | λ</div>
+<p><code>S ⇒ aSb ⇒ aaSbb ⇒ aaaSbbb ⇒ aaabbb</code>。每次多一個 a，同時多一個 b；λ 結束，a 都在 b 之前。</p>
+<p><b>有限 DFA 反證：</b>若有 m 個狀態，讀 a⁰、a¹、…、aᵐ 後至少兩個字首 aⁱ、aʲ（i&lt;j）到同一狀態。再接 bⁱ，DFA 必須同判；但 aⁱbⁱ 應收、aʲbⁱ 應拒，矛盾。</p>
+<div class="warn"><b>不要寫：</b>「aaabbb 不是 regular」。單一字串可直接用 RE <code>aaabbb</code>。不能表達的是<b>任意 n 的整個等量語言</b>。</div>
+<p><b>括號例：</b>S → (S)S | λ 可表達平衡括號。CFG 的「context-free」指改寫 A 不需看左右上下文，<b>不是程式不用考慮 scope</b>。</p></section>
+<section><h2>5｜情境題：先說哪一層失敗</h2>
+<table class="tight"><tr><th>現象（依指定語言規則）</th><th>階段</th></tr><tr><td>@ 無任何 token pattern</td><td>Lexical error</td></tr><tr><td>x = ;，每個 token 合法但缺 RHS</td><td>Syntax error</td></tr><tr><td>x 未宣告，但 x=1 文法合法</td><td>Static semantic error</td></tr><tr><td>文法／型別合法，結果違反人的意圖</td><td>可能是 logic error</td></tr></table>
+<p class="en">A syntax error violates the grammar; a static semantic error violates declaration or type rules despite a grammatically valid token sequence.</p></section>
+</div></div>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>03 / 10</span></footer></article>
+
+<article class="sheet" id="p4">
+<header><h1>AST｜看到短程式，怎麼畫？</h1><div class="meta">OPENBOOK · 04 / 10<br>Quiz 2 實作題｜優先序 × 結合性 × 節點</div></header>
+<main>
+<section><h2>6｜四步畫樹＋一個驗算 <small>Ch2 PPT 27–28、39–42＋自編例題</small></h2>
+<p><b>① 分敘述：</b>program / block 依來源順序接 declaration、assignment、print 等。<b>② 找最外層：</b>如 <code>x=E</code> 先畫 assign，左目標、右 RHS。<b>③ 遞迴分解：</b>先按括號、再優先序、再結合性決定 expression 的根。<b>④ 保留：</b>operators、識別字、常數、必要的敘述結構；省略純語法包裝與分隔符。<b>⑤ 驗算：</b>由樹還原括號式，檢查左右、先後與題目相符。</p>
+<p class="en">An AST represents the essential syntactic structure using operators and operands. It omits grammar-only nodes and punctuation while preserving precedence, associativity, and statement order.</p>
+<div class="warn"><b>第二次小考未附實際短程式。</b>下方 A/B 是<b>一般 C-like 補充練習</b>，不是原小考答案；教材 ac 沒有乘法、括號或分號。先辨認題目採哪套語言。</div></section>
+<div class="cols"><div>
+<section><h2>7｜A：x = a + b * c;</h2><svg viewBox="0 0 340 185" role="img" aria-label="x=a+b*c 的 AST：assign(x, plus(a, multiply(b,c)))"><path d="M145 28 L45 55"/><path d="M145 28 L230 55"/><path d="M230 78 L165 105"/><path d="M230 78 L280 105"/><path d="M280 128 L240 155"/><path d="M280 128 L310 155"/><rect x="115.0" y="5" width="60" height="23" rx="8"/><text x="145" y="21" text-anchor="middle" font-size="11">assign</text><rect x="17.0" y="55" width="56" height="23" rx="8"/><text x="45" y="71" text-anchor="middle" font-size="11">id x</text><rect x="205.0" y="55" width="50" height="23" rx="8"/><text x="230" y="71" text-anchor="middle" font-size="11">+</text><rect x="137.5" y="105" width="55" height="23" rx="8"/><text x="165" y="121" text-anchor="middle" font-size="11">id a</text><rect x="255.0" y="105" width="50" height="23" rx="8"/><text x="280" y="121" text-anchor="middle" font-size="11">*</text><rect x="212.5" y="155" width="55" height="23" rx="8"/><text x="240" y="171" text-anchor="middle" font-size="11">id b</text><rect x="282.5" y="155" width="55" height="23" rx="8"/><text x="310" y="171" text-anchor="middle" font-size="11">id c</text></svg>
+<p><b>RHS 的根是 +：</b>因 * 優先於 +，<code>b*c</code> 作一個子樹。整句的根仍是 assign。</p><pre>assign(id(x),
+       plus(id(a), times(id(b), id(c))))</pre>
+<p class="small">上式是樹的文字記法；要求畫樹時，畫節點與邊。葉標 a 或 id(a) 須一致。</p></section>
+</div><div>
+<section><h2>8｜B：x = (a + b) * c;</h2><svg viewBox="0 0 340 185" role="img" aria-label="x=(a+b)*c 的 AST：assign(x, multiply(plus(a,b),c))"><path d="M145 28 L45 55"/><path d="M145 28 L230 55"/><path d="M230 78 L180 105"/><path d="M230 78 L290 105"/><path d="M180 128 L140 155"/><path d="M180 128 L220 155"/><rect x="115.0" y="5" width="60" height="23" rx="8"/><text x="145" y="21" text-anchor="middle" font-size="11">assign</text><rect x="17.0" y="55" width="56" height="23" rx="8"/><text x="45" y="71" text-anchor="middle" font-size="11">id x</text><rect x="205.0" y="55" width="50" height="23" rx="8"/><text x="230" y="71" text-anchor="middle" font-size="11">*</text><rect x="155.0" y="105" width="50" height="23" rx="8"/><text x="180" y="121" text-anchor="middle" font-size="11">+</text><rect x="262.5" y="105" width="55" height="23" rx="8"/><text x="290" y="121" text-anchor="middle" font-size="11">id c</text><rect x="112.5" y="155" width="55" height="23" rx="8"/><text x="140" y="171" text-anchor="middle" font-size="11">id a</text><rect x="192.5" y="155" width="55" height="23" rx="8"/><text x="220" y="171" text-anchor="middle" font-size="11">id b</text></svg>
+<p><b>RHS 的根改成 *：</b>括號強制先加；AST 通常不畫「(」「)」節點，<b>樹形本身保留分組</b>。</p><pre>assign(id(x),
+       times(plus(id(a), id(b)), id(c)))</pre>
+<p class="small">Expr、Term、Factor、分號、λ 屬 parse tree 的語法細節。</p></section>
+</div></div>
+<div class="cols"><div>
+<section><h2>9｜結合性：同優先序時怎麼拆？</h2>
+<p><b>一般 C 減法左結合：</b><code>x-30-1</code> → <code>(x-30)-1</code>；最外層是<b>最後一個 −</b>。</p><svg viewBox="0 0 340 135" role="img" aria-label="一般 C 左結合減法：(x−30)−1"><path d="M205 28 L120 55"/><path d="M205 28 L290 55"/><path d="M120 78 L60 105"/><path d="M120 78 L175 105"/><rect x="182.0" y="5" width="46" height="23" rx="8"/><text x="205" y="21" text-anchor="middle" font-size="11">−</text><rect x="97.0" y="55" width="46" height="23" rx="8"/><text x="120" y="71" text-anchor="middle" font-size="11">−</text><rect x="267.5" y="55" width="45" height="23" rx="8"/><text x="290" y="71" text-anchor="middle" font-size="11">1</text><rect x="32.5" y="105" width="55" height="23" rx="8"/><text x="60" y="121" text-anchor="middle" font-size="11">id x</text><rect x="152.5" y="105" width="45" height="23" rx="8"/><text x="175" y="121" text-anchor="middle" font-size="11">30</text></svg>
+<p>x=100 時左樹得 69；右樹 <code>x-(30-1)</code> 得 71。左右運算元不能交換。</p>
+<p><b>一般 C 指定右結合：</b><code>x=y=z</code> → <code>assign(x,assign(y,z))</code>。<b>一元負號</b> <code>-x</code> 畫 neg(x)，與 binary minus(L,R) 分開。</p>
+<p class="small">右遞迴文法不必強迫右結合 AST；semantic actions 可累積左子樹。以題目指定的語意／教材圖為準。</p></section>
+</div><div>
+<section><h2>10｜教材 ac：原圖是右結合 <small>Ch2 p.42</small></h2>
+<p><code>i x　x=100　x=x+30+1　p x</code></p><svg viewBox="0 0 500 235" role="img" aria-label="教材 ac 程式 AST；第二個指定的加法樹為右結合"><path d="M220 28 L50 55"/><path d="M220 28 L150 55"/><path d="M220 28 L300 55"/><path d="M220 28 L445 55"/><path d="M150 78 L107 105"/><path d="M150 78 L195 105"/><path d="M300 78 L250 105"/><path d="M300 78 L370 105"/><path d="M370 128 L315 155"/><path d="M370 128 L425 155"/><path d="M425 178 L390 205"/><path d="M425 178 L460 205"/><rect x="177.5" y="5" width="85" height="23" rx="8"/><text x="220" y="21" text-anchor="middle" font-size="15">Program</text><rect x="2.5" y="55" width="95" height="23" rx="8"/><text x="50" y="71" text-anchor="middle" font-size="15">intdcl x</text><rect x="117.5" y="55" width="65" height="23" rx="8"/><text x="150" y="71" text-anchor="middle" font-size="15">assign</text><rect x="267.5" y="55" width="65" height="23" rx="8"/><text x="300" y="71" text-anchor="middle" font-size="15">assign</text><rect x="402.5" y="55" width="85" height="23" rx="8"/><text x="445" y="71" text-anchor="middle" font-size="15">print x</text><rect x="83.0" y="105" width="48" height="23" rx="8"/><text x="107" y="121" text-anchor="middle" font-size="15">id x</text><rect x="169.0" y="105" width="52" height="23" rx="8"/><text x="195" y="121" text-anchor="middle" font-size="15">100</text><rect x="226.0" y="105" width="48" height="23" rx="8"/><text x="250" y="121" text-anchor="middle" font-size="15">id x</text><rect x="347.5" y="105" width="45" height="23" rx="8"/><text x="370" y="121" text-anchor="middle" font-size="15">+</text><rect x="291.0" y="155" width="48" height="23" rx="8"/><text x="315" y="171" text-anchor="middle" font-size="15">id x</text><rect x="402.5" y="155" width="45" height="23" rx="8"/><text x="425" y="171" text-anchor="middle" font-size="15">+</text><rect x="367.5" y="205" width="45" height="23" rx="8"/><text x="390" y="221" text-anchor="middle" font-size="15">30</text><rect x="440.0" y="205" width="40" height="23" rx="8"/><text x="460" y="221" text-anchor="middle" font-size="15">1</text></svg>
+<p class="diagram-note">重繪 Ch2 p.42 的樹形；補明 declaration／token 名稱。</p>
+<div class="warn"><b>依教材圖：</b>plus(x,plus(30,1))。<b>一般左結合：</b>plus(plus(x,30),1)。本例整數值同為 131，但不能任意把右樹當所有語言的標準。</div></section>
+</div></div>
+<section><h2>11｜容易失分：AST ≠ Parse Tree ≠ Decorated AST</h2>
+<table class="tight"><tr><th>表示</th><th>保留什麼</th><th>作答提醒</th></tr><tr><td>Parse tree</td><td>文法的 nonterminals、terminals、每次改寫</td><td>葉序要符合 token 序列；依要求畫 λ</td></tr><tr><td>AST</td><td>核心操作與 operands、敘述／宣告結構</td><td>保留所有敘述；不要只畫 RHS 或算出結果</td></tr><tr><td>Decorated AST</td><td>AST 加型別、符號資訊，可能插 int2float</td><td>只有要求型別分析時才加入；普通 AST 不先常數摺疊</td></tr></table>
+<p class="en"><b>Why use an AST?</b> It removes grammar-specific detail and gives later analysis and code generation a compact representation of program structure.</p></section>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>04 / 10</span></footer></article>
+
+<article class="sheet" id="p5">
+<header><h1>Regular Expressions｜寫規格與判合法</h1><div class="meta">OPENBOOK · 05 / 10<br>先拆群組，再判整串｜PPT 5–16、53–54</div></header>
+<main>
+<section><h2>12｜RE 是語言：一個字串集合</h2>
+<p class="en">A regular expression specifies a regular language: the set of strings that match its pattern. A finite automaton recognizes that language.</p>
+<p><b>Σ</b>：有限字母表；<b>Σ*</b>：Σ 上所有有限長字串。<b>λ / ε</b>：空字串，|λ|=0。<b>∅</b>：空集合，沒有任何字串。<b>L(λ)={λ} ≠ L(∅)=∅</b>；教材用 0 表空集合，不是 literal "0"。</p>
+<table class="tight"><tr><th>形式</th><th>語意／展開</th><th>例與陷阱</th></tr><tr><td>A | B</td><td>L(A) ∪ L(B)；選任一支</td><td>a|bc 接受 a 或 bc，不接受 abc</td></tr><tr><td>AB</td><td>先 A 再 B；{xy | x∈L(A), y∈L(B)}</td><td>一般 AB ≠ BA；Aλ=λA=A</td></tr><tr><td>A*</td><td>0 次以上；λ | A | AA | …</td><td>一定含 λ；∅*={λ}</td></tr><tr><td>A+</td><td>1 次以上；AA*</td><td>若 A 自己含 λ，A+ 仍可能含 λ</td></tr><tr><td>A?</td><td>0 或 1 次；A | λ</td><td>(ab)? 接受 λ 或 ab</td></tr><tr><td>Aᵏ</td><td>串接恰 k 次；A⁰=λ</td><td>(ab)² 是 abab</td></tr><tr><td>Not(C)</td><td>字元集合 Σ\C，C⊆Σ</td><td>只排除單一字元集合；非任意語言補集</td></tr></table>
+<p><b>優先序：</b>分組 (…) → postfix * + ? → 串接 → |。<b>Literal：</b>要匹配字面 *、+、.，依工具 syntax 跳脫或用字元類別。<code>[.]</code> 是字面點；多數 regex 工具的 <code>.</code> 是 wildcard，是否含換行取決於 dialect／設定。</p></section>
+<div class="cols"><div>
+<section><h2>13｜最常見的分組判斷</h2>
+<table class="tight"><tr><th>RE</th><th>整串可接受</th><th>整串不可接受</th></tr><tr><td>ab*</td><td>a, ab, abb, …</td><td>λ, b, abab</td></tr><tr><td>(ab)*</td><td>λ, ab, abab, …</td><td>a, abb</td></tr><tr><td>(abc+)+</td><td>abc, abcc, abcabc</td><td>λ, ab, abbc</td></tr><tr><td>(a|b)*abb</td><td>abb, aabb, babb, ababb</td><td>λ, ab, abba</td></tr></table>
+<p><b>不要看字元各自出現過就說合法。</b><code>(abc+)+</code> 每塊都是一個 a、一個 b、至少一個 c，然後整塊至少一次。</p>
+<p><code>A∅=∅A=∅</code>；<code>A|∅=A</code>。空字串是串接的單位元，空集合是會讓串接全空的集合。</p></section>
+<section><h2>14｜Identifier：本章特有規格 <small>p.15、32</small></h2>
+<pre>L = [A-Za-z]    D = [0-9]
+L(L|D)*(_(L|D)+)*</pre>
+<p><b>讀法：</b>字母開頭；後接任意字母／數字；每個底線後至少一個字母／數字。允許 <code>foo_2_bar</code>，拒 <code>_foo</code>、<code>foo_</code>、<code>foo__bar</code>。</p>
+<p>底線不是任意可放；<code>[A-Za-z_][A-Za-z0-9_]*</code> 是<b>另一套</b>常見 ID 規格，不能代替本頁教材。</p></section>
+<section><h2>15｜格式符合不代表語意正確</h2>
+<p>p.16 日期規格允許年 1900–2099、月 01–12、日 01–31，所以 <code>2001-02-31</code> 形狀符合，日曆不合法。兩個分隔符獨立，<code>2001/02-03</code> 也符合。</p>
+<p>字串 <code>"[^"\r\n]*"</code> 禁 quote／CR／LF，但<b>沒定義跳脫引號</b>；不能當完整 C string 規格。</p></section>
+</div><div>
+<section><h2>16｜科學記號：兩層 optional <small>HW 3；補充修正版</small></h2>
+<pre>^[0-9]+([.][0-9]+)?
+         (e[+-]?[0-9]+)?$</pre>
+<p class="small">排版換行僅供閱讀；實際 pattern 不含換行或上述空格。</p>
+<p><b>① 整個 exponent 可省略：</b><code>(e…)?</code>。<b>② exponent 內符號可省略：</b><code>[+-]?</code>。e 後數字始終<b>至少一位</b>。沿用 ac：小數點兩側必須有 digit。</p>
+<table class="tight"><tr><th>測試字串</th><th>整串結果／理由</th></tr><tr><td>12, 3.2</td><td>✓ exponent 可省</td></tr><tr><td>1.0e10, 123e-22, 12e+3</td><td>✓ 無號／負號／正號</td></tr><tr><td>12e, 1.2e-</td><td>✗ 缺 exponent digits</td></tr><tr><td>.1, 10., 3.e2</td><td>✗ 小數兩側須 digit</td></tr><tr><td>1E2</td><td>✗ 這個規格只收小寫 e</td></tr></table>
+<div class="warn"><b>p.54 原解答的缺漏：</b>e 部分變必填；只寫 -? 漏正號；fnum 小數前少 +。問「依題意擴充」使用上方修正版；NUM 如何分 int／float 是另外的語意政策。</div>
+<p class="en">Make the entire exponent optional, allow an optional plus or minus sign, and require at least one exponent digit.</p></section>
+<section><h2>17｜Whole match / Search / Tokenize</h2>
+<p><b>整串驗證：</b>要求所有字元屬同一 pattern，例 <code>^…$</code>（依工具模式）。<b>Search：</b>找一段子字串。<b>Scanner：</b>從目前位置取合法 token 前綴，然後繼續。</p>
+<div class="ans"><code>12e</code> <b>不符合完整 NUM</b>；但某 scanner 可切 <code>NUM(12), ID(e)</code>。要把它報 malformed number，須另定規則。不要由整串 regex 拒絕直接斷言 lexer 必報錯。</div>
+<p><b>Dialect 提醒：</b>理論 RE 的 λ、Not 是數學記法；工具的 <code>\d</code>、dot、anchors、BRE／ERE 有自己的規則。上方數值採 POSIX ERE 形式；不用把所有語法混在同一答案。</p></section>
+</div></div>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>05 / 10</span></footer></article>
+
+<article class="sheet" id="p6">
+<header><h1>Finite Automata × Scanner 行為</h1><div class="meta">OPENBOOK · 06 / 10<br>讀完整串的 recognizer ≠ 切前綴的 scanner</div></header>
+<main>
+<section><h2>18｜五元組與 DFA / NFA <small>PPT 23–36</small></h2>
+<p class="formula">M = (Q, Σ, δ, q₀, F)</p><p><b>Q</b>：有限 states；<b>Σ</b>：輸入字母表；<b>δ</b>：轉移；<b>q₀</b>：起始 state；<b>F⊆Q</b>：接受 states。圖中 incoming arrow 是起始，雙圈是接受；一個 state 可同時是兩者。</p>
+<table class="tight"><tr><th>比較</th><th>DFA</th><th>NFA（本章允許 λ 邊）</th></tr><tr><td>轉移</td><td>δ: Q×Σ → Q；每個 state／字元唯一後繼</td><td>Δ: Q×(Σ∪{λ}) → 𝒫(Q)；後繼是一個集合</td></tr><tr><td>λ / ε 邊</td><td>無；每一步吃一個字元</td><td>可有；移動不吃字元</td></tr><tr><td>接受完整 w</td><td>讀完所有字元後，當前 state 在 F</td><td>存在一條吃完整 w、可含 λ 的路徑到 F</td></tr><tr><td>表達能力</td><td>Regular languages</td><td>同 DFA；較方便組合，並沒有更強</td></tr></table>
+<p class="en">A DFA has one next state for each state and input symbol. An NFA may have multiple choices and epsilon transitions. They recognize the same class of languages.</p>
+<div class="warn">NFA 不是要求所有路徑成功；一條成功即可。DFA 中途到接受 state 也不能忽略後面的字元。<b>∅ 集合</b>可成為 DFA 的 dead state，與空字串 λ 不同。</div></section>
+<div class="cols"><div>
+<section><h2>19｜Comment DFA：逐字追蹤 <small>p.25–30</small></h2>
+<p>教材：<code>//(Not(EOL))*EOL</code>。OTHER 是非 /、非 EOL 字元；X 表拒絕 sink。EOF 是結束條件，<b>不是輸入字元 EOL</b>。</p>
+<table id="comment-dfa" class="tight"><tr><th>State</th><th>/</th><th>EOL</th><th>OTHER</th><th>結束時</th></tr><tr><td>→1</td><td>2</td><td>X</td><td>X</td><td>拒</td></tr><tr><td>2</td><td>3</td><td>X</td><td>X</td><td>拒</td></tr><tr><td>3</td><td>3</td><td>4</td><td>3</td><td>拒</td></tr><tr><td>★4</td><td>X</td><td>X</td><td>X</td><td>接受</td></tr><tr><td>X</td><td>X</td><td>X</td><td>X</td><td>拒</td></tr></table>
+<p><code>//hi\n</code>：1→2→3→3→3→4 ✓。<code>//hi</code> 在 EOF 留在 3 ✗，因教材要求 EOL。這不是宣稱所有真實語言都拒絕檔尾註解。</p>
+<p><b>Table-driven：</b>資料表 δ ＋ 通用 driver。<b>Explicit control：</b>if／switch／loops 直接編入轉移。<b>Transducer：</b>辨識之外還產出 token／attribute，例如 digit 串轉數值。</p>
+<p class="en">Table-driven scanning separates transition data from control code. Explicit control embeds transitions in branches and loops.</p></section>
+<section><h2>20｜整串辨識器手算模板</h2>
+<p>設 q=q₀ → 依每個字元查下一 state → 不合法邊到 X → <b>字串讀完</b>才判 q∈F。表中沒畫的邊通常表示失敗；若要求完整 DFA，就補 sink。</p>
+<p><b>字母表先寫清楚：</b>本頁 comment 表用「字元類別」合併大量字元；小題 a/b/c 的表則按個別符號列。</p></section>
+</div><div>
+<section><h2>21｜Maximal munch ＋ Tie priority <small>p.20；flex 補充</small></h2>
+<p class="en">Choose the longest matching lexeme. If multiple flex rules match the same length, choose the rule listed first.</p>
+<p>keyword 與 ID 重疊：把 keyword rule 放 ID 前面。同長才比順序；<b>不能先看到 keyword 就停止</b>。</p>
+<table class="tight"><tr><th>輸入</th><th>應選</th><th>理由</th></tr><tr><td>float</td><td>FLOAT keyword</td><td>與 ID 同長；keyword 規則先列</td></tr><tr><td>floatx</td><td>ID(floatx)</td><td>ID 6 字元長於 keyword 5</td></tr><tr><td>int7</td><td>ID(int7)</td><td>以本章多字元 ID 規格為例</td></tr><tr><td>5+10</td><td>NUM(5), PLUS, NUM(10)</td><td>每次從目前位置重新匹配</td></tr></table>
+<p><b>通用 scanner 需記最後接受：</b>掃描時更新 <code>last_accept_state</code> 與 <code>last_accept_position</code>；遇到死路，回到最後接受處，回傳那個 token，剩下字元交下一輪。</p>
+<div class="ans"><b>反例：</b>只有 <code>a</code>、<code>abc</code> 兩種 token，輸入 <code>abx</code>。讀 a 已接受；讀 b 尚有可能；讀 x 失敗。應回退輸出 token <code>a</code>，從 b 繼續／報錯。<b>只檢查最後 state 會漏掉合法前綴</b>。</div>
+<p class="small">教材 p.28 的簡化 driver 只查停下時的 state，不能直接視為處理所有 token 規格的 maximal-munch implementation。</p></section>
+<section><h2>22｜小 token 題：honeycone=5+10*num;</h2>
+<pre>ID(honeycone), ASSIGN(=), NUM(5),
+PLUS(+), NUM(10), TIMES(*), ID(num),
+SEMICOLON(;)</pre>
+<p><b>共 8 tokens</b>，與空白／字元個數不同。此例取自 p.3 的 C-like token 示意，<b>不是</b> ac 的單字母 identifier 文法。</p>
+<p>略過 whitespace／comment 的 action 可繼續掃，不交 token 給 parser。<code>yylval</code> 傳必要 attribute；<code>return</code> 交 token type。</p></section>
+</div></div>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>06 / 10</span></footer></article>
+
+<article class="sheet" id="p7">
+<header><h1>RE → NFA｜按結構拼，別猜箭頭</h1><div class="meta">OPENBOOK · 07 / 10<br>Thompson-style 構造＋(bc)*d 完整例</div></header>
+<main>
+<section><h2>23｜先解析 RE，再組片段 <small>PPT 37–41；補充操作順序</small></h2>
+<p><b>順序：</b>① 先圈群組與 operators；② literal 用一條吃字元的邊；③ 按 |、串接、* 組合；④ 標一個整體 start 與 accept；⑤ 用 λ、最短合法字串、近似錯例驗算。狀態編號可不同，<b>結構與語言正確才重要</b>。</p>
+<p><b>a：</b>s ─a→ f；<b>λ：</b>s ─λ→ f；<b>∅：</b>沒有從 s 到 f 的路徑。所有子片段 state 先重新編號以免撞名；組合後移除子片段的「整體接受」標記，只保留完整表達式的出口。</p></section>
+<div class="cols"><div>
+<section><h2>24｜三個可套模板 <small>依教材重繪</small></h2>
+<h3>A | B：分支取任一條</h3>
+<svg viewBox="0 0 340 120" role="img" aria-label="A或B的NFA：新起點以lambda分支進入A或B，兩片段出口以lambda接到新接受點">
+<defs><marker id="arrow-u" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#8998b5"/></marker></defs>
+<path d="M4 60 H25 " marker-end="url(#arrow-u)"/><path d="M55 54 L112 30 " marker-end="url(#arrow-u)"/><path d="M55 67 L112 91 " marker-end="url(#arrow-u)"/><path d="M225 30 L287 54 " marker-end="url(#arrow-u)"/><path d="M225 91 L287 67" marker-end="url(#arrow-u)"/>
+<circle cx="40" cy="60" r="15"/><text x="40" y="64" text-anchor="middle" font-size="11">s</text>
+<rect x="116" y="12" width="104" height="35" rx="5"/><text x="168" y="34" text-anchor="middle" font-size="12">A fragment</text>
+<rect x="116" y="73" width="104" height="35" rx="5"/><text x="168" y="95" text-anchor="middle" font-size="12">B fragment</text>
+<circle cx="305" cy="60" r="16"/><circle cx="305" cy="60" r="12"/><text x="305" y="64" text-anchor="middle" font-size="11">f</text>
+<text x="78" y="33" font-size="11">λ</text><text x="78" y="96" font-size="11">λ</text><text x="258" y="33" font-size="11">λ</text><text x="258" y="96" font-size="11">λ</text>
+</svg>
+<p>新起點 λ 分到 A／B；兩出口 λ 到新終點。只要一支完成即可接受。</p>
+<h3>AB：先 A，再 B</h3>
+<svg viewBox="0 0 340 72" role="img" aria-label="串接AB的NFA：A片段出口以lambda接B片段入口，只有B出口是整体接受点">
+<defs><marker id="arrow-c" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#8998b5"/></marker></defs>
+<path d="M4 40 H27 " marker-end="url(#arrow-c)"/><path d="M130 40 H205 " marker-end="url(#arrow-c)"/><path d="M299 40 H319" marker-end="url(#arrow-c)"/>
+<rect x="32" y="18" width="95" height="43" rx="5"/><text x="79" y="44" text-anchor="middle" font-size="12">A fragment</text>
+<rect x="211" y="18" width="84" height="43" rx="5"/><text x="253" y="44" text-anchor="middle" font-size="12">B fragment</text>
+<circle cx="326" cy="40" r="9"/><circle cx="326" cy="40" r="6"/>
+<text x="167" y="30" text-anchor="middle" font-size="11">λ</text>
+</svg>
+<p>A 的出口 λ 接 B 的入口；<b>只讀完 A 不算完成 AB</b>。</p>
+<h3>A*：零次旁路＋重複迴圈</h3>
+<svg viewBox="0 0 340 130" role="img" aria-label="A星号NFA：lambda进入A、lambda离开A，另有起点到出口零次旁路与A出口到入口的重复边">
+<defs><marker id="arrow-s" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#8998b5"/></marker></defs>
+<path d="M2 65 H20 " marker-end="url(#arrow-s)"/><path d="M52 65 H78 " marker-end="url(#arrow-s)"/><path d="M109 65 H125 " marker-end="url(#arrow-s)"/><path d="M215 65 H231 " marker-end="url(#arrow-s)"/><path d="M263 65 H286 " marker-end="url(#arrow-s)"/><path d="M36 48 C36 6 305 6 305 47 " marker-end="url(#arrow-s)"/><path d="M244 83 C244 120 94 120 94 83" marker-end="url(#arrow-s)"/>
+<circle cx="36" cy="65" r="15"/><text x="36" y="69" text-anchor="middle" font-size="11">s</text>
+<circle cx="94" cy="65" r="15"/><text x="94" y="69" text-anchor="middle" font-size="10">iA</text>
+<rect x="130" y="46" width="80" height="38" rx="5"/><text x="170" y="69" text-anchor="middle" font-size="12">A</text>
+<circle cx="247" cy="65" r="15"/><text x="247" y="69" text-anchor="middle" font-size="10">fA</text>
+<circle cx="305" cy="65" r="16"/><circle cx="305" cy="65" r="12"/><text x="305" y="69" text-anchor="middle" font-size="11">f</text>
+<text x="170" y="14" text-anchor="middle" font-size="11">λ：零次 bypass</text>
+<text x="170" y="123" text-anchor="middle" font-size="11">λ：再做一次</text>
+<text x="60" y="57" font-size="11">λ</text><text x="271" y="57" font-size="11">λ</text>
+</svg>
+<p><b>A+：</b>保留重複邊，移除新 s→新 f 的零次旁路。<b>A?：</b>A | λ；有旁路，沒有重複邊。</p>
+<div class="warn">若 A 自己可接受 λ，去掉外部 bypass 後 A+ 仍可能接受 λ。例 (a*)+ 可收空字串；「+ 不收 λ」須先確認內層不收 λ。</div></section>
+</div><div>
+<section><h2>25｜HW 5(d)：(bc)*d <small>PPT 55–57</small></h2>
+<p><b>語言：</b>零個以上 bc，最後<b>恰一個 d</b>。λ 不收，但 d 收。教材 NFA：start=1，F={6}，Σ={b,c,d}。</p>
+<table id="bcd-nfa" class="tight"><tr><th>NFA</th><th>b</th><th>c</th><th>d</th><th>λ</th></tr><tr><td>→1</td><td>∅</td><td>∅</td><td>∅</td><td>{2,5}</td></tr><tr><td>2</td><td>{3}</td><td>∅</td><td>∅</td><td>∅</td></tr><tr><td>3</td><td>∅</td><td>{4}</td><td>∅</td><td>∅</td></tr><tr><td>4</td><td>∅</td><td>∅</td><td>∅</td><td>{2,5}</td></tr><tr><td>5</td><td>∅</td><td>∅</td><td>{6}</td><td>∅</td></tr><tr><td>★6</td><td>∅</td><td>∅</td><td>∅</td><td>∅</td></tr></table>
+<p><b>分解：</b>1→5 的 λ 允許零次 bc；2─b→3─c→4，4→2 的 λ 再做一次；4→5 的 λ 離開迴圈，再吃 d 到 6。</p>
+<h3>轉 DFA：先算集合（公式見 p.8）</h3>
+<p>A={1,2,5}；B={3}；C={2,4,5}；D={6}；X=∅。→ 是 start，★ 是接受。</p>
+<table id="bcd-dfa" class="tight"><tr><th>DFA</th><th>b</th><th>c</th><th>d</th></tr><tr><td>→A</td><td>B</td><td>X</td><td>D</td></tr><tr><td>B</td><td>X</td><td>C</td><td>X</td></tr><tr><td>C</td><td>B</td><td>X</td><td>D</td></tr><tr><td>★D</td><td>X</td><td>X</td><td>X</td></tr><tr><td>X</td><td>X</td><td>X</td><td>X</td></tr></table>
+<p><b>一格怎麼算：</b>A 在 b 下只有 2→3，所以 move={3}、close={3}=B。B 在 c 下到 4，再走 λ 到 2、5，得到 C。</p>
+<p><b>bcd：</b>A→B→C→D ✓。<b>bc：</b>A→B→C ✗。<b>bcdd：</b>A→B→C→D→X ✗；先到 D 不代表剩下 d 可忽略。</p>
+<p class="small"><b>最小化補充：</b>A、C 轉移完全相同且都拒絕，可合併；連同 B、D、X 得 4 states。先做完子集構造，再談合併。</p></section>
+</div></div>
+<section><h2>26｜考試畫 NFA 的五個檢查點</h2>
+<div class="ans"><b>Start / F / Σ</b> 都有；每條邊明寫字元或 λ；* 的零次／重複都有；+ 不誤加外部零次邊；串接不讓前半完成就接受。<br><span class="en"><b>Construction answer:</b> Build NFAs for the subexpressions, connect them according to alternation, concatenation, and closure, and mark only the final exit of the complete expression as accepting.</span></div></section>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>07 / 10</span></footer></article>
+
+<article class="sheet" id="p8">
+<header><h1>NFA → DFA｜集合就是一個狀態</h1><div class="meta">OPENBOOK · 08 / 10<br>close → move → close｜完整逐輪推導</div></header>
+<main>
+<section><h2>27｜三個公式＋接受條件 <small>PPT 42–48</small></h2>
+<div class="formula">S₀ = close({q₀})<br>move(S,c) = ∪<sub>s∈S</sub> Δ(s,c)<br>δ<sub>D</sub>(S,c) = close(move(S,c))<br>S 是接受 state ⇔ S ∩ F<sub>N</sub> ≠ ∅</div>
+<p><b>close(S) / λ-closure：</b>從 S 本身開始，沿<b>零條或多條 λ 邊</b>到的全部 states。遇循環就去重，反覆加入到沒有新 state；不吃字元。<b>move(S,c)：</b>所有成員吃<b>一個 c</b>的後繼聯集；之後一定再 close。</p>
+<p class="en">Each DFA state represents all possible NFA states after the same input prefix, including epsilon reachability. It is accepting if it contains at least one accepting NFA state.</p></section>
+<div class="cols"><div>
+<section><h2>28｜教材 Fig 3.24 的原 NFA <small>p.43</small></h2>
+<p>start=1，F={5}，Σ={a,b}；只有 1→2 是 λ。</p>
+<table id="small-nfa" class="tight"><tr><th>NFA</th><th>a</th><th>b</th><th>λ</th></tr><tr><td>→1</td><td>{3}</td><td>{1}</td><td>{2}</td></tr><tr><td>2</td><td>{4,5}</td><td>∅</td><td>∅</td></tr><tr><td>3</td><td>∅</td><td>{4}</td><td>∅</td></tr><tr><td>4</td><td>{5}</td><td>{5}</td><td>∅</td></tr><tr><td>★5</td><td>∅</td><td>∅</td><td>∅</td></tr></table>
+<h3>Step 1：起始閉包</h3><p>{1} → 加入 2 → {1,2}，再無新 λ 後繼。令 A={1,2}。不含 5，故<b>空字串拒絕</b>。</p>
+<div class="warn"><b>p.47 原句把 3 寫入 closure，應校正。</b>1→3 是 a 邊；不讀 a 就不能把 3 加進起始閉包。</div>
+<h3>Step 2：算 A 的所有字元</h3>
+<pre>move(A,a) = {3} ∪ {4,5}
+          = {3,4,5}
+close(...) = {3,4,5} = B
+
+move(A,b) = {1} ∪ ∅ = {1}
+close({1}) = {1,2} = A</pre>
+<p>B 含 5，標接受；A 已存在，不再造新 state。<b>同一集合就是同一 state</b>，排列順序不影響身分。</p>
+<h3>Step 3：算 B、其餘新集合</h3>
+<p>B 在 a 下只有 4→5，得 D={5}；在 b 下由 3→4、4→5，得 C={4,5}。C 讀 a／b 都得 D。D 讀任何字元皆 ∅，令 X=∅。</p></section>
+</div><div>
+<section><h2>29｜完整 DFA：每一格都交代</h2>
+<p>A={1,2}；B={3,4,5}；C={4,5}；D={5}；X=∅。B、C、D 接受，因都含 5。</p>
+<table id="small-dfa" class="tight"><tr><th>DFA</th><th>a</th><th>b</th></tr><tr><td>→A</td><td>B</td><td>A</td></tr><tr><td>★B</td><td>D</td><td>C</td></tr><tr><td>★C</td><td>D</td><td>D</td></tr><tr><td>★D</td><td>X</td><td>X</td></tr><tr><td>X</td><td>X</td><td>X</td></tr></table>
+<h3>Worklist：a 先、b 後，FIFO</h3>
+<table id="small-worklist" class="tight"><tr><th>取出</th><th>本輪新增</th><th>本輪後 queue</th></tr><tr><td>A</td><td>B</td><td>[B]</td></tr><tr><td>B</td><td>D, C</td><td>[D,C]</td></tr><tr><td>D</td><td>X</td><td>[C,X]</td></tr><tr><td>C</td><td>無</td><td>[X]</td></tr><tr><td>X</td><td>無</td><td>[]：結束</td></tr></table>
+<p><b>seen</b> 存已見集合；<b>worklist</b> 存尚未處理全部字元的集合。每個新集合只加入一次；表要包含已見集合的轉移。</p>
+<h3>驗算幾個字串</h3>
+<table id="small-traces" class="tight"><tr><th>輸入</th><th>走 DFA</th><th>最後</th></tr><tr><td>λ</td><td>A</td><td>拒</td></tr><tr><td>bbb</td><td>A→A→A→A</td><td>拒</td></tr><tr><td>a</td><td>A→B</td><td>接受</td></tr><tr><td>ab</td><td>A→B→C</td><td>接受</td></tr><tr><td>abb</td><td>A→B→C→D</td><td>接受</td></tr><tr><td>aaa</td><td>A→B→D→X</td><td>拒</td></tr></table>
+<div class="ans"><b>∅ 不是「未算」：</b>沒有 NFA 路徑存活，成為 DFA 的拒絕 sink；在所有字元下仍到 ∅。原圖若省略 sink 是部分圖，完整轉移表要補上。</div></section>
+</div></div>
+<section><h2>30｜Why correct? Why terminate? <small>英文說理題＋補充不變量</small></h2>
+<p class="en">Initially, epsilon closure gives every NFA state reachable without input. After each symbol, move collects all symbol transitions and closure adds every epsilon-reachable state. Thus the subset always equals the possible NFA positions after that prefix. Both automata accept exactly when this subset intersects the NFA accepting set.</p>
+<p><b>終止：</b>n 個 NFA states 至多有 2<sup>n</sup> 個子集；只處理可達集合，且每個至多一次。2<sup>n</sup> 是<b>上限</b>，不是每題一定生成的個數。此例 5 個 NFA state → 5 個可達 DFA state。</p></section>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>08 / 10</span></footer></article>
+
+<article class="sheet" id="p9">
+<header><h1>(a|b)*abb｜構造、追蹤與合併</h1><div class="meta">OPENBOOK · 09 / 10<br>PPT 49–50 的 11-state 版本｜最小化為補充</div></header>
+<main>
+<section><h2>31｜先用一句話說出語言，再畫狀態機</h2>
+<p class="en">Over the alphabet {a,b}, (a|b)*abb denotes all strings ending in abb.</p>
+<p>前綴可為任意 a／b 字串（含 λ），尾端必須是 abb；最短接受字串是 <b>abb</b>，不是 ab。教材 p.41 另有 9-state NFA，<b>本頁只用 p.49 的編號</b>。</p></section>
+<div class="cols"><div>
+<section><h2>32｜原 NFA：q₀=0、F={10}</h2>
+<table id="abb-nfa" class="tight"><tr><th>NFA</th><th>a</th><th>b</th><th>λ</th></tr><tr><td>→0</td><td>∅</td><td>∅</td><td>{1,7}</td></tr><tr><td>1</td><td>∅</td><td>∅</td><td>{2,4}</td></tr><tr><td>2</td><td>{3}</td><td>∅</td><td>∅</td></tr><tr><td>3</td><td>∅</td><td>∅</td><td>{6}</td></tr><tr><td>4</td><td>∅</td><td>{5}</td><td>∅</td></tr><tr><td>5</td><td>∅</td><td>∅</td><td>{6}</td></tr><tr><td>6</td><td>∅</td><td>∅</td><td>{1,7}</td></tr><tr><td>7</td><td>{8}</td><td>∅</td><td>∅</td></tr><tr><td>8</td><td>∅</td><td>{9}</td><td>∅</td></tr><tr><td>9</td><td>∅</td><td>{10}</td><td>∅</td></tr><tr><td>★10</td><td>∅</td><td>∅</td><td>∅</td></tr></table>
+<p><b>結構：</b>0→7 允許零次前綴；1→2／4 選 a／b；3／5→6→1 重複；6→7 離開迴圈。7─a→8─b→9─b→10 完成尾碼。</p>
+<h3>起始閉包 → 第一個 a</h3>
+<pre>close({0}) = {0,1,2,4,7} = A
+move(A,a)  = {3,8}
+close({3,8}) = {1,2,3,4,6,7,8} = B</pre>
+<p>3 的 λ 到 6，再到 1、7，再到 2、4。<b>閉包不是只走一次 λ</b>；要一路到固定點。</p>
+<h3>abb 的完整集合追蹤</h3>
+<p>A ─a→ B ─b→ D ─b→ E。最後含 10，接受。NFA 的「任意前綴」與「尾碼開始」可同時存活，DFA 用集合一起保留。</p></section>
+</div><div>
+<section><h2>33｜所有可達子集與完整 DFA</h2>
+<table id="abb-sets" class="tight"><tr><th>名稱</th><th>NFA state 集合</th></tr><tr><td>→A</td><td>{0,1,2,4,7}</td></tr><tr><td>B</td><td>{1,2,3,4,6,7,8}</td></tr><tr><td>C</td><td>{1,2,4,5,6,7}</td></tr><tr><td>D</td><td>{1,2,4,5,6,7,9}</td></tr><tr><td>★E</td><td>{1,2,4,5,6,7,10}</td></tr></table><table id="abb-dfa" class="tight"><tr><th>DFA</th><th>a</th><th>b</th></tr><tr><td>→A</td><td>B</td><td>C</td></tr><tr><td>B</td><td>B</td><td>D</td></tr><tr><td>C</td><td>B</td><td>C</td></tr><tr><td>D</td><td>B</td><td>E</td></tr><tr><td>★E</td><td>B</td><td>C</td></tr></table>
+<p><b>逐輪：</b>A 發現 B、C；B 發現 D；C 無新集合；D 發現 E；E 無新集合。只有 E 含 10。在 Σ={a,b} 下<b>沒有可達 ∅</b>，不可硬加進可達集合清單。</p>
+<table id="abb-traces" class="tight"><tr><th>字串</th><th>DFA path</th><th>結果</th></tr><tr><td>aabb</td><td>A→B→B→D→E</td><td>✓</td></tr><tr><td>babb</td><td>A→C→B→D→E</td><td>✓</td></tr><tr><td>abba</td><td>A→B→D→E→B</td><td>✗</td></tr><tr><td>ababb</td><td>A→B→D→B→D→E</td><td>✓</td></tr></table>
+<div class="warn"><b>E 是接受、不是停止：</b>追加 a 會回 B，不再接受；追加 b 回 C。問整串辨識，必須把輸入讀完。</div></section>
+<section><h2>34｜最小化：先接受／拒絕，再拆 <small>補充</small></h2>
+<p>兩 states 只有對<b>所有後續字串</b>接受結果一致才可合併；不是「都拒絕」就能合併。先按 F 分組，再按各字元後繼的組別反覆細分。</p>
+<table id="abb-partitions" class="tight"><tr><th>輪</th><th>分組（每格表示一組）</th></tr><tr><td>P₀</td><td>{E} / {A,B,C,D}</td></tr><tr><td>P₁</td><td>{E} / {D} / {A,B,C}</td></tr><tr><td>P₂</td><td>{E} / {D} / {B} / {A,C}</td></tr><tr><td>P₃</td><td>與 P₂ 相同；固定點</td></tr></table>
+<p>D 的 b 後繼接受，所以先分 D；接著 B 的 b 後繼到 D，所以分 B。A、C 兩個字元的組別始終相同，可合併。</p></section>
+</div></div>
+<section><h2>35｜最小 DFA：用尾碼進度理解四個 states <small>補充，不是原投影片新增要求</small></h2>
+<table id="abb-min-dfa" class="tight"><tr><th>最小 state</th><th>a</th><th>b</th><th>已讀字首的最長尾段／接受</th></tr><tr><td>→U={A,C}</td><td>B</td><td>U</td><td>λ：尚未匹配 abb 的非空字首</td></tr><tr><td>B</td><td>B</td><td>D</td><td>a</td></tr><tr><td>D</td><td>B</td><td>E</td><td>ab</td></tr><tr><td>★E</td><td>B</td><td>U</td><td>abb；接受</td></tr></table>
+<p><b>不能再合併：</b>E 與其餘由 λ 區分；D 與 B／U 由 b 區分；B 與 U 由 bb 區分。這些 distinguishing suffixes 會讓其中一方接受、另一方拒絕，故至少需要四個 states。</p></section>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>09 / 10</span></footer></article>
+
+<article class="sheet" id="p10">
+<header><h1>綜合題 × 英文短答 × 最後檢查</h1><div class="meta">OPENBOOK · 10 / 10<br>HW 5(a) 完整表｜沒有熟讀時的作答模板</div></header>
+<main>
+<section><h2>36｜(a|(bc)*d)+：先理解「一塊」 <small>PPT 58–60</small></h2>
+<p><b>一塊</b>是 a，或零個以上 bc 加 d；整串由<b>至少一塊</b>串接。因此 d、a、ad、bcd、abcbcdad 接受；λ、bc、bd 拒絕。<b>內層 * 可零次，不代表外層 + 可零塊</b>。</p></section>
+<div class="cols"><div>
+<section><h2>37｜教材 NFA：start=1，F={12}</h2>
+<p>Σ={a,b,c,d}；表中 — 表示 ∅（無後繼）。</p>
+<table id="outer-nfa" class="tight"><tr><th>state</th><th>a</th><th>b</th><th>c</th><th>d</th><th>λ</th></tr><tr><td>→1</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{2}</td></tr><tr><td>2</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{3,6}</td></tr><tr><td>3</td><td>{4}</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td>4</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{5}</td></tr><tr><td>5</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{2,12}</td></tr><tr><td>6</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{7,10}</td></tr><tr><td>7</td><td>—</td><td>{8}</td><td>—</td><td>—</td><td>—</td></tr><tr><td>8</td><td>—</td><td>—</td><td>{9}</td><td>—</td><td>—</td></tr><tr><td>9</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{7,10}</td></tr><tr><td>10</td><td>—</td><td>—</td><td>—</td><td>{11}</td><td>—</td></tr><tr><td>11</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{5}</td></tr><tr><td>★12</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table>
+<p><b>抓結構：</b>2 分到 a 或 (bc)*d；完成一塊到 5；5→2 可再做一塊、5→12 可結束。沒有起始→12 的零次 λ 旁路。</p></section>
+<section><h2>38｜英文短答：Definition / Difference</h2>
+<p class="q">What is epsilon closure?</p>
+<p class="en">It is the set of states reachable from a given set through zero or more epsilon transitions, including the original states.</p>
+<p class="q">Is an NFA more powerful than a DFA?</p>
+<p class="en">No. Both recognize regular languages. Subset construction converts an NFA into an equivalent DFA.</p>
+<p class="q">What is a dead state?</p>
+<p class="en">It is a non-accepting state from which no accepting state is reachable. The empty subset in subset construction is a sink that loops on every input symbol.</p></section>
+</div><div>
+<section><h2>39｜DFA 集合與完整轉移表</h2>
+<table id="outer-sets" class="tight"><tr><th>state</th><th>NFA states</th></tr><tr><td>→A</td><td>{1,2,3,6,7,10}</td></tr><tr><td>★B</td><td>{2,3,4,5,6,7,10,12}</td></tr><tr><td>C</td><td>{8}</td></tr><tr><td>★D</td><td>{2,3,5,6,7,10,11,12}</td></tr><tr><td>E</td><td>{7,9,10}</td></tr><tr><td>X</td><td>∅</td></tr></table><table id="outer-dfa" class="tight"><tr><th>DFA</th><th>a</th><th>b</th><th>c</th><th>d</th></tr><tr><td>→A</td><td>B</td><td>C</td><td>X</td><td>D</td></tr><tr><td>★B</td><td>B</td><td>C</td><td>X</td><td>D</td></tr><tr><td>C</td><td>X</td><td>X</td><td>E</td><td>X</td></tr><tr><td>★D</td><td>B</td><td>C</td><td>X</td><td>D</td></tr><tr><td>E</td><td>X</td><td>C</td><td>X</td><td>D</td></tr><tr><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr></table>
+<p><b>逐輪（a,b,c,d；FIFO）：</b>A 新增 B、C、X、D；B 無新；C 新增 E；X、D、E 無新。含 12 的 B／D 才是接受。</p>
+<pre>abcbcdad：
+A → B → C → E → C → E → D → B → D ✓</pre>
+<p><b>最短反例：</b>bc 停 E，尚缺 d；bd 由 C 在 d 下到 X，少了 c。將路徑與「一塊」的定義互相核對。</p></section>
+<section><h2>40｜英文短答：Why / Scenario</h2>
+<p class="q">Why convert RE to NFA and then to DFA?</p>
+<p class="en">NFAs are easy to build compositionally from regular expressions. A DFA then supports deterministic scanning with one next state per input symbol.</p>
+<p class="q">When is a subset accepting?</p>
+<p class="en">When it contains at least one accepting NFA state; it does not require all member states to be accepting.</p>
+<p class="q">Why must a scanner remember the last acceptance?</p>
+<p class="en">A longer candidate may fail after a shorter valid token prefix. Remembering the last accepting position allows the scanner to return the longest valid prefix.</p></section>
+</div></div>
+<section><h2>41｜考場作答模板：把過程寫成能給分的形式</h2>
+<div class="ans"><b>Explain：</b>定義 → 工作／輸入輸出 → 小例子。<b>Why：</b>能力需求 → 比較限制 → 實作理由。<b>Draw AST：</b>寫語言假設 → 根與子樹 → 優先序／結合性。<b>Convert FA：</b>列 Q、Σ、start、F → close 起始 → 每字元 move 再 close → 去重 → 完整表／圖 → 標接受 → 測 λ、最短成功、近似失敗。</div>
+<p><b>最常漏：</b>λ≠∅；DFA 接受要讀完；NFA 接受是「存在」；closure 走到底；* 含零次；+ 看內層是否含 λ；keyword 同長才比規則；AST 不先算成常數；依題目採教材或一般語意。</p></section>
+<section class="small"><b>來源／範圍：</b>Ch03 scanning.pptx（60 slides）與六份伴讀；前兩次小考題型；AST 課本例取 Ch2 p.42。圖均重繪；C-like 練習、maximal munch、反例、最小化為補充。10 頁 A4（雙面 5 張），未假定允許頁數上限。<br>
+<b>教材疑點已辨析：</b>Ch3 p.47 閉包、p.51 字串 vs 語言、p.54 exponent；Ch2 p.42 右結合。Ch2 p.34／43 待核對仍見舊筆記。<br>
+<b>參照：</b><a href="../../Inbox/Ch03%20scanning.pptx">原 PPTX</a> · <a href="../../Chapters/Compiler%20-%20Chapter%203%20導讀.md">本章導讀</a> · <a href="../../Review/Compiler%20-%20第一次小考題目與標準答案.md">Quiz 1</a> · <a href="../../Review/Compiler%20-%20第二次小考題目紀錄.md">Quiz 2</a> · <a href="https://westes.github.io/flex/manual/Matching.html">flex Matching</a>。<br>
+<b>列印：</b>A4／100%／關閉瀏覽器自帶頁首頁尾；HTML 離線可讀。沒時間時：p.1 查名詞、p.2 按流程；CFG／AST 詳解 p.3–4；p.9 最小化為補充。</section>
+</main><footer><span>Crafting a Compiler · Ch03 Scanning · 2026-10-08</span><span>10 / 10</span></footer></article>
+</body></html>

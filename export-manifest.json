@@ -1,0 +1,404 @@
+{
+  "created": "2026-10-14",
+  "source_git_commit": "0dd12f91c8986a5f95b66dc86f06894e63230805",
+  "copied_files": 79,
+  "cpp_programs": 13,
+  "export_kind": "selected current files; no vault git history",
+  "files": [
+    {
+      "path": "Complier/Code/exam/expression.cpp",
+      "bytes": 7043,
+      "sha256": "fb13f022ef8250fb447c7b602956b546bc5c22380762409b0b9272993fa56eae"
+    },
+    {
+      "path": "Complier/Code/exam/expression.in",
+      "bytes": 29,
+      "sha256": "3df6d321d3438bd5bac053a58da8deaecf264af4b21d83e271b9a47db39228a6"
+    },
+    {
+      "path": "Complier/Code/exam/expression.expected",
+      "bytes": 47,
+      "sha256": "fc25c74011c0d09d2dcd52c99b379433521c22396d93bb8d9201442e0c867bce"
+    },
+    {
+      "path": "Complier/Code/exam/html_parser.cpp",
+      "bytes": 9367,
+      "sha256": "850b1235b4a0c90cfb25e53f802c04764b5c07dab3ccf22b20dc74ad8ad6d93a"
+    },
+    {
+      "path": "Complier/Code/exam/html_parser.in",
+      "bytes": 83,
+      "sha256": "c40dada2554c6c97c227673e42d5b5d6b12d1be4a032b9fc53911499685ecd7a"
+    },
+    {
+      "path": "Complier/Code/exam/html_parser.expected",
+      "bytes": 6,
+      "sha256": "de545cc7e7ff8eaacefae8fcb4a954555a1224f24fe7ce8ff62b9874c54f3fe2"
+    },
+    {
+      "path": "Complier/Code/exam/lexer.cpp",
+      "bytes": 6035,
+      "sha256": "3763b207074e71d1ad00f489a31747296d58f4f74e8c0d2c1f5269fcd5ef046d"
+    },
+    {
+      "path": "Complier/Code/exam/lexer.in",
+      "bytes": 67,
+      "sha256": "2230d7b8ad415fbe613f152fcc347ea99dd3d9da9b91dad27545785e770e8740"
+    },
+    {
+      "path": "Complier/Code/exam/lexer.expected",
+      "bytes": 189,
+      "sha256": "7e31f9f0291929c93dd8c3ffc8a1c44544b52e0c0b74b47a1f45c66f1d5b4760"
+    },
+    {
+      "path": "Complier/Code/exam/ll1.cpp",
+      "bytes": 8893,
+      "sha256": "d6a65ce98c502339c53400c5cf2f9e2139629ef385e70f33b2633a2740843840"
+    },
+    {
+      "path": "Complier/Code/exam/ll1.in",
+      "bytes": 38,
+      "sha256": "6c00a1d7b7d7c7f3368c23cf8e6105a0b56c911581fab61ec2c0be0fa28a88df"
+    },
+    {
+      "path": "Complier/Code/exam/ll1.expected",
+      "bytes": 197,
+      "sha256": "b2eceb121e6e267683cc7545135eaee95a3d490e6844e0944ed95732e00c7e9d"
+    },
+    {
+      "path": "Complier/Code/exam/nfa_to_dfa.cpp",
+      "bytes": 5927,
+      "sha256": "c6a7c50f5f1e939c2ca65fc8f6660e45654f5ff4e943718b6dfc03c9550df0c0"
+    },
+    {
+      "path": "Complier/Code/exam/nfa_to_dfa.in",
+      "bytes": 80,
+      "sha256": "c847f2a6fd90de9ef7d88774b1938794e7bf0f9c220e61cdc012228951715887"
+    },
+    {
+      "path": "Complier/Code/exam/nfa_to_dfa.expected",
+      "bytes": 49,
+      "sha256": "64382028d48a68ba38588dcadf46bca6bf3fa82097039aa1f14acc712ed0134e"
+    },
+    {
+      "path": "Complier/Code/exam/stack_vm.cpp",
+      "bytes": 4887,
+      "sha256": "5858e7a1067b2c8eab1afc84dae2aad03d30188c648fe4556779e1ee0a4fa3b1"
+    },
+    {
+      "path": "Complier/Code/exam/stack_vm.in",
+      "bytes": 68,
+      "sha256": "f6c83db1178b1d26ea1830de13a66049f284f3377cfc77bd2bec7c86b19dbfe7"
+    },
+    {
+      "path": "Complier/Code/exam/stack_vm.expected",
+      "bytes": 4,
+      "sha256": "a5af689f2e58459835bb77930031a16999a7b03b90788d4e43f8b609e6d3475b"
+    },
+    {
+      "path": "Complier/Code/exam/short/ac_dc.cpp",
+      "bytes": 7086,
+      "sha256": "4f1cc415e2cb0442f75517e1cd1d4ba246370b2cf54062837c70fc0c7f517260"
+    },
+    {
+      "path": "Complier/Code/exam/short/ac_dc.in",
+      "bytes": 23,
+      "sha256": "1963cc63cdcb6010dd5a271ead93f207803c33dda8ab885f4222730ad5b3e80b"
+    },
+    {
+      "path": "Complier/Code/exam/short/ac_dc.expected",
+      "bytes": 38,
+      "sha256": "55cc6e2960ff29c90de1e9e9ca4dc0ddd46c8f50e51573436261b3e089dd870d"
+    },
+    {
+      "path": "Complier/Code/exam/short/expression.cpp",
+      "bytes": 5861,
+      "sha256": "24ae4131c59e55424d274a489c7076ba24591be0e623c5b208d25db54aafa21e"
+    },
+    {
+      "path": "Complier/Code/exam/short/expression.in",
+      "bytes": 39,
+      "sha256": "80142e5143c61e93be18d8c6cb9ddbc60dea97914aa5b44680f0da92eea7f76c"
+    },
+    {
+      "path": "Complier/Code/exam/short/expression.expected",
+      "bytes": 15,
+      "sha256": "ea845a4fc0f366f2aa54a3de89f86e6d00cd88a545ef6ebc5fe283696f88504f"
+    },
+    {
+      "path": "Complier/Code/exam/short/html_check.cpp",
+      "bytes": 6554,
+      "sha256": "d2b41a8e34f6b8723d3b409b4821af18c5658f7d94b9b3882afccdcb313b9e69"
+    },
+    {
+      "path": "Complier/Code/exam/short/html_check.in",
+      "bytes": 83,
+      "sha256": "c40dada2554c6c97c227673e42d5b5d6b12d1be4a032b9fc53911499685ecd7a"
+    },
+    {
+      "path": "Complier/Code/exam/short/html_check.expected",
+      "bytes": 6,
+      "sha256": "de545cc7e7ff8eaacefae8fcb4a954555a1224f24fe7ce8ff62b9874c54f3fe2"
+    },
+    {
+      "path": "Complier/Code/exam/short/hw5_check.cpp",
+      "bytes": 1812,
+      "sha256": "4859447c26a2b1f36cba5c5da4b7ba1418bb6c4e96c6899cb2cd43982172bd73"
+    },
+    {
+      "path": "Complier/Code/exam/short/hw5_check.in",
+      "bytes": 42,
+      "sha256": "19a905c61c082d4611470e3a5ea6eb9ccc1fb2d23c4f233605195b7fcb8f71aa"
+    },
+    {
+      "path": "Complier/Code/exam/short/hw5_check.expected",
+      "bytes": 77,
+      "sha256": "cbb1a05938e62ff3a8f17221a56bfda2d45bec80ca702454b058ef034a310500"
+    },
+    {
+      "path": "Complier/Code/exam/short/nfa_check.cpp",
+      "bytes": 3956,
+      "sha256": "4f8700108bb99836b2006e0e3bf752dd7cd51b43287a48223135349b6c15dac8"
+    },
+    {
+      "path": "Complier/Code/exam/short/nfa_check.in",
+      "bytes": 80,
+      "sha256": "c847f2a6fd90de9ef7d88774b1938794e7bf0f9c220e61cdc012228951715887"
+    },
+    {
+      "path": "Complier/Code/exam/short/nfa_check.expected",
+      "bytes": 49,
+      "sha256": "64382028d48a68ba38588dcadf46bca6bf3fa82097039aa1f14acc712ed0134e"
+    },
+    {
+      "path": "Complier/Code/ch02/ac_homework.cpp",
+      "bytes": 15332,
+      "sha256": "c27d46dc1462d64b0fe33f078a49083ef04c33e883784c67fa0087f63026826b"
+    },
+    {
+      "path": "Complier/Code/ch02/ac_homework.in",
+      "bytes": 23,
+      "sha256": "1963cc63cdcb6010dd5a271ead93f207803c33dda8ab885f4222730ad5b3e80b"
+    },
+    {
+      "path": "Complier/Code/ch02/ac_homework.expected",
+      "bytes": 38,
+      "sha256": "55cc6e2960ff29c90de1e9e9ca4dc0ddd46c8f50e51573436261b3e089dd870d"
+    },
+    {
+      "path": "Complier/Code/ch03/automata_homework.cpp",
+      "bytes": 4742,
+      "sha256": "2d3b89a072da6429cce2d240434b06e5dbd59fee85ee69dd9253aeba9cb435f3"
+    },
+    {
+      "path": "Complier/Code/ch03/automata_homework.in",
+      "bytes": 42,
+      "sha256": "19a905c61c082d4611470e3a5ea6eb9ccc1fb2d23c4f233605195b7fcb8f71aa"
+    },
+    {
+      "path": "Complier/Code/ch03/automata_homework.expected",
+      "bytes": 77,
+      "sha256": "cbb1a05938e62ff3a8f17221a56bfda2d45bec80ca702454b058ef034a310500"
+    },
+    {
+      "path": "Complier/Code/build_cpp_exam_pack.py",
+      "bytes": 31015,
+      "sha256": "1ccd8cd2c2d90746b40fe5a3e27227b26851eea744ee335665705d92d007f553"
+    },
+    {
+      "path": "Complier/Code/build_cpp_print_handbook.py",
+      "bytes": 31242,
+      "sha256": "0117c7c3716e9a4cb21f0b1f0ddd018829c7fccc63747bc8b16b30235814a291"
+    },
+    {
+      "path": "Complier/Code/build_cpp_short_pack.py",
+      "bytes": 29814,
+      "sha256": "81768a3dfb05b1fa315d6f8009af6784ebaf0339e531729af483e4383cbf4d89"
+    },
+    {
+      "path": "Complier/Code/check_cpp_exam.py",
+      "bytes": 9983,
+      "sha256": "ddfbfa201dacdb151730b4521504b343644467a0dcd677b6f610ec3a03ca9729"
+    },
+    {
+      "path": "Complier/Code/check_cpp_handbook.py",
+      "bytes": 2644,
+      "sha256": "03f3b1e4b6d58c8aefb656cd00260a0debdbed76e92ff61d20722a8fd357c0bc"
+    },
+    {
+      "path": "Complier/Code/check_cpp_homework.py",
+      "bytes": 7222,
+      "sha256": "cff27a0aef40c7dd3f3b2f03853b7146ce4f45d80d4b95f1cca2cd0959aba74f"
+    },
+    {
+      "path": "Complier/Code/check_cpp_short.py",
+      "bytes": 8250,
+      "sha256": "5740cb8e42a74f9a5cd686664f9c8f67e48af2aeb27e1dd49ac28efa0ee346b2"
+    },
+    {
+      "path": "Complier/Code/cpp_handbook_examples.py",
+      "bytes": 21233,
+      "sha256": "331f958415265b6749b889bc20f4bc9c3504b5088917cff779a08bc6a1069a2a"
+    },
+    {
+      "path": "Complier/Review/Compiler - Ch1-Ch3 考試 C++ 程式集.md",
+      "bytes": 5967,
+      "sha256": "a1596e7e86d54059ff07f76d177320f780cb378fc733dc411524ab0c4f0b87f6"
+    },
+    {
+      "path": "Complier/Review/Compiler - Ch1-Ch3 考場短版 C++.md",
+      "bytes": 32769,
+      "sha256": "d9f563bf01d392e4a096a837aeb3bd569c9bd59f27ad070b8dced4e473f2d309"
+    },
+    {
+      "path": "Complier/Review/Compiler - Ch1-Ch3 考場列印手冊.md",
+      "bytes": 4837,
+      "sha256": "aa06bf8c27909d2fda2c3f0386c946e88294efd06e8d6e8a9289a1ec3d89157f"
+    },
+    {
+      "path": "Complier/Review/Compiler - 第一次小考題目與標準答案.md",
+      "bytes": 13438,
+      "sha256": "4b604d41358252ddb6fac1378e2455b7645eaa6e306a8ac33c560d7c93531901"
+    },
+    {
+      "path": "Complier/Review/Compiler - 第二次小考題目紀錄.md",
+      "bytes": 1398,
+      "sha256": "fa3eb47c4544b828d87c373d3c6947eeadecb99c6bad54c17effd20b20d7965e"
+    },
+    {
+      "path": "Complier/Review/Compiler-Ch1-Ch3-Cpp-Exam-Pack.html",
+      "bytes": 112334,
+      "sha256": "e58eeeb8e013fb035f4cd2e6a9fe67d2e9040b5bf106caa0f3efe3046a7128ca"
+    },
+    {
+      "path": "Complier/Review/Compiler-Ch1-Ch3-Cpp-Short.html",
+      "bytes": 89783,
+      "sha256": "a3f30cc9a0da52e41c852984ad2643b3df8a1cf80877e45958c21735d524e8b6"
+    },
+    {
+      "path": "Complier/Review/Compiler-Ch1-Ch3-Cpp-Exam-Pack.pdf",
+      "bytes": 684403,
+      "sha256": "928262194e5da5a2815ce111395c1c4239b84e290556903082ffe27e964d5a2a"
+    },
+    {
+      "path": "Complier/Review/Compiler-Ch1-Ch3-Cpp-Short.pdf",
+      "bytes": 607589,
+      "sha256": "4804fa345369f122c9845062f54bc6e4f2d72d16b99ca0f7e2d90ba1a1576dcf"
+    },
+    {
+      "path": "Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.html",
+      "bytes": 101138,
+      "sha256": "d3f9d9e8aba4d91b15a2735f25437ee3921241175705fd6d39892e561c5faee3"
+    },
+    {
+      "path": "Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.pdf",
+      "bytes": 4338326,
+      "sha256": "a5df23de8ea1eca075e0adb8edef14396ef2a839da7131c580c94ce4a2c2baf3"
+    },
+    {
+      "path": "Complier/Review/cpp-exam-pack-layout.json",
+      "bytes": 2167,
+      "sha256": "62f0dfdcaafd4b8c56cdd6d8881591e07a68842bdd664fb368e400217de2c747"
+    },
+    {
+      "path": "Complier/Review/cpp-exam-validation.json",
+      "bytes": 3497,
+      "sha256": "0a679b5c3a2141f1899e2fef7994ce31fb65b89b077a24c4c919e7c1a8abb463"
+    },
+    {
+      "path": "Complier/Review/cpp-handbook-examples.json",
+      "bytes": 43475,
+      "sha256": "ee357ca937f9f28c24bc025234995de02e4706d317ca366270bd39bddef4ce35"
+    },
+    {
+      "path": "Complier/Review/cpp-homework-validation.json",
+      "bytes": 2371,
+      "sha256": "57efb728fe2f5aef44dea88e7411a99504530b2cd9fa4c242e2c4375fc420fe7"
+    },
+    {
+      "path": "Complier/Review/cpp-print-handbook-validation.json",
+      "bytes": 4219,
+      "sha256": "6aca964da6e3c2a42f2a1d5c87cc44e674e33e3cf24b20de01758e6e3b6fe064"
+    },
+    {
+      "path": "Complier/Review/cpp-short-pack-layout.json",
+      "bytes": 2160,
+      "sha256": "07f68562f8ff92714334738ee2c35176c972d59d158fa847846ca6bddf39dc06"
+    },
+    {
+      "path": "Complier/Review/cpp-short-validation.json",
+      "bytes": 6230,
+      "sha256": "379b5c973855202db42d73eaa2ed8acf282232a44f3df62f0f50fcc8947a01f6"
+    },
+    {
+      "path": "Complier/Notes/Exam/Compiler - HTML parser 考試實作.md",
+      "bytes": 12945,
+      "sha256": "0108f4738f5eac4abc64048536afe3b32e2f250c5b871e8a9c2e23dc62e4d49b"
+    },
+    {
+      "path": "Complier/Notes/Exam/Compiler - Predict 與 LL1 考試實作.md",
+      "bytes": 12136,
+      "sha256": "ae1390a187cfd9dfe44469a0a49fb2240ff0568664dc4e3ebdf80c3591e9db6d"
+    },
+    {
+      "path": "Complier/Notes/Exam/Compiler - Scanner 與註解考試實作.md",
+      "bytes": 9280,
+      "sha256": "73900885ac549e4d92fe8e3bef254cf9d2f657e0be7aaaeb369eb8697a03648c"
+    },
+    {
+      "path": "Complier/Notes/Exam/Compiler - 堆疊機 Interpreter 考試實作.md",
+      "bytes": 7684,
+      "sha256": "7ef8559bed6ec0e507555b8808908fefd0d42e2f79f34a9caec290089119154d"
+    },
+    {
+      "path": "Complier/Notes/Exam/Compiler - 通用 NFA DFA 考試實作.md",
+      "bytes": 8957,
+      "sha256": "7040b1cc3a0e980779fc710f4b58bbd5abedf3aefc4dcdd8be3dccef01035fdb"
+    },
+    {
+      "path": "Complier/Notes/Exam/Compiler - 運算式 parser 考試實作.md",
+      "bytes": 10098,
+      "sha256": "29f4cd952b27ff312a8070f4076151dbf1645ce561232323f7395c5f464ecae8"
+    },
+    {
+      "path": "Complier/Notes/Compiler - Ch1-Ch3 作業完整 C++17 實作.md",
+      "bytes": 33091,
+      "sha256": "2f9da9fc1499a93c38c295bc04db4e973ed4e789aae95a2bf39c58c93bedb748"
+    },
+    {
+      "path": "Complier/Lessons/Chapter 1/Compiler-Ch1-cheatsheet.html",
+      "bytes": 29669,
+      "sha256": "5335e20b1aea198ccefa35bf818b49b7072c8cfaef492e39afb1042fdf6ed0b1"
+    },
+    {
+      "path": "Complier/Lessons/Chapter 1/Compiler-Ch1-cheatsheet.pdf",
+      "bytes": 2046974,
+      "sha256": "fe86206c03677a0a00f8b7fe02396bd29318348f86d6dda9f447e20ec8a78026"
+    },
+    {
+      "path": "Complier/Lessons/Chapter 2/Compiler-Ch2-cheatsheet.html",
+      "bytes": 35370,
+      "sha256": "40cbbf44be5162a08763ddce33076675928a3678cde403bbac9f8ddb2d0cb6a7"
+    },
+    {
+      "path": "Complier/Lessons/Chapter 2/Compiler-Ch2-cheatsheet.pdf",
+      "bytes": 1762889,
+      "sha256": "fa551255c1271442227f81e9885857c8e8e3cbf6cceea97855f0cf42c5eba71d"
+    },
+    {
+      "path": "Complier/Lessons/Chapter 3/Compiler-Ch3-cheatsheet.html",
+      "bytes": 67005,
+      "sha256": "96c9e8b2f474e1765f2d9df02add804750f1589c128f8e9b93ed67e148b2bc0d"
+    },
+    {
+      "path": "Complier/Lessons/Chapter 3/Compiler-Ch3-cheatsheet.pdf",
+      "bytes": 2738085,
+      "sha256": "830f11689ef720099a1704820492e77107941e6d00d93e6dc701bdabcb6ff4ae"
+    },
+    {
+      "path": "Complier/Review/Chapter 3/cheatsheet-validation.json",
+      "bytes": 6749,
+      "sha256": "241549003486d389dc42f9e028cb6fbb06ab47b19023ee7e14f9ec68681ff8b3"
+    }
+  ]
+}

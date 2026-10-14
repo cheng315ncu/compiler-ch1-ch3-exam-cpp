@@ -1,0 +1,44 @@
+{
+  "created": "2026-10-14",
+  "cpp_programs": 13,
+  "copied_files_byte_identical": 79,
+  "fixture_pairs": 13,
+  "native_compiler": "Apple clang version 21.0.0 (clang-2100.3.33.1)",
+  "flags": [
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror",
+    "-O2"
+  ],
+  "native_tests": {
+    "short": 610,
+    "full_exam": 151,
+    "homework": 52,
+    "total": 813,
+    "dc_execution": "verified"
+  },
+  "normal_tests_rerun_in_export": true,
+  "sanitizer_rerun_in_export": false,
+  "existing_sanitizer_evidence": "Complier/Review/cpp-short-validation.json; identical source hashes",
+  "linux_runtime_verified": false,
+  "domjudge_accepted_verified": false,
+  "readme_local_links_resolved": true,
+  "credential_pattern_scan_matches": 0,
+  "source_sha256": {
+    "Complier/Code/exam/expression.cpp": "fb13f022ef8250fb447c7b602956b546bc5c22380762409b0b9272993fa56eae",
+    "Complier/Code/exam/html_parser.cpp": "850b1235b4a0c90cfb25e53f802c04764b5c07dab3ccf22b20dc74ad8ad6d93a",
+    "Complier/Code/exam/lexer.cpp": "3763b207074e71d1ad00f489a31747296d58f4f74e8c0d2c1f5269fcd5ef046d",
+    "Complier/Code/exam/ll1.cpp": "d6a65ce98c502339c53400c5cf2f9e2139629ef385e70f33b2633a2740843840",
+    "Complier/Code/exam/nfa_to_dfa.cpp": "c6a7c50f5f1e939c2ca65fc8f6660e45654f5ff4e943718b6dfc03c9550df0c0",
+    "Complier/Code/exam/stack_vm.cpp": "5858e7a1067b2c8eab1afc84dae2aad03d30188c648fe4556779e1ee0a4fa3b1",
+    "Complier/Code/exam/short/ac_dc.cpp": "4f1cc415e2cb0442f75517e1cd1d4ba246370b2cf54062837c70fc0c7f517260",
+    "Complier/Code/exam/short/expression.cpp": "24ae4131c59e55424d274a489c7076ba24591be0e623c5b208d25db54aafa21e",
+    "Complier/Code/exam/short/html_check.cpp": "d2b41a8e34f6b8723d3b409b4821af18c5658f7d94b9b3882afccdcb313b9e69",
+    "Complier/Code/exam/short/hw5_check.cpp": "4859447c26a2b1f36cba5c5da4b7ba1418bb6c4e96c6899cb2cd43982172bd73",
+    "Complier/Code/exam/short/nfa_check.cpp": "4f8700108bb99836b2006e0e3bf752dd7cd51b43287a48223135349b6c15dac8",
+    "Complier/Code/ch02/ac_homework.cpp": "c27d46dc1462d64b0fe33f078a49083ef04c33e883784c67fa0087f63026826b",
+    "Complier/Code/ch03/automata_homework.cpp": "2d3b89a072da6429cce2d240434b06e5dbd59fee85ee69dd9253aeba9cb435f3"
+  }
+}

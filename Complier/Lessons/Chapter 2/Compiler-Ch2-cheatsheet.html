@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compiler Ch2｜A Simple Compiler｜Openbook Cheatsheet</title>
+<style>
+@page{size:A4;margin:10mm}*{box-sizing:border-box}html{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+body{margin:0;color:#1a1a2e;background:#e9edf3;font:8.7pt/1.43 "PingFang TC","Noto Sans TC","Helvetica Neue",sans-serif}
+.sheet{width:190mm;height:276mm;margin:8mm auto;background:white;position:relative}
+header{display:flex;align-items:baseline;justify-content:space-between;border-bottom:2.5px solid #2d4a8f;padding-bottom:4px;margin-bottom:7px}
+h1{color:#2d4a8f;font-size:15pt;margin:0}.meta{text-align:right;font-size:7.2pt;color:#555}
+h2{font-size:10.2pt;color:white;background:#2d4a8f;margin:0 0 4px;padding:3px 7px;border-radius:3px}
+h2 small{float:right;font-size:7.2pt;font-weight:400;margin-top:2px}h3{color:#22335e;font-size:9.2pt;margin:6px 0 2px}
+section{margin-bottom:7px;break-inside:avoid}p{margin:3px 0}table{width:100%;border-collapse:collapse;margin:4px 0;font-size:8pt}
+th,td{border:.6pt solid #9aa7c7;padding:3px 5px;text-align:left;vertical-align:top}th{background:#e8edf8;color:#22335e}
+tr:nth-child(even) td{background:#f6f8fc}code,pre{font-family:Menlo,Consolas,monospace;font-size:7.8pt}
+code{background:#f0f2f8;padding:0 2px}pre{background:#f6f7fb;border-left:3px solid #2d4a8f;padding:6px 8px;margin:4px 0;white-space:pre-wrap;line-height:1.38}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:6mm}.term,.ans,.warn{padding:5px 7px;margin:4px 0;border-left:3px solid}
+.term{background:#eef3ff;border-color:#2d4a8f}.ans{background:#edf9f0;border-color:#2f9e5f}.warn{background:#fff6e5;border-color:#d49315}
+.q{font-weight:700;color:#22335e;margin-top:5px}.en{color:#1e5c38}.small{font-size:7.5pt;color:#555}ul,ol{margin:3px 0;padding-left:17px}li{margin:2px 0}
+footer{position:absolute;left:0;right:0;bottom:0;padding-top:3px;border-top:1px solid #9aa7c7;color:#666;font-size:7pt;display:flex;justify-content:space-between}
+a{color:#2d4a8f;text-decoration:none}nav{position:sticky;top:0;z-index:10;background:#22335e;color:white;padding:9px;text-align:center;font-size:10pt}
+nav a{color:white;margin:0 10px}button{cursor:pointer}svg{display:block;width:100%;height:auto}svg text{font-family:Menlo,"PingFang TC",sans-serif;fill:#22335e}
+svg path{stroke:#8998b5;stroke-width:1.5;fill:none}svg rect{fill:#eef3ff;stroke:#9aa7c7}svg .convert{fill:#edf9f0;stroke:#2f9e5f}
+.tight td,.tight th{padding:2px 4px}
+@media print{body{background:white}nav{display:none}.sheet{margin:0;break-after:page}.sheet:last-child{break-after:auto}}
+@media screen{.sheet{padding:6mm;width:202mm;height:288mm;box-shadow:0 3px 18px #26375522}footer{left:6mm;right:6mm;bottom:6mm}}
+</style></head><body>
+<nav aria-label="頁面導覽"><a href="#p1">1 詞法</a><a href="#p2">2 文法</a><a href="#p3">3 樹與推導</a><a href="#p4">4 語意</a><a href="#p5">5 產碼</a><a href="#p6">6 習題</a><button onclick="window.print()">列印 / 存 PDF</button></nav>
+<article class="sheet" id="p1">
+<header><h1>Chapter 2｜A Simple Compiler</h1><div class="meta">OPENBOOK · 01 / 06<br>詞法、名詞、英文簡答｜2026-09-30</div></header>
+<div class="term"><b>考場找答案：</b>token／RE → 本頁；CFG／predict／parser → p.2；推導／parse tree／AST → p.3；symbol table／type／error → p.4；dc code → p.5；課本習題／scanner 擴充 → p.6。<br><b>題型依據：</b>第一次小考的 Explain / Difference / 情境判斷。以下英文問答為<b>仿題型練習答案</b>，不是教師公布的第二次考題。</div>
+<section><h2>1｜ac 編譯器：每一站在處理什麼？ <small>PPT 2、12、15、27–38</small></h2>
+<table><tr><th>階段</th><th>輸入 → 輸出</th><th>關鍵工作</th></tr>
+<tr><td>Scanner / lexer</td><td>Characters → tokens</td><td>依 regular expression 辨認詞法單位，略過 blank。</td></tr>
+<tr><td>Parser</td><td>Tokens → AST</td><td>依 CFG 檢查語法；本章用預測式 recursive descent。</td></tr>
+<tr><td>Symbol-table constructor</td><td>AST 宣告 → symbol table</td><td>記錄 identifier 的型別，檢查重複宣告。</td></tr>
+<tr><td>Type checker</td><td>AST ＋ symbol table → decorated AST</td><td>查宣告、由葉往根求型別，必要時加入 int2float。</td></tr>
+<tr><td>Code generator</td><td>Checked AST → dc code</td><td>走訪節點；先產生運算元，再產生運算子。</td></tr></table>
+<p class="en"><b>短答：</b>The scanner groups characters into tokens. The parser checks their grammatical structure and builds an AST. Semantic analysis checks declarations and types; code generation translates the checked AST into dc instructions.</p></section>
+<div class="cols"><div>
+<section><h2>2｜Token：kind 與實際字串 <small>PPT 3–5、12–14</small></h2>
+<p class="q">Explain what a token / lexeme is.</p><p class="en">A token is a lexical unit with a type and, when needed, a value. Its lexeme is the actual character sequence in the source.</p>
+<p><code>b</code>：type = <code>id</code>，value = <code>"b"</code>。<code>3.2</code>：type = <code>fnum</code>，value = <code>"3.2"</code>。Parser 選規則看 <b>type</b>，符號表／產碼需要 <b>value</b>。</p>
+<table class="tight"><tr><th>Token</th><th>ac 規則 / lexeme</th></tr><tr><td>floatdcl / intdcl / print</td><td><code>f / i / p</code></td></tr><tr><td>id</td><td><code>[a-eghj-oq-z]</code>，單一字母</td></tr><tr><td>assign / plus / minus</td><td><code>= / + / -</code></td></tr><tr><td>inum</td><td><code>[0-9]+</code></td></tr><tr><td>fnum</td><td><code>[0-9]+\.[0-9]+</code></td></tr><tr><td>blank</td><td>原表為一個以上空格；略過</td></tr><tr><td>$</td><td>輸入結尾；不是要打的字元</td></tr></table>
+<p class="small">RE 的 <code>+</code> 是一次以上；<code>\.</code> 是字面小數點。原圖未跳脫，此處消除歧義。多行程式另需略過換行。</p>
+<div class="warn"><b>ac ≠ C：</b>id 只有一個小寫字母，f、i、p 是保留字；沒有分號、括號、乘除或 <code>//</code> 註解。投影片的註解是給人看的。</div></section>
+<section><h2>3｜切 token：短例快查</h2><table class="tight"><tr><th>輸入</th><th>Scanner 的結果</th></tr><tr><td><code>b2</code></td><td>id(b), inum(2)；不是單一 id</td></tr><tr><td><code>abc</code></td><td>id(a), id(b), id(c)</td></tr><tr><td><code>007</code></td><td>一個 inum(007)</td></tr><tr><td><code>-5</code></td><td>minus, inum(5)；負號非數字一部分</td></tr><tr><td><code>.5</code></td><td>首字元「.」無 token → lexical error</td></tr><tr><td><code>5.</code></td><td>Fig 2.3 不合法；Fig 2.6 虛擬碼會收</td></tr></table></section>
+</div><div>
+<section><h2>4｜RE 與 CFG 的分工</h2><p class="q">What is the difference between a regular expression and a context-free grammar?</p><p class="en">In this compiler, regular expressions specify the character patterns of tokens. A context-free grammar specifies how tokens form declarations, expressions, statements, and programs.</p>
+<div class="term"><b>terminal</b>：不能再改寫，本章是 token kinds。<br><b>non-terminal</b>：可依 production 改寫。<br><b>production</b>：<code>A → α</code>，將 LHS 的 A 換成 RHS 的 α。<br><b>start symbol</b>：本章為 Prog。<br><b>λ / ε</b>：空字串，不消耗任何 token。<br><b>$</b>：end-of-input marker，與 λ 不同。</div>
+<p class="q">Why are scanning and parsing separate?</p><p class="en">Scanning handles character-level patterns; parsing handles token-level structure. This separation simplifies the grammar and lets the parser operate on token types.</p></section>
+<section><h2>5｜課本範例：一路都用它 <small>PPT 5</small></h2><pre>f b
+i a
+a = 5
+b = a + 3.2
+p b</pre>
+<pre>floatdcl id | intdcl id | id assign inum
+id assign id plus fnum | print id | $</pre><p><b>共 14 個來源 tokens</b>（| 僅分句）；再加 scanner 回傳的 <code>$</code> 共 15 個。空白不計。宣告 b:float、a:integer；最後印出 8.2。</p></section>
+<section><h2>6｜Scanner 作答骨架</h2><p>略過 blank → EOF 回 $ → 數字呼叫 SCANDIGITS → 否則吃一字元分類 → 未定義字元報 lexical error。</p><p><b>PEEK</b>：看但不吃；<b>ADVANCE</b>：吃掉並前進。Scanner 的 lookahead 是<b>字元</b>；parser 的 lookahead 是 <b>token</b>。</p><div class="warn"><b>5. 的答法：</b>問 formal definition → 不合法；問「照 Fig 2.6 執行」→ fnum，因小數點後的 while 可跑 0 次。</div></section>
+</div></div><footer><span>Crafting a Compiler · 課程 Ch02 · 依第一章 cheatsheet 版式整理</span><span>01 / 06　詞法與短答</span></footer></article>
+
+<article class="sheet" id="p2">
+<header><h1>文法 × Predict Set × Parser</h1><div class="meta">OPENBOOK · 02 / 06<br>依 Fig 2.1 完整列出 15 條規則</div></header>
+<section><h2>7｜文法與每條產生式的 predict set <small>PPT 7、17–24；全表依文法推算</small></h2>
+<table class="tight"><tr><th>#</th><th>Production</th><th>Predict set</th><th>選它時做什麼</th></tr>
+<tr><td>1</td><td><code>Prog → Dcls Stmts $</code></td><td>{floatdcl, intdcl, id, print, $}</td><td>DCLS(); STMTS(); MATCH($)</td></tr>
+<tr><td>2</td><td><code>Dcls → Dcl Dcls</code></td><td>{floatdcl, intdcl}</td><td>剖析一個宣告，再繼續</td></tr>
+<tr><td>3</td><td><code>Dcls → λ</code></td><td>{id, print, $}</td><td>宣告結束，不吃 token</td></tr>
+<tr><td>4</td><td><code>Dcl → floatdcl id</code></td><td>{floatdcl}</td><td>MATCH(floatdcl); MATCH(id)</td></tr>
+<tr><td>5</td><td><code>Dcl → intdcl id</code></td><td>{intdcl}</td><td>MATCH(intdcl); MATCH(id)</td></tr>
+<tr><td>6</td><td><code>Stmts → Stmt Stmts</code></td><td>{id, print}</td><td>剖析一個敘述，再繼續</td></tr>
+<tr><td>7</td><td><code>Stmts → λ</code></td><td>{$}</td><td>敘述結束，不吃 token</td></tr>
+<tr><td>8</td><td><code>Stmt → id assign Val Expr</code></td><td>{id}</td><td>指定敘述</td></tr>
+<tr><td>9</td><td><code>Stmt → print id</code></td><td>{print}</td><td>只能印變數，不能 p 5 或 p a+1</td></tr>
+<tr><td>10</td><td><code>Expr → plus Val Expr</code></td><td>{plus}</td><td>繼續處理「+ 值」</td></tr>
+<tr><td>11</td><td><code>Expr → minus Val Expr</code></td><td>{minus}</td><td>繼續處理「− 值」</td></tr>
+<tr><td>12</td><td><code>Expr → λ</code></td><td>{id, print, $}</td><td>算式結束；lookahead 留給下一句</td></tr>
+<tr><td>13</td><td><code>Val → id</code></td><td>{id}</td><td>變數</td></tr>
+<tr><td>14</td><td><code>Val → inum</code></td><td>{inum}</td><td>整數常數</td></tr>
+<tr><td>15</td><td><code>Val → fnum</code></td><td>{fnum}</td><td>浮點常數</td></tr></table>
+<p><b>7 個 non-terminals：</b>Prog, Dcls, Dcl, Stmts, Stmt, Expr, Val。<b>10 個 terminals：</b>floatdcl, intdcl, print, id, assign, plus, minus, inum, fnum, $。Blank 已略過，λ 不是 terminal。</p>
+<div class="warn"><b>文法限制：</b>宣告在全部敘述前；Val 不接受負號／括號。<code>a=5</code> 是 <b>Val(5) + Expr(λ)</b>，Expr 只是「後續 ± Val 串」。Dcls、Stmts 都可為空，所以空輸入在此 CFG 中合法。</div></section>
+<div class="cols"><div>
+<section><h2>8｜Predict 怎麼算、怎麼解釋？</h2><p class="q">What is a predict set? Why must the sets be disjoint?</p><p class="en">A predict set contains the lookahead tokens for selecting a production. For predictive parsing with one token of lookahead, alternatives of the same nonterminal must have disjoint predict sets so that the choice is unique.</p>
+<ol><li>RHS 第一個是 terminal t → {t}。</li><li>第一個是 non-terminal → 找它能導出的第一個 token；若可為空，繼續看後面符號。</li><li>整個 RHS 可為 λ → 加入 LHS 後面能接的 token。</li></ol>
+<div class="term"><b>補充公式（FIRST / FOLLOW）：</b><br>Predict(A → α) = FIRST(α) − {λ}；<br>若 α ⇒* λ，再聯集 FOLLOW(A)。<br>這是推算工具，Ch2 先用口語說明。</div>
+<p><b>Stmts → Stmt Stmts：</b>Stmt 可由 id 或 print 開始，故 {id, print}。<br><b>Stmts → λ：</b>Prog 裡 Stmts 後面是 $，故 {$}。<br><b>Expr → λ：</b>後面是下一個 Stmt 或程式結尾，故 {id, print, $}。</p>
+<div class="warn">λ 分支<b>不能</b>寫「前面分支都不是就 return」。Expr 遇到 inum 並不合法；λ 不表示吞掉未知輸入。</div></section>
+</div><div>
+<section><h2>9｜Recursive descent 的程序模板</h2><p class="en">Recursive descent uses one procedure per nonterminal. It selects a production using lookahead, matches terminals, and calls procedures for nonterminals in RHS order.</p>
+<pre>教材虛擬碼整理（不建 AST 的辨識版）
+STMT():
+  if peek() == id:
+    match(id); match(assign)
+    VAL(); EXPR()
+  else if peek() == print:
+    match(print); match(id)
+  else: error()
+
+STMTS():
+  if peek() in {id, print}:
+    STMT(); STMTS()
+  else if peek() == $: return   // λ
+  else: error()</pre>
+<p><b>MATCH(t)</b>：確認 lookahead 為 t，成功才消耗；不符即 syntax error。<b>LL(1)</b>：由左到右讀輸入（L），最左推導（L），看 1 個 token。</p>
+<p class="q">What if one lookahead cannot select a unique rule?</p><p class="en">Rewrite the grammar or use more lookahead, if sufficient. Overlapping predict sets prevent a unique LL(1) choice; they do not by themselves prove ambiguity.</p>
+<p class="small">Recursive descent 也可能使用回溯；本章採 predict set 選分支。不能推論所有文法都可藉增加 lookahead 解決。</p></section>
+</div></div><footer><span>Stmt 看 id / print；Stmts 的 λ 只看 $；Expr 的 λ 看 id / print / $</span><span>02 / 06　文法與剖析</span></footer></article>
+
+<article class="sheet" id="p3">
+<header><h1>Derivation × Parse Tree × AST</h1><div class="meta">OPENBOOK · 03 / 06<br>畫樹與推導題的可套用範例</div></header>
+<section><h2>10｜三種表示，回答的問題不同 <small>PPT 8–11、27–28</small></h2>
+<table><tr><th></th><th>Derivation 推導</th><th>Parse tree 剖析樹</th><th>AST 抽象語法樹</th></tr><tr><td>重點</td><td>依序用了哪些 productions</td><td>文法規則如何形成階層</td><td>程式操作與運算元</td></tr><tr><td>保留</td><td>每一步 sentential form</td><td>non-terminals、terminals、λ、$</td><td>宣告、assign、plus/minus、print、值</td></tr><tr><td>省略</td><td>—</td><td>獨立子樹的改寫先後</td><td>Dcls/Stmts/Val/Expr 包裝、λ、$</td></tr></table>
+<p class="en"><b>Difference：</b>A parse tree records the full grammatical structure of a derivation. An AST omits grammar-only details and keeps the operations and operands needed by later compiler phases.</p>
+<p><b>最左推導：</b>每次展開最左 non-terminal；<b>最右推導：</b>每次展開最右 non-terminal。同一棵 parse tree 的最左與最右推導只差展開順序，不因此變成兩棵不同的樹。</p></section>
+<div class="cols"><div>
+<section><h2>11｜完整最左推導：i a a=5 p a</h2><pre>Prog
+⇒ Dcls Stmts $                         (1)
+⇒ Dcl Dcls Stmts $                     (2)
+⇒ intdcl id Dcls Stmts $               (5)
+⇒ intdcl id Stmts $                    (3)
+⇒ intdcl id Stmt Stmts $               (6)
+⇒ intdcl id id assign Val Expr Stmts $ (8)
+⇒ intdcl id id assign inum Expr Stmts $ (14)
+⇒ intdcl id id assign inum Stmts $    (12)
+⇒ intdcl id id assign inum Stmt Stmts $ (6)
+⇒ intdcl id id assign inum print id Stmts $ (9)
+⇒ intdcl id id assign inum print id $  (7)</pre>
+<p><b>共 11 次改寫</b>，12 個句型。規則序列：<code>1,2,5,3,6,8,14,12,6,9,7</code>。</p><p>最後是 token kinds；a、5 是 attributes。考題要「程式字串」時，可在 token 葉旁註記 lexeme。</p></section>
+<section><h2>12｜畫 parse tree 的檢查法</h2><ol><li>根為 Prog，孩子 Dcls、Stmts、$。</li><li>每次展開完整照 RHS 左到右放孩子。</li><li>Dcls / Stmts 遞迴串接，最後 λ 收尾。</li><li>指定式：id、assign、Val、Expr。</li><li>葉由左到右忽略 λ，等於完整 token 串。</li></ol><div class="warn"><b>不要提前變成 AST：</b>parse tree 的 plus 是 Expr 底下的 terminal 葉；AST 的 plus 才是兩個運算元的父節點。嚴格文法樹中 Val 下保留 inum／id 這層。</div></section>
+</div><div>
+<section><h2>13｜同一例的 parse tree 與 AST</h2><pre>Parse tree（括號為 lexeme 註記）
+Prog
+├─ Dcls
+│  ├─ Dcl
+│  │  ├─ intdcl (i)
+│  │  └─ id (a)
+│  └─ Dcls → λ
+├─ Stmts
+│  ├─ Stmt
+│  │  ├─ id (a)
+│  │  ├─ assign (=)
+│  │  ├─ Val → inum (5)
+│  │  └─ Expr → λ
+│  └─ Stmts
+│     ├─ Stmt
+│     │  ├─ print (p)
+│     │  └─ id (a)
+│     └─ Stmts → λ
+└─ $</pre>
+<svg viewBox="0 0 330 152" role="img" aria-label="AST：Program 下有 intdcl a、assign 及 print a；assign 下有 id a 與 inum 5。"><path d="M165 27 L58 68 M165 27 L165 68 M165 27 L270 68 M165 87 L120 127 M165 87 L210 127"/><rect x="125" y="7" width="80" height="25" rx="12"/><text x="165" y="24" text-anchor="middle" font-size="12">Program</text><rect x="8" y="62" width="99" height="25" rx="12"/><text x="58" y="79" text-anchor="middle" font-size="11">intdcl a</text><rect x="126" y="62" width="78" height="25" rx="12"/><text x="165" y="79" text-anchor="middle" font-size="11">assign</text><rect x="230" y="62" width="82" height="25" rx="12"/><text x="271" y="79" text-anchor="middle" font-size="11">print a</text><rect x="80" y="120" width="80" height="25" rx="12"/><text x="120" y="137" text-anchor="middle" font-size="11">id a</text><rect x="171" y="120" width="80" height="25" rx="12"/><text x="211" y="137" text-anchor="middle" font-size="11">inum 5</text></svg>
+<p class="small">AST 重新繪製，保留語意結構；不是投影片原圖。</p></section>
+</div></div>
+<section><h2>14｜遞迴方向不等於運算結合性 <small>PPT 28、42；補充辨析</small></h2><div class="warn"><b>本課習題圖：</b><code>x+30+1</code> 畫成 <code>plus(x, plus(30,1))</code>（右側較深）。要求依教材圖畫，就照該形狀。<br><b>一般左結合語意／本地 C 實作：</b><code>minus(minus(x,30),1)</code> 表示 <code>(x−30)−1</code>。x=100 時得 69；<code>x−(30−1)</code> 得 71。未指定時說明採用的結合規則，不能只憑右遞迴斷定語意。</div><p class="en">A right-recursive grammar does not force a left-associative language to use a right-associated AST. Semantic actions can accumulate the left operand to construct a left-associated tree.</p><p class="small">本章整數加法例兩種形狀都得 131；不能泛化成任何數值語意下都可任意重排加法。</p></section>
+<footer><span>切 token → 套 grammar → 檢查葉序 → 刪語法包裝成 AST → 補型別</span><span>03 / 06　推導與樹</span></footer></article>
+
+<article class="sheet" id="p4">
+<header><h1>Symbol Table × Type × Errors</h1><div class="meta">OPENBOOK · 04 / 06<br>先判階段，再說理由</div></header>
+<div class="cols"><div>
+<section><h2>15｜Symbol table <small>PPT 29–33</small></h2><p class="q">What does the symbol table store? Why 23 entries?</p><p class="en">The ac symbol table maps each identifier to integer, float, or unused (null). There are 23 possible identifiers: the 26 lowercase letters excluding the reserved letters f, i, and p.</p>
+<table class="tight"><tr><th>動作</th><th>規則</th></tr><tr><td>初始化</td><td>全部設 null（尚未宣告）</td></tr><tr><td>EnterSymbol(name,type)</td><td>null 才填入；已有型別 → duplicate declaration</td></tr><tr><td>LookupSymbol(name)</td><td>回傳型別；null 代表未宣告</td></tr><tr><td>範例 f b / i a</td><td>b→float、a→integer；其他 21 項 null</td></tr></table>
+<div class="warn">null 是 unused 狀態，<b>不是第三種運算型別</b>。表記錄型別，不是 a=5、b=8.2 這些執行期值。C 補充實作用 26 格陣列方便索引，課本仍是 23 個可用名稱。</div></section>
+<section><h2>16｜Type checking 為何 bottom-up？</h2><p class="en">The type of a compound expression depends on its operands. Therefore, type checking processes the children before the parent, looking up identifier types and inserting conversions when needed.</p>
+<table class="tight"><tr><th>節點</th><th>規則 / 依據</th></tr><tr><td>inum / fnum</td><td>integer / float（p.034）</td></tr><tr><td>id</td><td>查表；須已宣告（p.033）</td></tr><tr><td>plus / minus</td><td>依子節點型別決定自己型別</td></tr><tr><td>assign</td><td>RHS 與目標 id 型別相容</td></tr><tr><td>int2float</td><td>編譯器加入（Fig 2.13）</td></tr></table>
+<div class="warn"><b>來源界限：</b>p.034 的 utility methods（Fig 2.12）未附。Fig 2.13 確實把 <code>a+3.2</code> 的 a 包成 int2float。下面完整規則依此反推、由本地實作採用，<b>不是逐字教材規格</b>。</div>
+<table class="tight"><tr><th>補充規則</th><th>結果</th></tr><tr><td>int ± int</td><td>int</td></tr><tr><td>int ± float / float ± int</td><td>int 那側轉 float，結果 float</td></tr><tr><td>float ± float</td><td>float</td></tr><tr><td>float ← int</td><td>RHS 外包 int2float</td></tr><tr><td>int ← float</td><td>拒絕隱式窄化（本地實作）</td></tr></table></section>
+</div><div>
+<section><h2>17｜Decorated AST：轉換插在哪？ <small>PPT 35</small></h2><p><code>f b i a a=5 b=a+3.2 p b</code> 中第二個指定：</p>
+<svg viewBox="0 0 330 250" role="img" aria-label="assign float 左側 id b，右側 plus float。plus 左側為 int2float 包住 id a，右側 fnum 3.2。"><path d="M155 30 L60 82 M155 30 L230 82 M230 105 L162 157 M230 105 L281 157 M162 183 L162 229"/><rect x="96" y="8" width="120" height="26" rx="13"/><text x="156" y="26" text-anchor="middle" font-size="12">assign : float</text><rect x="9" y="78" width="102" height="26" rx="13"/><text x="60" y="96" text-anchor="middle" font-size="11">id b : float</text><rect x="174" y="78" width="114" height="26" rx="13"/><text x="231" y="96" text-anchor="middle" font-size="11">plus : float</text><rect class="convert" x="96" y="153" width="132" height="28" rx="14"/><text x="162" y="172" text-anchor="middle" font-size="11">int2float : float</text><rect x="239" y="153" width="88" height="28" rx="14"/><text x="283" y="172" text-anchor="middle" font-size="10">fnum 3.2</text><rect x="110" y="220" width="104" height="26" rx="13"/><text x="162" y="238" text-anchor="middle" font-size="11">id a : int</text></svg>
+<p><b>保留 a 的宣告：</b>a 仍是 integer，只在這次運算使用其值時轉成 float。不是把 symbol table 的 a 改成 float。</p><p class="en">A decorated AST carries semantic information such as types and may contain inserted conversion nodes. Here, int2float converts the value of a before floating-point addition.</p></section>
+<section><h2>18｜Semantic action：執行或記錄？ <small>PPT 25–27</small></h2><p class="q">What happens after parsing a = 5?</p><p class="en">An interpreter may execute the assignment immediately. In this chapter's compiler, the semantic action records the assignment in an AST for later analysis and code generation.</p><p>走完 <code>id assign Val Expr</code> 已知道目標和 RHS，可建 assign 節點。<b>本章</b>先建 AST，再檢查、產碼；不是所有 compiler 都必須如此排程。</p></section>
+</div></div>
+<section><h2>19｜情境題：Lexical / Syntax / Semantic？ <small>依 ac 規則自編練習</small></h2>
+<table class="tight"><tr><th>輸入（各列獨立）</th><th>第一個問題</th><th>可直接寫的英文理由</th></tr><tr><td><code>i a a=@</code></td><td>Lexical</td><td>The character @ does not match any ac token.</td></tr><tr><td><code>i a a=+5</code></td><td>Syntax</td><td>Val cannot begin with plus; ac has no unary plus here.</td></tr><tr><td><code>i a p 5</code></td><td>Syntax</td><td>The print production requires an identifier, not a number.</td></tr><tr><td><code>i a a=5 f b</code></td><td>Syntax</td><td>Declarations cannot occur after statements.</td></tr><tr><td><code>i a f a</code></td><td>Semantic</td><td>The identifier a is declared twice.</td></tr><tr><td><code>f b b=c</code></td><td>Semantic</td><td>The identifier c has not been declared.</td></tr><tr><td><code>i a a=3.2</code></td><td>Semantic（補充型別規則）</td><td>A float value cannot be implicitly assigned to an integer variable.</td></tr></table>
+<div class="ans"><b>通用答法：</b><span class="en">A syntax error violates the grammar. A static semantic error violates declaration or type rules even though the token sequence is grammatically valid.</span><br>合法程式算出非預期答案可能是 logic error；編譯器不一定知道人的意圖。未宣告與未初始化也是兩個不同問題。</div></section>
+<footer><span>先查字元 → token 結構 → 宣告 → 型別；不要把全部錯誤歸到 parser</span><span>04 / 06　語意與錯誤</span></footer></article>
+
+<article class="sheet" id="p5">
+<header><h1>Code Generation｜dc 堆疊機</h1><div class="meta">OPENBOOK · 05 / 06<br>產碼順序、暫存器與 stack trace</div></header>
+<section><h2>20｜六種 visitor：寫出碼的模板 <small>PPT 36–38 · Fig 2.14–2.15</small></h2>
+<table class="tight"><tr><th>AST 節點</th><th>依序輸出的碼</th><th>意義</th></tr><tr><td>Consting：inum / fnum</td><td><code>value</code></td><td>常數推入堆疊</td></tr><tr><td>SymReferencing：id r</td><td><code>lr</code></td><td>複製暫存器 r 的值到堆疊</td></tr><tr><td>Computing：L op R</td><td><code>code(L); code(R); op</code></td><td>先左、再右、最後運算子</td></tr><tr><td>Converting：int2float(E)</td><td><code>code(E); 5 k</code></td><td>教材以設定 scale 表達轉換</td></tr><tr><td>Assigning：r = E</td><td><code>code(E); sr; 0 k</code></td><td>彈出 RHS 結果存入 r，重設 scale</td></tr><tr><td>Printing：p r</td><td><code>lr; p; si</code></td><td>取值、印值、彈出丟到暫存器 i</td></tr><tr><td>宣告</td><td>無</td><td>只影響符號表，不輸出 dc 指令</td></tr></table>
+<p class="small">分號僅分隔「依序輸出」的指令，不是 dc 字元。<code>lr/sr</code> 的 r 是變數名，例如 <code>la/sa</code>。</p>
+<div class="ans"><span class="en"><b>Why postfix?</b> A stack machine needs the operands before the operator. The code generator therefore emits code for the left child, then the right child, and finally the operation.</span><br>走訪從根呼叫，不代表先輸出根的運算子；計算節點實際 emit 順序是後序（postorder）。</div></section>
+<div class="cols"><div>
+<section><h2>21｜完整例：b = a + 3.2</h2><pre>ac source       dc target
+f b             （宣告無碼）
+i a             （宣告無碼）
+a = 5            5
+                 sa
+                 0 k
+b = a + 3.2      la
+                 5 k
+                 3.2
+                 +
+                 sb
+                 0 k
+p b              lb
+                 p
+                 si</pre><p><b>轉換位置：</b><code>int2float(id a)</code> → 先 <code>la</code> 再 <code>5 k</code>。不是在整個加法後才放轉換。</p></section>
+<section><h2>22｜dc 指令的易混處</h2><ul><li><code>sr</code> 會 <b>pop</b>；<code>lr</code> 只讀暫存器、push 副本。</li><li><code>p</code> 印出 top，<b>不 pop</b>；用 <code>si</code> 清理。</li><li>i 是 ac 保留字、不能當變數名，作 dc 垃圾暫存器不會覆蓋使用者變數。</li><li><code>5 k</code>：push 5，再由 k pop 5 作 scale；不是把原有 top 改成 5。</li><li><code>0 k</code> 不把已存入暫存器的 8.2 變成 8。</li></ul>
+<div class="warn"><b>教材模型與 dc 行為：</b><code>k</code> 設定 scale，並非硬體的 int→float 指令。dc 的加減小數位由運算元決定，不能說 <code>5 k</code> 使所有輸出固定五位；考產碼仍照 Fig 2.14。</div></section>
+</div><div>
+<section><h2>23｜手算 stack：右側是頂端</h2><table class="tight"><tr><th>指令</th><th>執行後 stack</th><th>其他狀態</th></tr><tr><td><code>5</code></td><td>[5]</td><td>—</td></tr><tr><td><code>sa</code></td><td>[]</td><td>a = 5</td></tr><tr><td><code>0 k</code></td><td>[]</td><td>scale = 0</td></tr><tr><td><code>la</code></td><td>[5]</td><td>a 保持 5</td></tr><tr><td><code>5 k</code></td><td>[5]</td><td>scale = 5</td></tr><tr><td><code>3.2</code></td><td>[5, 3.2]</td><td>—</td></tr><tr><td><code>+</code></td><td>[8.2]</td><td>5 + 3.2</td></tr><tr><td><code>sb</code></td><td>[]</td><td>b = 8.2</td></tr><tr><td><code>0 k</code></td><td>[]</td><td>scale = 0</td></tr><tr><td><code>lb</code></td><td>[8.2]</td><td>—</td></tr><tr><td><code>p</code></td><td>[8.2]</td><td>印出 8.2</td></tr><tr><td><code>si</code></td><td>[]</td><td>i = 8.2（丟棄用）</td></tr></table></section>
+<section><h2>24｜減法：一定要分左右</h2><p><code>L R -</code> 計算 <b>L − R</b>；先 pop 的是右運算元 R，第二個 pop 才是 L。</p><pre>左結合：(100 - 30) - 1
+100 30 - 1 -       → 69
+
+右結合：100 - (30 - 1)
+100 30 1 - -       → 71</pre><p><code>x=x-30</code> 產碼：<code>lx 30 - sx 0 k</code>。不是 <code>30 lx -</code>，也不應先 <code>sx</code> 才計算 RHS。</p>
+<p class="q">Why is si emitted after p?</p><p class="en">The dc print command leaves the value on the stack. The generated si pops it into the unused register i, restoring the stack for subsequent statements.</p></section>
+</div></div><footer><span>dc：GNU manual · Arithmetic / Printing / Registers / Parameters（連結見 p.6）</span><span>05 / 06　產碼與堆疊</span></footer></article>
+
+<article class="sheet" id="p6">
+<header><h1>教材習題 × Scanner 擴充</h1><div class="meta">OPENBOOK · 06 / 06<br>原解答與補充辨析分開標示</div></header>
+<div class="cols"><div>
+<section><h2>25｜HW 1–2 <small>PPT 39–44</small></h2><p><b>題目：</b><code>i x x=100 x=x+30+1 p x</code></p><h3>HW 1：parse tree / 最左推導</h3><p>按 p.2 文法，規則序列為：<br><code>1,2,5,3,6,8,14,12,6,8,13,10,14,10,14,12,6,9,7</code>（19 次改寫）。</p>
+<p>第二句指定的尾巴：<br><code>Expr → plus Val Expr</code>，Val→inum(30)；下一層 <code>Expr → plus Val Expr</code>，Val→inum(1)；最後 Expr→λ。</p>
+<h3>HW 2(a)：教材 AST 的結構</h3><pre>Prog
+├─ intdcl x       // 原圖只標 x
+├─ assign(id x, inum 100)
+├─ assign
+│  ├─ id x
+│  └─ plus
+│     ├─ id x
+│     └─ plus
+│        ├─ inum 30
+│        └─ inum 1
+└─ print x</pre><p class="small">補齊節點種類；樹形保留 p.042 的右結合。</p>
+<h3>HW 2(b)：語意正確嗎？</h3><div class="warn"><b>教材解答 p.043：</b>先答「No」，接著說 AST 的 30、+、1 可合成單一節點 31。<br><b>待核對：</b>p.033–034 所列宣告／型別規則未顯示此例違規。把常數子樹算成 31 是 <b>constant folding（常數摺疊）</b>，不等於修正語意錯誤。問「依投影片解答」時保留 No 及說明；問規則推理時明列 x 已宣告、運算元皆 integer。不可捏造「ac 不准連續加法」。</div>
+<h3>HW 2(c)：教材摺疊後的 dc code</h3><pre>100 sx 0 k
+lx 31 + sx 0 k
+lx p si</pre><p>印出 <b>131</b>。原右結合 AST 未摺疊的第二行：<code>lx 30 1 + + sx 0 k</code>。本地 C 左結合版：<code>lx 30 + 1 + sx 0 k</code>。本例結果相同，形狀與碼序不同。</p></section>
+</div><div>
+<section><h2>26｜HW 3：擴充 scanner <small>PPT 45–46</small></h2><h3>(a)(b) 宣告可用完整單字</h3><pre>floatdcl  "f" | "float"
+intdcl    "i" | "int"</pre><p><b>程式也要改：</b>看到 f/i 時不能立刻只回一個字元；檢查完整關鍵字是否匹配，未匹配字元保留給後續 token。明定最長匹配／關鍵字邊界規則。</p><p>原 ac 的 <code>fl</code> 是 <code>floatdcl id(l)</code>，仍須辨認。完整 <code>float</code> 匹配時選長 token，不能拆成 f、l、o、a、t。</p>
+<h3>(c) 可選的有號指數</h3><p><b>教材原解答（照錄結構）：</b></p><pre>inum  [0-9]+ e -? [0-9]+
+fnum  [0-9] . [0-9]+ e -? [0-9]+</pre><div class="warn"><b>與題意有三個落差：</b>① 指數變必填；② 只收負號、漏正號；③ fnum 小數點前只有一位。「依題意擴充」時應補齊。</div>
+<p><b>依題意補充：</b>接受原數字及指數形式；帶指數者歸 fnum（<code>123e-22</code> 不一定是整數）。</p><pre>inum  [0-9]+
+fnum  [0-9]+\.[0-9]+(e[+-]?[0-9]+)?
+      | [0-9]+e[+-]?[0-9]+</pre><p><code>e</code> 依題目小寫；要 E 另明定 <code>[eE]</code>。流程：數字 → 可選小數部分 → 可選 e → 可選 +/− → <b>至少一位指數數字</b>。</p>
+<table class="tight"><tr><th>應接受（補充規則）</th><th>非完整數字格式</th></tr><tr><td>5、3.2、1.0e10<br>123e-22、123.4e+5</td><td>1e、1e+、3.e2、.5</td></tr></table>
+<p class="small">不完整指數依明定 scanner 規則報 malformed number，或退回較短 token 由後續階段拒絕；RE 本身未決定所有錯誤回復策略。</p>
+<p class="en"><b>Extension answer：</b>Update both the token patterns and the scanner. Recognize the optional exponent and its sign, require exponent digits, and preserve characters that belong to the next token.</p>
+<p><b>後端：</b>dc 不直接接受科學記號；須轉成可輸出的十進位寫法，不能直接 EMIT <code>1e10</code>。</p></section>
+</div></div>
+<section><h2>27｜最後 30 秒：英文短答骨架</h2><div class="ans"><b>Explain X：</b>definition → role / input-output → tiny example。<br><b>Difference：</b>“X checks / represents …, whereas Y checks / represents ….”<br><b>Is it valid?：</b>“Lexically …; syntactically …; semantically …, because ….”<br><b>How to extend?：</b>token rule → scanner behavior → parser/type/codegen 是否受影響。</div></section>
+<section class="small"><b>來源與範圍：</b>Ch02 a simple compiler.pptx／46 頁衍生 PDF、四份逐頁伴讀（p.001–046）；題型參考「Compiler - 第一次小考題目與標準答案」，版面參考 Ch1 cheatsheet。6 頁 A4（雙面 3 張），未假設允許的頁數上限。<br>
+<b>參照：</b><a href="../../Output/Ch02%20a%20simple%20compiler/auto/Ch02%20a%20simple%20compiler.pdf">Chapter 2 原投影片 PDF</a> · <a href="../../Review/Compiler%20-%20第一次小考題目與標準答案.md">第一次小考</a> · <a href="https://www.gnu.org/software/bc/manual/dc-1.05/html_mono/dc.html">GNU dc manual</a>。<br>
+<b>待核對保留：</b>p.034 缺 Fig 2.12；p.043 的 No 與既列規則不一致。p.014、p.042、p.046 的定義／樹形／解答差異已明示。</section>
+<footer><span>列印：A4／100%／關閉瀏覽器頁首頁尾；HTML 可離線使用</span><span>06 / 06　習題與擴充</span></footer></article>
+</body></html>

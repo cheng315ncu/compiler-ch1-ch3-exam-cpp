@@ -1,0 +1,146 @@
+{
+  "native_compiler": "Apple clang version 21.0.0 (clang-2100.3.33.1)",
+  "standard": "C++17",
+  "flags": [
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror",
+    "-O2"
+  ],
+  "native_tests": {
+    "normal": 610,
+    "asan_ubsan": 610,
+    "html_differential": 200,
+    "expression_fraction_oracles": 200,
+    "fixed_dfa_words": 97222,
+    "random_nfa_words": 768
+  },
+  "unchanged_full_exam_tests": 151,
+  "shortened_original_lines": 839,
+  "shortened_lines": 400,
+  "eight_original_lines": 1085,
+  "eight_short_lines": 646,
+  "source_sha256": {
+    "Complier/Code/exam/short/html_check.cpp": "d2b41a8e34f6b8723d3b409b4821af18c5658f7d94b9b3882afccdcb313b9e69",
+    "Complier/Code/exam/short/expression.cpp": "24ae4131c59e55424d274a489c7076ba24591be0e623c5b208d25db54aafa21e",
+    "Complier/Code/exam/lexer.cpp": "3763b207074e71d1ad00f489a31747296d58f4f74e8c0d2c1f5269fcd5ef046d",
+    "Complier/Code/exam/short/nfa_check.cpp": "4f8700108bb99836b2006e0e3bf752dd7cd51b43287a48223135349b6c15dac8",
+    "Complier/Code/exam/short/hw5_check.cpp": "4859447c26a2b1f36cba5c5da4b7ba1418bb6c4e96c6899cb2cd43982172bd73",
+    "Complier/Code/exam/short/ac_dc.cpp": "4f1cc415e2cb0442f75517e1cd1d4ba246370b2cf54062837c70fc0c7f517260",
+    "Complier/Code/exam/stack_vm.cpp": "5858e7a1067b2c8eab1afc84dae2aad03d30188c648fe4556779e1ee0a4fa3b1",
+    "Complier/Code/exam/ll1.cpp": "d6a65ce98c502339c53400c5cf2f9e2139629ef385e70f33b2633a2740843840"
+  },
+  "linux_cross_compilation": {
+    "ac_dc": "/tmp/compiler-commented-linux/ac_dc: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped",
+    "lexer": "/tmp/compiler-commented-linux/lexer: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped",
+    "nfa_check": "/tmp/compiler-commented-linux/nfa_check: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped",
+    "html_check": "/tmp/compiler-commented-linux/html_check: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped",
+    "stack_vm": "/tmp/compiler-commented-linux/stack_vm: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped",
+    "ll1": "/tmp/compiler-commented-linux/ll1: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped",
+    "hw5_check": "/tmp/compiler-commented-linux/hw5_check: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped",
+    "expression": "/tmp/compiler-commented-linux/expression: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, with debug_info, not stripped"
+  },
+  "linux_runtime_verified": false,
+  "domjudge_accepted_verified": false,
+  "gnu_gcc_runtime_verified": false,
+  "html_code_roundtrips": 0,
+  "note_code_exact_matches": 0,
+  "resolved_wikilinks": 10,
+  "obsidian_readback_matches": true,
+  "obsidian_ui_render_verified": false,
+  "notion_uploaded": false,
+  "contracts": [
+    "HTML check retains full-check subset",
+    "Expression nesting/unary limit 256; AST text O(n^2)",
+    "NFA recognition only; full DFA table retained in original",
+    "ac dc only; original tree/folding modes retained"
+  ],
+  "mirror_note_byte_matches": 1,
+  "html_handbook": {
+    "mode": "source_lookup_guide_with_collapsed_examples",
+    "problems": 8,
+    "diagrams": 3,
+    "edit_entries": 40,
+    "compiled_edit_variants": 40,
+    "example_checks": 82,
+    "cpp_source_blocks_exact": 0,
+    "direct_cpp_links": 8,
+    "collapsed_example_sections": 48,
+    "all_local_links_resolved": true,
+    "source_sha256_unchanged": true,
+    "offline_svg_self_check": true,
+    "browser_ui_verified": false,
+    "sha256": "a3f30cc9a0da52e41c852984ad2643b3df8a1cf80877e45958c21735d524e8b6"
+  },
+  "annotation_update": {
+    "added_comment_lines": 160,
+    "noncomment_cpp_tokens_unchanged": true,
+    "files": {
+      "Complier/Code/exam/short/html_check.cpp": {
+        "added_comments": 28,
+        "noncomment_sha256": "89e126fd042da20285352448166926e8790a7f5f6514509fd21e19623dee1719"
+      },
+      "Complier/Code/exam/short/expression.cpp": {
+        "added_comments": 23,
+        "noncomment_sha256": "269fa6a51010a6da231f61b1ae88860ae39f5349c0aa74e76bd9789b760dea8f"
+      },
+      "Complier/Code/exam/lexer.cpp": {
+        "added_comments": 20,
+        "noncomment_sha256": "8df5ad9aea52d5789e9b137067b0fa056ef35361a88a763edcc49d84f65bb2ef"
+      },
+      "Complier/Code/exam/short/nfa_check.cpp": {
+        "added_comments": 16,
+        "noncomment_sha256": "360e86ba19445f163b7cb1800bd8109bfc0865802ba722a14cb8bde0f0274cf1"
+      },
+      "Complier/Code/exam/short/hw5_check.cpp": {
+        "added_comments": 11,
+        "noncomment_sha256": "b7b71a5ea896c4e31ba29a8bd6c41c39a70eab32f7793ad14783cf04c428ccd4"
+      },
+      "Complier/Code/exam/short/ac_dc.cpp": {
+        "added_comments": 25,
+        "noncomment_sha256": "de008a091685486fe9eb8bb5f080a2f5deacdd8217adcb6886504da25896cdac"
+      },
+      "Complier/Code/exam/stack_vm.cpp": {
+        "added_comments": 15,
+        "noncomment_sha256": "afacceb5adecb7c39b60518e333db20cea51261c1bac7a0ac9b9fec1e422c687"
+      },
+      "Complier/Code/exam/ll1.cpp": {
+        "added_comments": 22,
+        "noncomment_sha256": "8da667bd691c0e9a7223409902a4ef2df69a5bd815678c41f20df7bb86785df5"
+      }
+    },
+    "normal_checks": 610,
+    "asan_ubsan_checks": 610,
+    "compiled_variants": 40,
+    "handbook_example_checks": 82
+  },
+  "note_full_prompts": 8,
+  "note_modification_examples": 40,
+  "eight_annotated_source_lines": 806,
+  "note_sha256": "d9f563bf01d392e4a096a837aeb3bd569c9bd59f27ad070b8dced4e473f2d309",
+  "archived_pdf_evidence": {
+    "pdf_pages": 23,
+    "pdf_bookmarks": 8,
+    "pdf_code_roundtrips": 8,
+    "pdf_all_text_within_bounds": true,
+    "pdf_rendered_pages": [
+      1,
+      3,
+      16,
+      23
+    ],
+    "pdf_visually_reviewed_pages": [
+      1,
+      3,
+      16,
+      23
+    ],
+    "regenerated_for_source_guide": false
+  },
+  "guide_update": {
+    "cpp_files_changed": 0,
+    "default_pdf_generation": false,
+    "full_cpp_duplicated_in_guide": false
+  }
+}
