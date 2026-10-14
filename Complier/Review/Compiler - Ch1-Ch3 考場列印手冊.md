@@ -11,7 +11,7 @@ source_pages: "各章原有 PPT 頁碼保留在合併 PDF；本冊頁碼另列�
 # Compiler - Ch1-Ch3 考場列印手冊
 
 > [!abstract] 可直接列印的完整版本
-> [[Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.pdf|完整 A4 PDF]]：70 頁，雙面約 35 張；黑白、連續頁碼與書籤。[[Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.html|前半部程式指南 HTML]] 可離線閱讀；三章完整速查表已合併於 PDF。
+> [[Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.html|考場速查 HTML]]：10 頁 A4，寫 code 用的骨架、觀念與各題改法。完整題意與改前／改後範例見 [[Complier/Review/Compiler-Ch1-Ch3-Detail.html|完整指南 HTML]]；舊版 70 頁 PDF 已不在 repo，下方 PDF 頁碼僅供參考。
 
 程式直接攜帶 `.cpp`；紙本提供選檔、完整題意、輸入輸出、解題追蹤、3 張流程圖、40 個修改範例的改前／改後及測例。八份原碼未修改，不在紙本重抄整份程式。附錄收錄 Ch1 7 頁、Ch2 6 頁、Ch3 10 頁，全部保留。
 

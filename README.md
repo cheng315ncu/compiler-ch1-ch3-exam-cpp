@@ -6,8 +6,8 @@
 
 ## 先讀這兩份
 
-- [70 頁 A4 完整列印手冊（雙面 35 張）](Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.pdf)：完整題意、選檔索引、流程圖、40 個改動範例與三章速查表。
-- [完整程式指南 HTML](Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.html)：前 47 頁指南內容全部攤開；三章附錄收於完整 PDF。
+- [10 頁 A4 考場速查（列印用）](Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.html)：選檔表、Scanner／Recursive Descent 骨架、文法→程式對照、FIRST／FOLLOW、NFA→DFA 表、dc 產碼、小考英文短答、21 題卡片（行號＋改法）。
+- [完整程式指南 HTML](Complier/Review/Compiler-Ch1-Ch3-Detail.html)：完整題意、全部測例、流程圖、46 個改前／改後範例；03／07／08 的行號比現行原碼少 3 行。
 
 下載或 clone 後，用瀏覽器開啟 HTML 即可離線閱讀；GitHub 的 HTML 檔案頁顯示原始內容。列印設定為 A4、雙面、長邊翻頁、實際大小 100%。程式直接帶 `.cpp`。
 
