@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile/run the two homework programs in scratch space. No binaries in vault.
+"""Compile/run the four homework programs in scratch space. No binaries in vault.
 Usage: python3 Complier/Code/check_cpp_homework.py [--sanitize]
 CXX=g++ is supported; only Python stdlib is required by this checker.
 """
@@ -37,10 +37,10 @@ with tempfile.TemporaryDirectory(prefix="compiler-cpp-") as scratch:
     flags = ["-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-Werror"]
     flags += ["-O1", "-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer"] if "--sanitize" in sys.argv else ["-O2"]
     ac, automata = Path(scratch) / "ac", Path(scratch) / "automata"
-    for source, binary in [(ROOT / "ch02/ac_homework.cpp", ac), (ROOT / "ch03/automata_homework.cpp", automata)]:
+    for source, binary in [(ROOT / "14-ac作業完整版/ac_homework.cpp", ac), (ROOT / "15-HW5-NFA-DFA作業完整版/automata_homework.cpp", automata)]:
         subprocess.run([*compiler, *flags, str(source), "-o", str(binary)], check=True, timeout=120)
-    sample = (ROOT / "ch02/ac_homework.in").read_bytes()
-    code = (ROOT / "ch02/ac_homework.expected").read_bytes()
+    sample = (ROOT / "14-ac作業完整版/ac_homework.in").read_bytes()
+    code = (ROOT / "14-ac作業完整版/ac_homework.expected").read_bytes()
     for data in [sample, sample.replace(b"\n", b"\r\n"), sample.rstrip(b"\n"), b"ixx=100x=x+30+1px"]:
         expect(ac, data, code)
     expect(ac, sample, b"OK\n", "--check")
@@ -77,8 +77,8 @@ with tempfile.TemporaryDirectory(prefix="compiler-cpp-") as scratch:
     long_program = b"i x x=" + b"1+" * 5000 + b"1 p x"
     expect(ac, long_program, b"5001\nsx\n0 k\nlx\np\nsi\n", "--fold")
     expect(ac, b" " * 70000 + sample, code)
-    words = (ROOT / "ch03/automata_homework.in").read_bytes()
-    expected = (ROOT / "ch03/automata_homework.expected").read_bytes()
+    words = (ROOT / "15-HW5-NFA-DFA作業完整版/automata_homework.in").read_bytes()
+    expected = (ROOT / "15-HW5-NFA-DFA作業完整版/automata_homework.expected").read_bytes()
     expect(automata, words, expected, "5a")
     expect(automata, words.replace(b"\n", b"\r\n"), expected, "5a")
     expect(automata, b"d\nbcd\nbcbcd\n\nbc\nbd\nbcdd\ndd\na\n", b"ACCEPT\nACCEPT\nACCEPT\nREJECT\nREJECT\nREJECT\nREJECT\nREJECT\nREJECT\n", "5d")
@@ -114,4 +114,18 @@ with tempfile.TemporaryDirectory(prefix="compiler-cpp-") as scratch:
             assert result.stdout == answer, result
             assert result.stderr == b"", result.stderr
             checks += 1
-    print(f"PASS: 2 C++17 builds; {checks} checks; {total_words} NFA/DFA/regex words (length <= 8); dc={'verified' if dc else 'unavailable'}; sanitizer={'on' if '--sanitize' in sys.argv else 'off'}")
+    # ScannerTest／ParserTest：題目 PDF 的範例，LF／CRLF／無末尾換行都要相同。
+    for folder, stem in [("09-作業ScannerTest", "scanner"), ("10-作業ParserTest", "parser")]:
+        source, binary = ROOT / folder / f"{stem}.cpp", Path(scratch) / stem
+        subprocess.run([*compiler, *flags, str(source), "-o", str(binary)], check=True, timeout=120)
+        data, wanted = source.with_suffix(".in").read_bytes(), source.with_suffix(".expected").read_bytes()
+        for variant in [data, data.replace(b"\n", b"\r\n"), data.rstrip(b"\n")]:
+            expect(binary, variant, wanted)
+    scanner, parser = Path(scratch) / "scanner", Path(scratch) / "parser"
+    expect(scanner, b"1+2", b"NUM 1\nPLUS\nNUM 2\n")
+    expect(scanner, b"012", b"NUM 0\nNUM 12\n")
+    expect(parser, b"illiga!id\n", b"invalid input\n")
+    expect(parser, b"", b"")
+    for bad in [b'"abc', b"a.", b"(a)", b"a(", b"a)"]:
+        expect(parser, bad, b"invalid input\n")
+    print(f"PASS: 4 C++17 builds; {checks} checks; {total_words} NFA/DFA/regex words (length <= 8); dc={'verified' if dc else 'unavailable'}; sanitizer={'on' if '--sanitize' in sys.argv else 'off'}")

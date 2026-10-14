@@ -20,7 +20,7 @@ PROMPTS = {
   basis='Ch3 scanner / longest match 的延伸模擬題。教材 HW3 要擴充 ac 的 f/float、i/int、scientific number；本份是一般 C-like token 題，規格不同。',
   statement='請對一份類 C 程式做詞彙分析，依序列出 keyword、identifier、number、string、char、operator 與 punctuation。忽略空白、單行 // 註解及非巢狀 /* */ 註解。先讀完整 identifier 再查保留字，operator 採最長匹配。quoted literal 中的註解符號不可當作註解，跳脫引號不得提早終止 literal。',
   input='整份 stdin 到 EOF；ID 可含底線；number 允許 .5、10.、e/E。keyword 名單及 operator 名單以檔案常數為準。',
-  output='每個 token 一行：類型、空白、std::quoted 包裝的原始 lexeme；最後一行 EOF。',
+  output='每個 token 一行：類型、空白、quoted 包裝的原始 lexeme；最後一行 EOF。',
   limits='不是完整 C/C++ lexer：沒有 preprocessing、raw string、數字 suffix 或完整字元 escape 語意；CHAR 只允許單 byte / 單簡單 escape。遇未閉註解／引號或非法 byte，exit 1 且 stdout 空。',
   trace=['intx：先讀四個字元，查 keyword 失敗，因此為 ID，不拆 int + x。','a>>=2：>>= 先於 >> / >，只有一個 operator token。','"//x"：整段是 STRING，// 不觸發註解。','-1e-2：前面的 - 是 OP，指數內的 - 是 NUM 的一部分。'],
   samples=[('intx >>= 2','ID "intx"\nOP ">>="\nNUM "2"\nEOF\n'),('int x; // hi\n','KW "int"\nID "x"\nPUNCT ";"\nEOF\n'),('"//x"','STRING "\\"//x\\""\nEOF\n'),('1e+',None),('/* unfinished',None)]),
@@ -100,9 +100,9 @@ def variants_for(spec, legacy):
         add(legacy[3][0],[after('bool id = letter(c);','if (id) fail();')],'x+1',None)
         old=line("if (op == '/')");add('每次除法結果向零截斷',[replace("if (op == '/')",old.replace('a.number /= b.number;','a.number = trunc(a.number / b.number);'))],'-7/2','-3\n')
     elif stem=='lexer':
-        old=line('const std::set<std::string> keywords');add(legacy[0][0],[replace('const std::set<std::string> keywords',old.replace('{"int"','{"switch","case","int"'))],'switch case','KW "switch"\nKW "case"\nEOF\n')
-        old=line('const std::vector<std::string> ops');add(legacy[1][0],[replace('const std::vector<std::string> ops',old.replace('"++"','"**","++"'))],'a**b','ID "a"\nOP "**"\nID "b"\nEOF\n')
-        add(legacy[2][0],[replace('output << kind <<',legacy[2][2])],'int x','KW int\nID x\nEOF\n')
+        old=line('const set<string> keywords');add(legacy[0][0],[replace('const set<string> keywords',old.replace('{"int"','{"switch","case","int"'))],'switch case','KW "switch"\nKW "case"\nEOF\n')
+        old=line('const vector<string> ops');add(legacy[1][0],[replace('const vector<string> ops',old.replace('"++"','"**","++"'))],'a**b','ID "a"\nOP "**"\nID "b"\nEOF\n')
+        add(legacy[2][0],[block(legacy[2][1],legacy[2][2])],'int x','KW int\nID x\nEOF\n')
         add(legacy[3][0],[replace('output << "EOF','')],'int','KW "int"\n')
         add('不區分 keyword，全部列為 ID',[replace('kind = keywords.count','kind = "ID";')],'int x','ID "int"\nID "x"\nEOF\n')
     elif stem=='nfa_check':
@@ -127,7 +127,7 @@ def variants_for(spec, legacy):
         add('assignment 後不要產生 scale reset',[replace("out << 's' << target",line("out << 's' << target").replace('\\n0 k\\n','\\n'))],'i x x=2 px','2\nsx\nlx\np\nsi\n')
     elif stem=='stack_vm':
         add(legacy[0][0],[replace(legacy[0][1][0],legacy[0][2])],'PUSH 2\nPRINT\nPRINT\n','2\n2\n')
-        a=legacy[1][1][0];add(legacy[1][0],[replace(a,line(a).replace('output << std::setprecision(15);','output << std::fixed << std::setprecision(2);'))],'PUSH .25\nPRINT\n','0.25\n')
+        a=legacy[1][1][0];add(legacy[1][0],[replace(a,line(a).replace('output << setprecision(15);','output << fixed << setprecision(2);'))],'PUSH .25\nPRINT\n','0.25\n')
         a=legacy[2][1][0];add(legacy[2][0],[replace(a,line(a).replace('op == "PRINT"','op == "OUT"'))],'PUSH 8\nOUT\n','8\n')
         add('指令名稱忽略 ASCII 大小寫',[after('if (!(input >> op)) continue;',"for (char& c : op) if (c >= 'a' && c <= 'z') c -= 'a' - 'A';")],'push 2\nprint\n','2\n')
         add('PRINT 不移除值，DUP 後連續列印',[replace(legacy[0][1][0],legacy[0][2])],'PUSH 2\nDUP\nPRINT\nPRINT\n','2\n2\n')
@@ -137,7 +137,7 @@ def variants_for(spec, legacy):
         a,d,e=output(legacy[2][1][0],'2\nS -> a S\nS -> #\na\nb\n','YES\nNO\n');add(legacy[2][0],a,d,e,('--check',))
         a='follow[rules[0].lhs].insert';b='words.push_back("$");'
         add('指定 S 為 start，不使用第一個 LHS',[replace(a,line(a).replace('rules[0].lhs','"S"')),replace(b,line(b).replace('rules[0].lhs','"S"'))],'2\nA -> b\nS -> a\na\nb\n','ACCEPT\nREJECT\n',('--check',))
-        add('只輸出是否為 LL(1)',[block(['for (const auto& nt : nonterminals) {', 'std::cout << (ll1 ?'], 'std::cout << (ll1 ? "LL1 YES\\n" : "LL1 NO\\n");')],'2\nS -> a S\nS -> #\n','LL1 YES\n')
+        add('只輸出是否為 LL(1)',[block(['for (const auto& nt : nonterminals) {', 'cout << (ll1 ?'], 'cout << (ll1 ? "LL1 YES\\n" : "LL1 NO\\n");')],'2\nS -> a S\nS -> #\n','LL1 YES\n')
     return result
 
 

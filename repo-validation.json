@@ -1,7 +1,7 @@
 {
   "created": "2026-10-14",
   "cpp_programs": 13,
-  "copied_files_byte_identical": 79,
+  "copied_files_byte_identical": 63,
   "fixture_pairs": 13,
   "native_compiler": "Apple clang version 21.0.0 (clang-2100.3.33.1)",
   "flags": [
@@ -21,7 +21,7 @@
   },
   "normal_tests_rerun_in_export": true,
   "sanitizer_rerun_in_export": false,
-  "existing_sanitizer_evidence": "Complier/Review/cpp-short-validation.json; identical source hashes",
+  "existing_sanitizer_evidence": "cpp-short-validation.json removed from this repo; rerun check_cpp_short.py --sanitize",
   "linux_runtime_verified": false,
   "domjudge_accepted_verified": false,
   "readme_local_links_resolved": true,

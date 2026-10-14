@@ -1,0 +1,11 @@
+STRLIT "test_string"
+ID Test_ID
+ID Str
+DOT .
+ID length
+LBR (
+RBR )
+ID printf
+LBR (
+STRLIT "HelloWorld"
+RBR )

@@ -1,7 +1,7 @@
 {
   "created": "2026-10-14",
   "source_git_commit": "0dd12f91c8986a5f95b66dc86f06894e63230805",
-  "copied_files": 79,
+  "copied_files": 63,
   "cpp_programs": 13,
   "export_kind": "selected current files; no vault git history",
   "files": [
@@ -201,19 +201,9 @@
       "sha256": "cbb1a05938e62ff3a8f17221a56bfda2d45bec80ca702454b058ef034a310500"
     },
     {
-      "path": "Complier/Code/build_cpp_exam_pack.py",
-      "bytes": 31015,
-      "sha256": "1ccd8cd2c2d90746b40fe5a3e27227b26851eea744ee335665705d92d007f553"
-    },
-    {
       "path": "Complier/Code/build_cpp_print_handbook.py",
       "bytes": 31242,
       "sha256": "0117c7c3716e9a4cb21f0b1f0ddd018829c7fccc63747bc8b16b30235814a291"
-    },
-    {
-      "path": "Complier/Code/build_cpp_short_pack.py",
-      "bytes": 29814,
-      "sha256": "81768a3dfb05b1fa315d6f8009af6784ebaf0339e531729af483e4383cbf4d89"
     },
     {
       "path": "Complier/Code/check_cpp_exam.py",
@@ -241,49 +231,9 @@
       "sha256": "331f958415265b6749b889bc20f4bc9c3504b5088917cff779a08bc6a1069a2a"
     },
     {
-      "path": "Complier/Review/Compiler - Ch1-Ch3 考試 C++ 程式集.md",
-      "bytes": 5967,
-      "sha256": "a1596e7e86d54059ff07f76d177320f780cb378fc733dc411524ab0c4f0b87f6"
-    },
-    {
-      "path": "Complier/Review/Compiler - Ch1-Ch3 考場短版 C++.md",
-      "bytes": 32769,
-      "sha256": "d9f563bf01d392e4a096a837aeb3bd569c9bd59f27ad070b8dced4e473f2d309"
-    },
-    {
       "path": "Complier/Review/Compiler - Ch1-Ch3 考場列印手冊.md",
       "bytes": 4837,
       "sha256": "aa06bf8c27909d2fda2c3f0386c946e88294efd06e8d6e8a9289a1ec3d89157f"
-    },
-    {
-      "path": "Complier/Review/Compiler - 第一次小考題目與標準答案.md",
-      "bytes": 13438,
-      "sha256": "4b604d41358252ddb6fac1378e2455b7645eaa6e306a8ac33c560d7c93531901"
-    },
-    {
-      "path": "Complier/Review/Compiler - 第二次小考題目紀錄.md",
-      "bytes": 1398,
-      "sha256": "fa3eb47c4544b828d87c373d3c6947eeadecb99c6bad54c17effd20b20d7965e"
-    },
-    {
-      "path": "Complier/Review/Compiler-Ch1-Ch3-Cpp-Exam-Pack.html",
-      "bytes": 112334,
-      "sha256": "e58eeeb8e013fb035f4cd2e6a9fe67d2e9040b5bf106caa0f3efe3046a7128ca"
-    },
-    {
-      "path": "Complier/Review/Compiler-Ch1-Ch3-Cpp-Short.html",
-      "bytes": 89783,
-      "sha256": "a3f30cc9a0da52e41c852984ad2643b3df8a1cf80877e45958c21735d524e8b6"
-    },
-    {
-      "path": "Complier/Review/Compiler-Ch1-Ch3-Cpp-Exam-Pack.pdf",
-      "bytes": 684403,
-      "sha256": "928262194e5da5a2815ce111395c1c4239b84e290556903082ffe27e964d5a2a"
-    },
-    {
-      "path": "Complier/Review/Compiler-Ch1-Ch3-Cpp-Short.pdf",
-      "bytes": 607589,
-      "sha256": "4804fa345369f122c9845062f54bc6e4f2d72d16b99ca0f7e2d90ba1a1576dcf"
     },
     {
       "path": "Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.html",
@@ -296,39 +246,14 @@
       "sha256": "a5df23de8ea1eca075e0adb8edef14396ef2a839da7131c580c94ce4a2c2baf3"
     },
     {
-      "path": "Complier/Review/cpp-exam-pack-layout.json",
-      "bytes": 2167,
-      "sha256": "62f0dfdcaafd4b8c56cdd6d8881591e07a68842bdd664fb368e400217de2c747"
-    },
-    {
-      "path": "Complier/Review/cpp-exam-validation.json",
-      "bytes": 3497,
-      "sha256": "0a679b5c3a2141f1899e2fef7994ce31fb65b89b077a24c4c919e7c1a8abb463"
-    },
-    {
       "path": "Complier/Review/cpp-handbook-examples.json",
       "bytes": 43475,
       "sha256": "ee357ca937f9f28c24bc025234995de02e4706d317ca366270bd39bddef4ce35"
     },
     {
-      "path": "Complier/Review/cpp-homework-validation.json",
-      "bytes": 2371,
-      "sha256": "57efb728fe2f5aef44dea88e7411a99504530b2cd9fa4c242e2c4375fc420fe7"
-    },
-    {
       "path": "Complier/Review/cpp-print-handbook-validation.json",
       "bytes": 4219,
       "sha256": "6aca964da6e3c2a42f2a1d5c87cc44e674e33e3cf24b20de01758e6e3b6fe064"
-    },
-    {
-      "path": "Complier/Review/cpp-short-pack-layout.json",
-      "bytes": 2160,
-      "sha256": "07f68562f8ff92714334738ee2c35176c972d59d158fa847846ca6bddf39dc06"
-    },
-    {
-      "path": "Complier/Review/cpp-short-validation.json",
-      "bytes": 6230,
-      "sha256": "379b5c973855202db42d73eaa2ed8acf282232a44f3df62f0f50fcc8947a01f6"
     },
     {
       "path": "Complier/Notes/Exam/Compiler - HTML parser 考試實作.md",
@@ -394,11 +319,6 @@
       "path": "Complier/Lessons/Chapter 3/Compiler-Ch3-cheatsheet.pdf",
       "bytes": 2738085,
       "sha256": "830f11689ef720099a1704820492e77107941e6d00d93e6dc701bdabcb6ff4ae"
-    },
-    {
-      "path": "Complier/Review/Chapter 3/cheatsheet-validation.json",
-      "bytes": 6749,
-      "sha256": "241549003486d389dc42f9e028cb6fbb06ab47b19023ee7e14f9ec68681ff8b3"
     }
   ]
 }

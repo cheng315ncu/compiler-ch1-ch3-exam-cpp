@@ -11,7 +11,7 @@ import re
 import subprocess
 import tempfile
 import fitz
-import build_cpp_short_pack as short
+import handbook_specs as short
 from cpp_handbook_examples import apply_variant, variants_for
 
 ROOT = short.ROOT
@@ -49,8 +49,8 @@ def front_matter(locations):
 <p>程式直接帶原始 .cpp；紙本用來找題型、看推導、核對輸入輸出及修改位置。本冊保留八題的完整題意、
 基本測例、手動追蹤、40 個修改範例的改前／改後與執行結果，不需展開才能閱讀。</p>
 <h2>A｜先選題，再開檔</h2>''' + table(['題型', 'Code 檔案（相對 Complier/Code/）', 'PDF 頁'], rows) + '<p><b>快速入口：</b>'+esc(quick)+'</p>' + '''
-<p class="line-note">相同檔名也可能有不同版本：exam/short/expression.cpp 是短版求值；
-exam/expression.cpp 是完整版本，預設 postfix。以本表完整相對路徑選檔。</p>
+<p class="line-note">相同檔名也可能有不同版本：02-遞迴下降運算式/expression.cpp 是短版求值；
+12-運算式parser完整版/expression.cpp 是完整版本，預設 postfix。以本表完整相對路徑選檔。</p>
 <h2>如何使用這本手冊</h2><ol>
 <li>圈出輸出要求：合法判定、Token、Tree、AST、Postfix、DFA 表、目標碼，或執行結果。</li>
 <li>先看該題輸入規格與範圍，再用配套 .in／.expected 跑一次原版。</li>
@@ -77,20 +77,20 @@ Scanner 小數位數及科學記號規則的差異，均沿用既有辨析。不
 
 def program_choice():
     rows = [
-        ['HTML 只判斷合法', 'exam/short/html_check.cpp', '無參數；VALID／INVALID'],
-        ['HTML Token／Tree／Text', 'exam/html_parser.cpp', '--tokens／--tree／--text；預設 --check'],
-        ['每行算式求值／Postfix／AST', 'exam/short/expression.cpp', 'MODE：eval／postfix／ast'],
-        ['深巢狀／迭代式算式 Parser', 'exam/expression.cpp', '--postfix（預設）／--ast／--eval'],
-        ['C-like Token、字串、註解', 'exam/lexer.cpp', 'keywords／ops 清單可改'],
-        ['教材 ac Scanner／Parse Tree／AST', 'ch02/ac_homework.cpp', '--tokens／--parse-tree／--ast／--typed-ast'],
-        ['ac 型別檢查／產 dc', 'exam/short/ac_dc.cpp', '只產 dc，不直接印數值'],
-        ['ac 完整型別／摺疊／產碼', 'ch02/ac_homework.cpp', '--check／--dc（預設）；可加 --fold'],
-        ['給 NFA，僅判字串', 'exam/short/nfa_check.cpp', '無參數；# 是 epsilon'],
-        ['給 NFA，產 DFA 表／集合追蹤', 'exam/nfa_to_dfa.cpp', '--table／--trace；預設 --check'],
-        ['固定 HW5(a)／(d) 字串辨識', 'exam/short/hw5_check.cpp', 'HW5A=true／false'],
-        ['固定 HW5 原 NFA→subset DFA', 'ch03/automata_homework.cpp', '5a --table／5d --table'],
-        ['Stack 指令執行', 'exam/stack_vm.cpp', 'PRINT 會 pop；不是 dc'],
-        ['通用 FIRST／FOLLOW／LL(1)', 'exam/ll1.cpp', '預設表格；--check 判 Token 序列'],
+        ['HTML 只判斷合法', '01-HTML標籤配對/html_check.cpp', '無參數；VALID／INVALID'],
+        ['HTML Token／Tree／Text', '11-HTML-parser完整版/html_parser.cpp', '--tokens／--tree／--text；預設 --check'],
+        ['每行算式求值／Postfix／AST', '02-遞迴下降運算式/expression.cpp', 'MODE：eval／postfix／ast'],
+        ['深巢狀／迭代式算式 Parser', '12-運算式parser完整版/expression.cpp', '--postfix（預設）／--ast／--eval'],
+        ['C-like Token、字串、註解', '03-Scanner與註解/lexer.cpp', 'keywords／ops 清單可改'],
+        ['教材 ac Scanner／Parse Tree／AST', '14-ac作業完整版/ac_homework.cpp', '--tokens／--parse-tree／--ast／--typed-ast'],
+        ['ac 型別檢查／產 dc', '06-ac產dc/ac_dc.cpp', '只產 dc，不直接印數值'],
+        ['ac 完整型別／摺疊／產碼', '14-ac作業完整版/ac_homework.cpp', '--check／--dc（預設）；可加 --fold'],
+        ['給 NFA，僅判字串', '04-NFA判定字串/nfa_check.cpp', '無參數；# 是 epsilon'],
+        ['給 NFA，產 DFA 表／集合追蹤', '13-NFA轉DFA完整版/nfa_to_dfa.cpp', '--table／--trace；預設 --check'],
+        ['固定 HW5(a)／(d) 字串辨識', '05-HW5固定DFA/hw5_check.cpp', 'HW5A=true／false'],
+        ['固定 HW5 原 NFA→subset DFA', '15-HW5-NFA-DFA作業完整版/automata_homework.cpp', '5a --table／5d --table'],
+        ['Stack 指令執行', '07-StackVM/stack_vm.cpp', 'PRINT 會 pop；不是 dc'],
+        ['通用 FIRST／FOLLOW／LL(1)', '08-LL1/ll1.cpp', '預設表格；--check 判 Token 序列'],
     ]
     return '''<section class="front" id="versions"><h2>同一題型，輸出要求不同就換版本</h2>
 <p>以下路徑相對 Complier/Code/。短版能辨識字串，不代表它也會畫樹或列 DFA 表。
@@ -334,11 +334,10 @@ A4、雙面、長邊翻頁、100%／實際大小。最底端 `Print handbook N /
 
 def main():
     evidence=json.loads((REVIEW/'cpp-handbook-examples.json').read_text())
-    baseline=json.loads((REVIEW/'cpp-short-validation.json').read_text())
     assert evidence['variant_builds']==40 and evidence['checks']==82
     for spec,tested in zip(short.SPECS,evidence['results']):
         path=spec['source_path'];digest=hashlib.sha256(path.read_bytes()).hexdigest()
-        assert digest==tested['source_sha256']==baseline['source_sha256'][str(path.relative_to(ROOT))]
+        assert digest==tested['source_sha256']
         for recipe,saved in zip(variants_for(spec,short.HANDBOOK[spec['stem']]['edits']),tested['variants']):
             changed,edits=apply_variant(path.read_text(),recipe)
             assert edits==saved['edits'] and hashlib.sha256(changed.encode()).hexdigest()==saved['changed_sha256']

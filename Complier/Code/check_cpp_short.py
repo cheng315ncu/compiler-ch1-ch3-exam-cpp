@@ -12,7 +12,8 @@ import subprocess
 import sys
 import tempfile
 ROOT = Path(__file__).resolve().parent
-SHORT = ROOT / "exam/short"
+SHORT = [ROOT / "06-ac產dc/ac_dc.cpp", ROOT / "02-遞迴下降運算式/expression.cpp", ROOT / "05-HW5固定DFA/hw5_check.cpp",
+         ROOT / "01-HTML標籤配對/html_check.cpp", ROOT / "04-NFA判定字串/nfa_check.cpp"]
 checks = 0
 
 def run(name, data):
@@ -46,23 +47,23 @@ with tempfile.TemporaryDirectory(prefix="compiler-short-") as scratch:
         binary = Path(scratch) / name
         subprocess.run([*shlex.split(os.environ.get("CXX", "c++")), *flags, str(source), "-o", str(binary)], check=True, timeout=120)
         bins[name] = binary
-    for src in sorted(SHORT.glob("*.cpp")):
+    for src in SHORT:
         build(src.stem, src)
         data, answer = src.with_suffix(".in").read_text(), src.with_suffix(".expected").read_text()
         for variant in [data, data.replace("\n", "\r\n"), data.rstrip("\n")]: expect(src.stem, variant, answer)
-    for name in ["lexer", "stack_vm", "ll1"]:
-        src = ROOT / "exam" / (name + ".cpp")
+    for name, folder in [("lexer", "03-Scanner與註解"), ("stack_vm", "07-StackVM"), ("ll1", "08-LL1")]:
+        src = ROOT / folder / (name + ".cpp")
         build(name, src)
         data, answer = src.with_suffix(".in").read_text(), src.with_suffix(".expected").read_text()
         for variant in [data, data.replace("\n", "\r\n"), data.rstrip("\n")]: expect(name, variant, answer)
-    for name, path in [("html_full", "exam/html_parser.cpp"), ("nfa_full", "exam/nfa_to_dfa.cpp"), ("ac_full", "ch02/ac_homework.cpp")]:
+    for name, path in [("html_full", "11-HTML-parser完整版/html_parser.cpp"), ("nfa_full", "13-NFA轉DFA完整版/nfa_to_dfa.cpp"), ("ac_full", "14-ac作業完整版/ac_homework.cpp")]:
         build(name, ROOT / path)
     for mode in ["postfix", "ast"]:
         src = Path(scratch) / (mode + ".cpp")
-        src.write_text((SHORT / "expression.cpp").read_text().replace('const string MODE = "eval";', 'const string MODE = "' + mode + '";'))
+        src.write_text((ROOT / "02-遞迴下降運算式/expression.cpp").read_text().replace('const string MODE = "eval";', 'const string MODE = "' + mode + '";'))
         build(mode, src)
     src = Path(scratch) / "hw5d.cpp"
-    src.write_text((SHORT / "hw5_check.cpp").read_text().replace('HW5A = true', 'HW5A = false'))
+    src.write_text((ROOT / "05-HW5固定DFA/hw5_check.cpp").read_text().replace('HW5A = true', 'HW5A = false'))
     build("hw5d", src)
     for data in ["", "text", "<p/>", "<P>Hello</p>", "<br><img src=x>", "<p a b c='>' d=abc>t</p>",
                  "<!DOCTYPE html><html><body></body></html>", "<script>if(a<b){s='<div>';}</SCRIPT >",

@@ -358,7 +358,7 @@
     },
     {
       "stem": "lexer",
-      "source_sha256": "3763b207074e71d1ad00f489a31747296d58f4f74e8c0d2c1f5269fcd5ef046d",
+      "source_sha256": "19efd54d03d8a9d259b74b5625620b57a736f8c9e6b6f35a023347e194acee74",
       "samples": [
         {
           "input": "intx >>= 2",
@@ -403,11 +403,11 @@
           "edits": [
             {
               "lines": [
-                23
+                26
               ],
               "action": "replace",
-              "before": "        const std::set<std::string> keywords{\"int\",\"float\",\"double\",\"char\",\"bool\",\"void\",\"if\",\"else\",\"while\",\"for\",\"return\",\"print\"};",
-              "after": "        const std::set<std::string> keywords{\"switch\",\"case\",\"int\",\"float\",\"double\",\"char\",\"bool\",\"void\",\"if\",\"else\",\"while\",\"for\",\"return\",\"print\"};"
+              "before": "        const set<string> keywords{\"int\",\"float\",\"double\",\"char\",\"bool\",\"void\",\"if\",\"else\",\"while\",\"for\",\"return\",\"print\"};",
+              "after": "        const set<string> keywords{\"switch\",\"case\",\"int\",\"float\",\"double\",\"char\",\"bool\",\"void\",\"if\",\"else\",\"while\",\"for\",\"return\",\"print\"};"
             }
           ],
           "example": {
@@ -417,18 +417,18 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "02ac1e92f699eba86b8d094b24300dcd31171ebe2f62a5c86cac98f36b03372d"
+          "changed_sha256": "edbff5eaafc91d93fb201d2e295d6921bf008b2d1a4e07e8c3e93c580e6a4ce3"
         },
         {
           "title": "增加多字元運算子",
           "edits": [
             {
               "lines": [
-                25
+                28
               ],
               "action": "replace",
-              "before": "        const std::vector<std::string> ops{\"<<=\",\">>=\",\"++\",\"--\",\"==\",\"!=\",\"<=\",\">=\",\"&&\",\"||\",\"+=\",\"-=\",\"*=\",\"/=\",\"%=\",\"<<\",\">>\",\"->\",\"&=\",\"|=\",\"^=\",\"::\"};",
-              "after": "        const std::vector<std::string> ops{\"<<=\",\">>=\",\"**\",\"++\",\"--\",\"==\",\"!=\",\"<=\",\">=\",\"&&\",\"||\",\"+=\",\"-=\",\"*=\",\"/=\",\"%=\",\"<<\",\">>\",\"->\",\"&=\",\"|=\",\"^=\",\"::\"};"
+              "before": "        const vector<string> ops{\"<<=\",\">>=\",\"++\",\"--\",\"==\",\"!=\",\"<=\",\">=\",\"&&\",\"||\",\"+=\",\"-=\",\"*=\",\"/=\",\"%=\",\"<<\",\">>\",\"->\",\"&=\",\"|=\",\"^=\",\"::\"};",
+              "after": "        const vector<string> ops{\"<<=\",\">>=\",\"**\",\"++\",\"--\",\"==\",\"!=\",\"<=\",\">=\",\"&&\",\"||\",\"+=\",\"-=\",\"*=\",\"/=\",\"%=\",\"<<\",\">>\",\"->\",\"&=\",\"|=\",\"^=\",\"::\"};"
             }
           ],
           "example": {
@@ -438,17 +438,18 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "df73410c56db125c62044167084e2b5a468dab85adc904be773e01dfe65c07dd"
+          "changed_sha256": "a677d033fad192dfbfa310f3eb561146a5186b9f33c0e8e386ad690e13cd301a"
         },
         {
           "title": "lexeme 不加引號",
           "edits": [
             {
               "lines": [
-                87
+                90,
+                92
               ],
-              "action": "replace",
-              "before": "            output << kind << ' ' << std::quoted(s.substr(start, p - start)) << '\\n';",
+              "action": "block",
+              "before": "            output << kind << \" \\\"\";\n            for (char c : s.substr(start, p - start)) { if (c == '\"' || c == '\\\\') output << '\\\\'; output << c; }\n            output << \"\\\"\\n\";",
               "after": "output << kind << ' ' << s.substr(start, p - start) << '\\n';"
             }
           ],
@@ -459,14 +460,14 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "e0ce83c7fe4660bf069a4e6ea7d1758adfc6b7e51f772d730d2a9bf3b25cf9ee"
+          "changed_sha256": "13f16947c075c6701c5811b417839a88ba0dc4ef2437370c54717fb47af31f5d"
         },
         {
           "title": "不要印 EOF",
           "edits": [
             {
               "lines": [
-                90
+                95
               ],
               "action": "replace",
               "before": "        output << \"EOF\\n\";",
@@ -480,14 +481,14 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "add4d467d56e20ebb868f6135f0c7c6c79d9ce31b702a0871c3c94b90433b1e4"
+          "changed_sha256": "23568da48c9ffee3d251000e266f24c00469ee56d77f52f220c903af8bdcd63d"
         },
         {
           "title": "不區分 keyword，全部列為 ID",
           "edits": [
             {
               "lines": [
-                44
+                47
               ],
               "action": "replace",
               "before": "                kind = keywords.count(s.substr(start, p - start)) ? \"KW\" : \"ID\";",
@@ -501,7 +502,7 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "af6490dcc3ad9b85d4f08481148083f3fbabc7c8a6022670fadea0b485ee9056"
+          "changed_sha256": "4898e54a6f878d2c79a597f090634c9351963a6b7fe8be464bc5d9dee3c27034"
         }
       ]
     },
@@ -994,7 +995,7 @@
     },
     {
       "stem": "stack_vm",
-      "source_sha256": "5858e7a1067b2c8eab1afc84dae2aad03d30188c648fe4556779e1ee0a4fa3b1",
+      "source_sha256": "89536c8a8485621d6dda86d9166551d4d427123f5fb32945e6baf9a214586d1e",
       "samples": [
         {
           "input": "PUSH 8\nPUSH 2\nSUB\nPRINT\n",
@@ -1039,11 +1040,11 @@
           "edits": [
             {
               "lines": [
-                54
+                57
               ],
               "action": "replace",
               "before": "            } else if (op == \"PRINT\") { const auto value = pop(); output << (value == 0 ? 0 : value) << '\\n'; }",
-              "after": "} else if (op == \"PRINT\") {\n    if (stack.empty()) throw std::runtime_error(\"stack underflow\");\n    const auto value = stack.back();\n    output << (value == 0 ? 0 : value) << '\\n';\n}"
+              "after": "} else if (op == \"PRINT\") {\n    if (stack.empty()) throw runtime_error(\"stack underflow\");\n    const auto value = stack.back();\n    output << (value == 0 ? 0 : value) << '\\n';\n}"
             }
           ],
           "example": {
@@ -1053,18 +1054,18 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "cb67b48859af74fe5b32f16acb6f61f910ff37a7f2551e2806de7bac53e01ea9"
+          "changed_sha256": "9c0989ad7b82fc7dcb461ca461a75f807f22e439cd8eee80e281cafc0a66022f"
         },
         {
           "title": "固定小數點後 2 位",
           "edits": [
             {
               "lines": [
-                29
+                32
               ],
               "action": "replace",
-              "before": "        std::ostringstream output; output.imbue(std::locale::classic()); output << std::setprecision(15);",
-              "after": "        std::ostringstream output; output.imbue(std::locale::classic()); output << std::fixed << std::setprecision(2);"
+              "before": "        ostringstream output; output.imbue(locale::classic()); output << setprecision(15);",
+              "after": "        ostringstream output; output.imbue(locale::classic()); output << fixed << setprecision(2);"
             }
           ],
           "example": {
@@ -1074,14 +1075,14 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "a384f4d111e9b54ebb694c23fb9e13b9950224de90b985c755767589a083b9a3"
+          "changed_sha256": "1da63da07f0f7f953fdff25300704428e1d22d3f7d03486a6c7606c39ac6e119"
         },
         {
           "title": "PRINT 指令改名為 OUT",
           "edits": [
             {
               "lines": [
-                54
+                57
               ],
               "action": "replace",
               "before": "            } else if (op == \"PRINT\") { const auto value = pop(); output << (value == 0 ? 0 : value) << '\\n'; }",
@@ -1095,14 +1096,14 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "748449d09d7b8b70de342b424e419ac178ba37e88d3c481435bccc6a3077b3e6"
+          "changed_sha256": "66f32ad520f8f75dbe3ee94b87ed8d3e88aef3efbb831096401eeb907942376f"
         },
         {
           "title": "指令名稱忽略 ASCII 大小寫",
           "edits": [
             {
               "lines": [
-                38
+                41
               ],
               "action": "after",
               "before": "            if (!(input >> op)) continue;",
@@ -1116,18 +1117,18 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "32b2e14e22ba393976c3882efc38ba4de4747853aab7143a34d860237f6e9ac3"
+          "changed_sha256": "1919c7fac95e010a689ec452cae37e95c2f6e7e87b602534290c1c4b5103d0b5"
         },
         {
           "title": "PRINT 不移除值，DUP 後連續列印",
           "edits": [
             {
               "lines": [
-                54
+                57
               ],
               "action": "replace",
               "before": "            } else if (op == \"PRINT\") { const auto value = pop(); output << (value == 0 ? 0 : value) << '\\n'; }",
-              "after": "} else if (op == \"PRINT\") {\n    if (stack.empty()) throw std::runtime_error(\"stack underflow\");\n    const auto value = stack.back();\n    output << (value == 0 ? 0 : value) << '\\n';\n}"
+              "after": "} else if (op == \"PRINT\") {\n    if (stack.empty()) throw runtime_error(\"stack underflow\");\n    const auto value = stack.back();\n    output << (value == 0 ? 0 : value) << '\\n';\n}"
             }
           ],
           "example": {
@@ -1137,13 +1138,13 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "cb67b48859af74fe5b32f16acb6f61f910ff37a7f2551e2806de7bac53e01ea9"
+          "changed_sha256": "9c0989ad7b82fc7dcb461ca461a75f807f22e439cd8eee80e281cafc0a66022f"
         }
       ]
     },
     {
       "stem": "ll1",
-      "source_sha256": "d6a65ce98c502339c53400c5cf2f9e2139629ef385e70f33b2633a2740843840",
+      "source_sha256": "589a3f41f641c3de57ec2170caf711b9089c7dffadf76e5a06a16d8083ad8163",
       "samples": [
         {
           "input": "2\nS -> a S\nS -> #\n",
@@ -1164,11 +1165,11 @@
           "edits": [
             {
               "lines": [
-                35
+                38
               ],
               "action": "replace",
-              "before": "        const std::string mode = argc == 1 ? \"--table\" : argv[1];",
-              "after": "const std::string mode = argc == 1 ? \"--check\" : argv[1];"
+              "before": "        const string mode = argc == 1 ? \"--table\" : argv[1];",
+              "after": "const string mode = argc == 1 ? \"--check\" : argv[1];"
             }
           ],
           "example": {
@@ -1178,18 +1179,18 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "cd7580812b9999c2eefce14760e7ab36b12b7aff1f580884f9f2896fc2982a30"
+          "changed_sha256": "6fe9a667252f8c8de95a7cb3f401bdabe4d26c5769d5cb3bb12b4e42b7e5a12a"
         },
         {
           "title": "只印 FIRST 與 FOLLOW",
           "edits": [
             {
               "lines": [
-                96,
-                103
+                99,
+                106
               ],
               "action": "block",
-              "before": "            for (std::size_t i = 0; i < rules.size(); ++i) { std::cout << \"SELECT(\" << i + 1 << \")=\"; print_set(select[i]); std::cout << '\\n'; }\n            for (const auto& cell : table) {\n                std::cout << \"M[\" << cell.first.first << ',' << cell.first.second << \"]=\";\n                for (std::size_t i = 0; i < cell.second.size(); ++i) std::cout << (i ? \",\" : \"\") << cell.second[i] + 1;\n                if (cell.second.size() > 1) std::cout << \" CONFLICT\";\n                std::cout << '\\n';\n            }\n            std::cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");",
+              "before": "            for (size_t i = 0; i < rules.size(); ++i) { cout << \"SELECT(\" << i + 1 << \")=\"; print_set(select[i]); cout << '\\n'; }\n            for (const auto& cell : table) {\n                cout << \"M[\" << cell.first.first << ',' << cell.first.second << \"]=\";\n                for (size_t i = 0; i < cell.second.size(); ++i) cout << (i ? \",\" : \"\") << cell.second[i] + 1;\n                if (cell.second.size() > 1) cout << \" CONFLICT\";\n                cout << '\\n';\n            }\n            cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");",
               "after": ""
             }
           ],
@@ -1200,18 +1201,18 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "43e79744fdb98b3a9581634a710fffbdf687ad7ae041fa0b3da1e01613bec0e8"
+          "changed_sha256": "ab1b69e330d70e9ef18fdf397348c014e7428613f04b834177b86f00d8826e49"
         },
         {
           "title": "字串判定輸出 YES / NO",
           "edits": [
             {
               "lines": [
-                129
+                132
               ],
               "action": "replace",
-              "before": "                std::cout << (accepted && pos == words.size() ? \"ACCEPT\\n\" : \"REJECT\\n\");",
-              "after": "                std::cout << (accepted && pos == words.size() ? \"YES\\n\" : \"NO\\n\");"
+              "before": "                cout << (accepted && pos == words.size() ? \"ACCEPT\\n\" : \"REJECT\\n\");",
+              "after": "                cout << (accepted && pos == words.size() ? \"YES\\n\" : \"NO\\n\");"
             }
           ],
           "example": {
@@ -1223,14 +1224,14 @@
           "args": [
             "--check"
           ],
-          "changed_sha256": "2c11a01752ec30dd8236c4ddc0946e165269e40522cb080fd1c5f319f428f215"
+          "changed_sha256": "13db0f9ab7ee5aa8ebfe49f528dd70f585d6ccfca544ad24520ac79d4f075f41"
         },
         {
           "title": "指定 S 為 start，不使用第一個 LHS",
           "edits": [
             {
               "lines": [
-                68
+                71
               ],
               "action": "replace",
               "before": "        follow[rules[0].lhs].insert(\"$\");",
@@ -1238,11 +1239,11 @@
             },
             {
               "lines": [
-                112
+                115
               ],
               "action": "replace",
-              "before": "                words.push_back(\"$\"); std::vector<std::string> stack{\"$\", rules[0].lhs}; std::size_t pos = 0, steps = 0;",
-              "after": "                words.push_back(\"$\"); std::vector<std::string> stack{\"$\", \"S\"}; std::size_t pos = 0, steps = 0;"
+              "before": "                words.push_back(\"$\"); vector<string> stack{\"$\", rules[0].lhs}; size_t pos = 0, steps = 0;",
+              "after": "                words.push_back(\"$\"); vector<string> stack{\"$\", \"S\"}; size_t pos = 0, steps = 0;"
             }
           ],
           "example": {
@@ -1254,19 +1255,19 @@
           "args": [
             "--check"
           ],
-          "changed_sha256": "4052936723ad811a58f4e8fbc9c5febe5a3ac8462cd96f5faaad18f024067328"
+          "changed_sha256": "da6b9373fc6dfe3a8be4095de120bb3290f7cb7d33d537030bf8977ff5bb8f25"
         },
         {
           "title": "只輸出是否為 LL(1)",
           "edits": [
             {
               "lines": [
-                93,
-                103
+                96,
+                106
               ],
               "action": "block",
-              "before": "            for (const auto& nt : nonterminals) {\n                std::cout << \"FIRST(\" << nt << \")=\"; print_set(first[nt]); std::cout << \" FOLLOW(\" << nt << \")=\"; print_set(follow[nt]); std::cout << '\\n';\n            }\n            for (std::size_t i = 0; i < rules.size(); ++i) { std::cout << \"SELECT(\" << i + 1 << \")=\"; print_set(select[i]); std::cout << '\\n'; }\n            for (const auto& cell : table) {\n                std::cout << \"M[\" << cell.first.first << ',' << cell.first.second << \"]=\";\n                for (std::size_t i = 0; i < cell.second.size(); ++i) std::cout << (i ? \",\" : \"\") << cell.second[i] + 1;\n                if (cell.second.size() > 1) std::cout << \" CONFLICT\";\n                std::cout << '\\n';\n            }\n            std::cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");",
-              "after": "std::cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");"
+              "before": "            for (const auto& nt : nonterminals) {\n                cout << \"FIRST(\" << nt << \")=\"; print_set(first[nt]); cout << \" FOLLOW(\" << nt << \")=\"; print_set(follow[nt]); cout << '\\n';\n            }\n            for (size_t i = 0; i < rules.size(); ++i) { cout << \"SELECT(\" << i + 1 << \")=\"; print_set(select[i]); cout << '\\n'; }\n            for (const auto& cell : table) {\n                cout << \"M[\" << cell.first.first << ',' << cell.first.second << \"]=\";\n                for (size_t i = 0; i < cell.second.size(); ++i) cout << (i ? \",\" : \"\") << cell.second[i] + 1;\n                if (cell.second.size() > 1) cout << \" CONFLICT\";\n                cout << '\\n';\n            }\n            cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");",
+              "after": "cout << (ll1 ? \"LL1 YES\\n\" : \"LL1 NO\\n\");"
             }
           ],
           "example": {
@@ -1276,7 +1277,7 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "a7d488edf917c49b4bcdf3f28e2c00e3b01863ee401e9554b85906650483fdd4"
+          "changed_sha256": "61c9a46d74d605d0c5f1e9336004a6d3b729c6ffeba70a9f1863e786ac487ea1"
         }
       ]
     }

@@ -11,7 +11,10 @@ import subprocess
 import sys
 import tempfile
 
-ROOT = Path(__file__).resolve().parent / "exam"
+ROOT = Path(__file__).resolve().parent
+SOURCES = [ROOT / "12-運算式parser完整版/expression.cpp", ROOT / "11-HTML-parser完整版/html_parser.cpp",
+           ROOT / "03-Scanner與註解/lexer.cpp", ROOT / "08-LL1/ll1.cpp", ROOT / "13-NFA轉DFA完整版/nfa_to_dfa.cpp",
+           ROOT / "07-StackVM/stack_vm.cpp"]
 checks = 0
 
 
@@ -40,7 +43,7 @@ with tempfile.TemporaryDirectory(prefix="compiler-exam-") as scratch:
     flags = ["-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-Werror"]
     sanitize = "--sanitize" in sys.argv
     flags += ["-O1", "-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer"] if sanitize else ["-O2"]
-    for source in sorted(ROOT.glob("*.cpp")):
+    for source in SOURCES:
         binary = Path(scratch) / source.stem
         subprocess.run([*shlex.split(os.environ.get("CXX", "c++")), *flags, str(source), "-o", str(binary)], check=True, timeout=120)
         binaries[source.stem] = binary

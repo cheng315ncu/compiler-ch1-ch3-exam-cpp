@@ -21,12 +21,13 @@ p,li{orphans:3;widows:3}h2,h3,h4,summary{break-after:avoid}pre,code{font-size:8.
 
 </style></head><body>
 <section class="front" id="index"><h1>Compiler Ch1–3｜考場列印手冊</h1>
-<p class="basis">黑白 A4 完整版 · 2026-10-14 · 八份註解程式的選檔／改題指南＋Ch1–3 三章完整速查表。</p>
-<p>程式直接帶原始 .cpp；紙本用來找題型、看推導、核對輸入輸出及修改位置。本冊保留八題的完整題意、
-基本測例、手動追蹤、40 個修改範例的改前／改後與執行結果，不需展開才能閱讀。</p>
-<h2>A｜先選題，再開檔</h2><table><thead><tr><th>題型</th><th>Code 檔案（相對 Complier/Code/）</th><th>PDF 頁</th></tr></thead><tbody><tr><td>HTML 標籤配對</td><td><code>exam/short/html_check.cpp</code></td><td>8</td></tr><tr><td>遞迴下降運算式</td><td><code>exam/short/expression.cpp</code></td><td>13</td></tr><tr><td>Scanner：沿用現有短程式</td><td><code>exam/lexer.cpp</code></td><td>17</td></tr><tr><td>NFA 直接判定字串</td><td><code>exam/short/nfa_check.cpp</code></td><td>22</td></tr><tr><td>HW5 固定四狀態 DFA</td><td><code>exam/short/hw5_check.cpp</code></td><td>28</td></tr><tr><td>ac 邊解析邊產 dc</td><td><code>exam/short/ac_dc.cpp</code></td><td>32</td></tr><tr><td>Stack VM：沿用現有短程式</td><td><code>exam/stack_vm.cpp</code></td><td>38</td></tr><tr><td>LL(1)：較低優先補充</td><td><code>exam/ll1.cpp</code></td><td>43</td></tr></tbody></table><p><b>快速入口：</b>版本／模式 p.3；Linux／I/O p.4；除錯 p.5；小考英文短答 p.6</p>
-<p class="line-note">相同檔名也可能有不同版本：exam/short/expression.cpp 是短版求值；
-exam/expression.cpp 是完整版本，預設 postfix。以本表完整相對路徑選檔。</p>
+<p class="basis">黑白 A4 完整版 · 2026-10-14 · 八份註解程式＋兩題作業（Scanner／Parser）的選檔／改題指南＋Ch1–3 三章完整速查表。</p>
+<p>程式直接帶原始 .cpp；紙本用來找題型、看推導、核對輸入輸出及修改位置。本冊保留八題與兩題作業的完整題意、
+基本測例、手動追蹤、46 個修改範例的改前／改後與執行結果，不需展開才能閱讀。</p>
+<h2>A｜先選題，再開檔</h2><table><thead><tr><th>題型</th><th>Code 檔案（相對 Complier/Code/）</th><th>PDF 頁</th></tr></thead><tbody><tr><td>HTML 標籤配對</td><td><code>01-HTML標籤配對/html_check.cpp</code></td><td>8</td></tr><tr><td>遞迴下降運算式</td><td><code>02-遞迴下降運算式/expression.cpp</code></td><td>13</td></tr><tr><td>Scanner：沿用現有短程式</td><td><code>03-Scanner與註解/lexer.cpp</code></td><td>17</td></tr><tr><td>NFA 直接判定字串</td><td><code>04-NFA判定字串/nfa_check.cpp</code></td><td>22</td></tr><tr><td>HW5 固定四狀態 DFA</td><td><code>05-HW5固定DFA/hw5_check.cpp</code></td><td>28</td></tr><tr><td>ac 邊解析邊產 dc</td><td><code>06-ac產dc/ac_dc.cpp</code></td><td>32</td></tr><tr><td>Stack VM：沿用現有短程式</td><td><code>07-StackVM/stack_vm.cpp</code></td><td>38</td></tr><tr><td>LL(1)：較低優先補充</td><td><code>08-LL1/ll1.cpp</code></td><td>43</td></tr><tr><td>作業 ScannerTest：算式 Scanner</td><td><code>09-作業ScannerTest/scanner.cpp</code></td><td>HTML 09</td></tr><tr><td>作業 ParserTest：Recursive-Descent Parser</td><td><code>10-作業ParserTest/parser.cpp</code></td><td>HTML 10</td></tr></tbody></table><p><b>快速入口：</b>版本／模式 p.3；Linux／I/O p.4；除錯 p.5；小考英文短答 p.6</p>
+<p class="line-note">相同檔名也可能有不同版本：02-遞迴下降運算式/expression.cpp 是短版求值；
+12-運算式parser完整版/expression.cpp 是完整版本，預設 postfix。以本表完整相對路徑選檔。
+09、10 兩題作業目前只收在本 HTML，PDF 尚未重建，因此沒有 PDF 頁碼。</p>
 <h2>如何使用這本手冊</h2><ol>
 <li>圈出輸出要求：合法判定、Token、Tree、AST、Postfix、DFA 表、目標碼，或執行結果。</li>
 <li>先看該題輸入規格與範圍，再用配套 .in／.expected 跑一次原版。</li>
@@ -43,7 +44,7 @@ FIRST／FOLLOW／LL(1) 保留為較低優先延伸，正式範圍尚未確認。
 Scanner 小數位數及科學記號規則的差異，均沿用既有辨析。不要把補充版本當成教材逐字原解。</p></section>
 <section class="front" id="versions"><h2>同一題型，輸出要求不同就換版本</h2>
 <p>以下路徑相對 Complier/Code/。短版能辨識字串，不代表它也會畫樹或列 DFA 表。
-評測若不傳命令列參數，將 main 的預設模式改成題目需要的模式。</p><table><thead><tr><th>題目要求</th><th>原檔路徑</th><th>模式／關鍵設定</th></tr></thead><tbody><tr><td>HTML 只判斷合法</td><td><code>exam/short/html_check.cpp</code></td><td>無參數；VALID／INVALID</td></tr><tr><td>HTML Token／Tree／Text</td><td><code>exam/html_parser.cpp</code></td><td>--tokens／--tree／--text；預設 --check</td></tr><tr><td>每行算式求值／Postfix／AST</td><td><code>exam/short/expression.cpp</code></td><td>MODE：eval／postfix／ast</td></tr><tr><td>深巢狀／迭代式算式 Parser</td><td><code>exam/expression.cpp</code></td><td>--postfix（預設）／--ast／--eval</td></tr><tr><td>C-like Token、字串、註解</td><td><code>exam/lexer.cpp</code></td><td>keywords／ops 清單可改</td></tr><tr><td>教材 ac Scanner／Parse Tree／AST</td><td><code>ch02/ac_homework.cpp</code></td><td>--tokens／--parse-tree／--ast／--typed-ast</td></tr><tr><td>ac 型別檢查／產 dc</td><td><code>exam/short/ac_dc.cpp</code></td><td>只產 dc，不直接印數值</td></tr><tr><td>ac 完整型別／摺疊／產碼</td><td><code>ch02/ac_homework.cpp</code></td><td>--check／--dc（預設）；可加 --fold</td></tr><tr><td>給 NFA，僅判字串</td><td><code>exam/short/nfa_check.cpp</code></td><td>無參數；# 是 epsilon</td></tr><tr><td>給 NFA，產 DFA 表／集合追蹤</td><td><code>exam/nfa_to_dfa.cpp</code></td><td>--table／--trace；預設 --check</td></tr><tr><td>固定 HW5(a)／(d) 字串辨識</td><td><code>exam/short/hw5_check.cpp</code></td><td>HW5A=true／false</td></tr><tr><td>固定 HW5 原 NFA→subset DFA</td><td><code>ch03/automata_homework.cpp</code></td><td>5a --table／5d --table</td></tr><tr><td>Stack 指令執行</td><td><code>exam/stack_vm.cpp</code></td><td>PRINT 會 pop；不是 dc</td></tr><tr><td>通用 FIRST／FOLLOW／LL(1)</td><td><code>exam/ll1.cpp</code></td><td>預設表格；--check 判 Token 序列</td></tr></tbody></table>
+評測若不傳命令列參數，將 main 的預設模式改成題目需要的模式。</p><table><thead><tr><th>題目要求</th><th>原檔路徑</th><th>模式／關鍵設定</th></tr></thead><tbody><tr><td>HTML 只判斷合法</td><td><code>01-HTML標籤配對/html_check.cpp</code></td><td>無參數；VALID／INVALID</td></tr><tr><td>HTML Token／Tree／Text</td><td><code>11-HTML-parser完整版/html_parser.cpp</code></td><td>--tokens／--tree／--text；預設 --check</td></tr><tr><td>每行算式求值／Postfix／AST</td><td><code>02-遞迴下降運算式/expression.cpp</code></td><td>MODE：eval／postfix／ast</td></tr><tr><td>深巢狀／迭代式算式 Parser</td><td><code>12-運算式parser完整版/expression.cpp</code></td><td>--postfix（預設）／--ast／--eval</td></tr><tr><td>C-like Token、字串、註解</td><td><code>03-Scanner與註解/lexer.cpp</code></td><td>keywords／ops 清單可改</td></tr><tr><td>作業：算式 Token（NUM／PLUS…RPR）</td><td><code>09-作業ScannerTest/scanner.cpp</code></td><td>無參數；NUM 開頭 0 只吃一位</td></tr><tr><td>作業：ID／STRLIT／DOT 遞迴下降檢查</td><td><code>10-作業ParserTest/parser.cpp</code></td><td>無參數；非法只印 invalid input</td></tr><tr><td>教材 ac Scanner／Parse Tree／AST</td><td><code>14-ac作業完整版/ac_homework.cpp</code></td><td>--tokens／--parse-tree／--ast／--typed-ast</td></tr><tr><td>ac 型別檢查／產 dc</td><td><code>06-ac產dc/ac_dc.cpp</code></td><td>只產 dc，不直接印數值</td></tr><tr><td>ac 完整型別／摺疊／產碼</td><td><code>14-ac作業完整版/ac_homework.cpp</code></td><td>--check／--dc（預設）；可加 --fold</td></tr><tr><td>給 NFA，僅判字串</td><td><code>04-NFA判定字串/nfa_check.cpp</code></td><td>無參數；# 是 epsilon</td></tr><tr><td>給 NFA，產 DFA 表／集合追蹤</td><td><code>13-NFA轉DFA完整版/nfa_to_dfa.cpp</code></td><td>--table／--trace；預設 --check</td></tr><tr><td>固定 HW5(a)／(d) 字串辨識</td><td><code>05-HW5固定DFA/hw5_check.cpp</code></td><td>HW5A=true／false</td></tr><tr><td>固定 HW5 原 NFA→subset DFA</td><td><code>15-HW5-NFA-DFA作業完整版/automata_homework.cpp</code></td><td>5a --table／5d --table</td></tr><tr><td>Stack 指令執行</td><td><code>07-StackVM/stack_vm.cpp</code></td><td>PRINT 會 pop；不是 dc</td></tr><tr><td>通用 FIRST／FOLLOW／LL(1)</td><td><code>08-LL1/ll1.cpp</code></td><td>預設表格；--check 判 Token 序列</td></tr></tbody></table>
 <h3>HTML parser 先判斷題意</h3><ul>
 <li><b>合法判定：</b>START 入 stack，END 配 top，EOF 為空；數量相同不保證巢狀正確。</li>
 <li><b>列 Token：</b>分辨 START／END／TEXT／COMMENT；是否檢查配對看題目要求。</li>
@@ -89,7 +90,7 @@ diff -u expected.txt actual.txt</pre>
 <dt>輸出規格</dt><dd>合法印 VALID，否則印 INVALID，每次只印一行；這兩種分類都正常結束。</dd>
 <dt>限制與適用範圍</dt><dd>不是完整 browser DOM：不恢復錯誤、不省略 end tag、不解碼 entity、不檢查內容模型。這裡的「合法」指指定子集。</dd>
 </dl>
-<p class="file"><b>Code 檔案名稱：</b><a href="../Code/exam/short/html_check.cpp"><code>html_check.cpp</code></a> <small>（exam/short/html_check.cpp）</small></p>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/01-HTML標籤配對/html_check.cpp"><code>html_check.cpp</code></a> <small>（01-HTML標籤配對/html_check.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror html_check.cpp -o main
 ./main &lt; input.txt</pre>
 <details open class="examples"><summary>題目範例與邊界測例</summary><div>
@@ -214,7 +215,7 @@ INVALID
 <dt>輸出規格</dt><dd>預設 eval：每行印 15 位有效數字的 long double 結果。postfix：以一個空白分隔 token。一元正負用 pos/neg。ast：印前序括號表示。</dd>
 <dt>限制與適用範圍</dt><dd>嵌套括號／一元鏈最多 256；不支援 %、^、函式或隱含乘法。非法字元、缺 operand、零除、非有限值：stdout 空、stderr 訊息、exit 1。</dd>
 </dl>
-<p class="file"><b>Code 檔案名稱：</b><a href="../Code/exam/short/expression.cpp"><code>expression.cpp</code></a> <small>（exam/short/expression.cpp）</small></p>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/02-遞迴下降運算式/expression.cpp"><code>expression.cpp</code></a> <small>（02-遞迴下降運算式/expression.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror expression.cpp -o main
 ./main &lt; input.txt</pre>
 <details open class="examples"><summary>題目範例與邊界測例</summary><div>
@@ -303,7 +304,7 @@ exit 1</pre></div></div>
 <dt>輸出規格</dt><dd>每個 token 一行：類型、空白、std::quoted 包裝的原始 lexeme；最後一行 EOF。</dd>
 <dt>限制與適用範圍</dt><dd>不是完整 C/C++ lexer：沒有 preprocessing、raw string、數字 suffix 或完整字元 escape 語意；CHAR 只允許單 byte / 單簡單 escape。遇未閉註解／引號或非法 byte，exit 1 且 stdout 空。</dd>
 </dl>
-<p class="file"><b>Code 檔案名稱：</b><a href="../Code/exam/lexer.cpp"><code>lexer.cpp</code></a> <small>（exam/lexer.cpp）</small></p>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/03-Scanner與註解/lexer.cpp"><code>lexer.cpp</code></a> <small>（03-Scanner與註解/lexer.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror lexer.cpp -o main
 ./main &lt; input.txt</pre>
 <details open class="examples"><summary>題目範例與邊界測例</summary><div>
@@ -414,7 +415,7 @@ EOF
 <dt>輸出規格</dt><dd>每案一行 ACCEPT / REJECT。非法 alphabet 字元直接拒絕該字串；非法 NFA 描述則 stderr、exit 1。</dd>
 <dt>限制與適用範圍</dt><dd>1&lt;=n&lt;=256、0&lt;=m&lt;=65536；alphabet 非空、無重複、不能含 #；只接受單 byte 符號。本份不輸出 subset DFA 表。</dd>
 </dl>
-<p class="file"><b>Code 檔案名稱：</b><a href="../Code/exam/short/nfa_check.cpp"><code>nfa_check.cpp</code></a> <small>（exam/short/nfa_check.cpp）</small></p>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/04-NFA判定字串/nfa_check.cpp"><code>nfa_check.cpp</code></a> <small>（04-NFA判定字串/nfa_check.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror nfa_check.cpp -o main
 ./main &lt; input.txt</pre>
 <details open class="examples"><summary>題目範例與邊界測例</summary><div>
@@ -554,7 +555,7 @@ a
 <dt>輸出規格</dt><dd>每案印 ACCEPT / REJECT。大小寫敏感，僅題目語言內的字母可接受。</dd>
 <dt>限制與適用範圍</dt><dd>不支援任意正則表示式輸入；這是固定兩個語言的四個可達 state 加 dead state。</dd>
 </dl>
-<p class="file"><b>Code 檔案名稱：</b><a href="../Code/exam/short/hw5_check.cpp"><code>hw5_check.cpp</code></a> <small>（exam/short/hw5_check.cpp）</small></p>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/05-HW5固定DFA/hw5_check.cpp"><code>hw5_check.cpp</code></a> <small>（05-HW5固定DFA/hw5_check.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror hw5_check.cpp -o main
 ./main &lt; input.txt</pre>
 <details open class="examples"><summary>題目範例與邊界測例</summary><div>
@@ -673,7 +674,7 @@ Case 2: REJECT
 <dt>輸出規格</dt><dd>只印 dc target code，不直接印數值答案。非法 ac 時 stdout 空、stderr 訊息、exit 1。</dd>
 <dt>限制與適用範圍</dt><dd>帶 . 或 e 的 number 在本實作一律 float；exponent 絕對值與 mantissa 長度 &lt;=10000。無乘除、括號、unary、註解。短版無 parse tree / AST / folding，這些要求使用 ac_homework.cpp。教材對 HW2(b) 的 No 與型別規則有疑義，詳見既有作業校讀。</dd>
 </dl>
-<p class="file"><b>Code 檔案名稱：</b><a href="../Code/exam/short/ac_dc.cpp"><code>ac_dc.cpp</code></a> <small>（exam/short/ac_dc.cpp）</small></p>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/06-ac產dc/ac_dc.cpp"><code>ac_dc.cpp</code></a> <small>（06-ac產dc/ac_dc.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror ac_dc.cpp -o main
 ./main &lt; input.txt</pre>
 <details open class="examples"><summary>題目範例與邊界測例</summary><div>
@@ -806,7 +807,7 @@ si
 <dt>輸出規格</dt><dd>每次 PRINT 一行，15 位有效數字。整份成功後才發出累積輸出；任何錯誤 stdout 空、stderr 訊息、exit 1。</dd>
 <dt>限制與適用範圍</dt><dd>long double，非任意精度；沒有跳躍、條件、函式或字串。EOF 可留未使用 stack；PRINT 與 dc p 的 pop 規則不同。</dd>
 </dl>
-<p class="file"><b>Code 檔案名稱：</b><a href="../Code/exam/stack_vm.cpp"><code>stack_vm.cpp</code></a> <small>（exam/stack_vm.cpp）</small></p>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/07-StackVM/stack_vm.cpp"><code>stack_vm.cpp</code></a> <small>（07-StackVM/stack_vm.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror stack_vm.cpp -o main
 ./main &lt; input.txt</pre>
 <details open class="examples"><summary>題目範例與邊界測例</summary><div>
@@ -931,7 +932,7 @@ PRINT
 <dt>輸出規格</dt><dd>預設列 FIRST/FOLLOW/SELECT、非空表格 cell、CONFLICT 與 LL1 YES/NO。--check 每案印 ACCEPT/REJECT；不由字串原始字元自動 tokenize。</dd>
 <dt>限制與適用範圍</dt><dd>不消除左遞迴、不做 left factoring，也不判定任意 CFG 是否無歧義；parse 步數 &lt;=1000000。有 LL(1) conflict 時不任選規則繼續。</dd>
 </dl>
-<p class="file"><b>Code 檔案名稱：</b><a href="../Code/exam/ll1.cpp"><code>ll1.cpp</code></a> <small>（exam/ll1.cpp）</small></p>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/08-LL1/ll1.cpp"><code>ll1.cpp</code></a> <small>（08-LL1/ll1.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror ll1.cpp -o main
 ./main &lt; input.txt</pre>
 <details open class="examples"><summary>題目範例與邊界測例</summary><div>
@@ -1052,6 +1053,230 @@ REJECT
 S -&gt; a S
 S -&gt; #
 </pre></div><div><p>輸出</p><pre>LL1 YES
+</pre></div></div>
+</div></details>
+</article>
+<article id="hw_scanner"><h2>09 作業 ScannerTest：算式 Scanner</h2>
+<h3>題目內容</h3>
+<p class="basis">課程作業原題（ScannerTest）。Token 規則照題目表格；與 03 的 C-like lexer 不同，只有數字、四則運算子與括號。</p>
+<p>Scanner 先把 input text 依規則轉成 Token，Parser 才能處理。請依題目規則寫一個 Scanner，取得 Tokens 並印出。Terminal：NUM ( [1-9][0-9]* ) | 0；PLUS \+；MINUS \-；MUL \*；DIV \/；LPR \(；RPR \)。</p>
+<dl>
+<dt>輸入規格</dt><dd>整份 stdin 是一條運算式，中間可能夾雜空格或換行；測資不會有錯誤資料，長度在 1000 字元內（不含換行）。</dd>
+<dt>輸出規格</dt><dd>每個 token 一行：種類名稱；NUM 另加一個空白與數值，例如 NUM 0。每個 token 後接 \n。</dd>
+<dt>限制與適用範圍</dt><dd>逐字元串流讀取，不存整份輸入。NUM 開頭 0 只吃一位，所以 012 切成 NUM 0、NUM 12。非法字元不在題目範圍：已印的 token 保留，之後 exit 1。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/09-作業ScannerTest/scanner.cpp"><code>scanner.cpp</code></a> <small>（09-作業ScannerTest/scanner.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror scanner.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<h4>題目範例 01</h4><div class="sample"><div><p>輸入</p><pre>1+2</pre></div><div><p>輸出</p><pre>NUM 1
+PLUS
+NUM 2
+</pre></div></div>
+<h4>題目範例 02</h4><div class="sample"><div><p>輸入</p><pre>( 1+
+ - 2
+ )
+</pre></div><div><p>輸出</p><pre>LPR
+NUM 1
+PLUS
+MINUS
+NUM 2
+RPR
+</pre></div></div>
+<h4>題目範例 03</h4><div class="sample"><div><p>輸入</p><pre>   (
+(1  +
+
+ 2*   3
+ / 4   )
+ )
+</pre></div><div><p>輸出</p><pre>LPR
+LPR
+NUM 1
+PLUS
+NUM 2
+MUL
+NUM 3
+DIV
+NUM 4
+RPR
+RPR
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>012</pre></div><div><p>輸出</p><pre>NUM 0
+NUM 12
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>1+2
+</pre></div><div><p>輸出</p><pre>NUM 1
+PLUS
+NUM 2
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre></pre></div><div><p>輸出</p><pre>stdout：空
+</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>1$2</pre></div><div><p>輸出</p><pre>NUM 1
+exit 1</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>一次讀一個字元 c：空白直接跳過；數字開始讀 NUM，其餘六個字元用 switch 對應名稱。讀 NUM 時會多讀一個字元才知道數字結束，所以那個字元留在 c，下一輪直接處理，不能再 cin.get()。</p><ul><li>10+0：讀 1 → 0 是數字繼續 → 讀到 + 結束，印 NUM 10；+ 已在 c，下一輪印 PLUS；0 開頭只吃一位，印 NUM 0。</li><li>012：0 開頭立即結束，印 NUM 0；c 是 1，下一輪讀成 NUM 12（照 RE 最長匹配）。</li><li>( 1+ 換行 - 2：空白與換行都跳過，不產生 token；- 是 MINUS，不和 2 合成負數。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>允許前導 0 的數字（NUM -&gt; [0-9]+）</td><td>17</td><td><a href="#hw_scanner-change-1">修改範例 01（後文）</a></td></tr><tr><td>增加 MOD（%）</td><td>28</td><td><a href="#hw_scanner-change-2">修改範例 02（後文）</a></td></tr><tr><td>非法字元印 ERROR 後繼續</td><td>30</td><td><a href="#hw_scanner-change-3">修改範例 03（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="hw_scanner-change-1"><summary>01 允許前導 0 的數字（NUM -&gt; [0-9]+）：改前／改後與測例</summary><div>
+<p>拿掉 num != &quot;0&quot; 的條件，任何數字都繼續讀到非數字為止。</p>
+<p>第 17 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (num != &quot;0&quot;) while (isdigit(c)) { num += char(c); c = cin.get(); }</pre></div><div><p>改後（對照修改）</p><pre class="after">            while (isdigit(c)) { num += char(c); c = cin.get(); }</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>012+3</pre></div><div><p>輸出</p><pre>NUM 012
+PLUS
+NUM 3
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw_scanner-change-2"><summary>02 增加 MOD（%）：改前／改後與測例</summary><div>
+<p>在 switch 多加一個 case；其他 token 不變。</p>
+<p>第 28 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            case &#x27;)&#x27;: cout &lt;&lt; &quot;RPR\n&quot;;   break;</pre></div><div><p>改後（對照修改）</p><pre class="after">            case &#x27;)&#x27;: cout &lt;&lt; &quot;RPR\n&quot;;   break;
+            case &#x27;%&#x27;: cout &lt;&lt; &quot;MOD\n&quot;;   break;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>7 % 3</pre></div><div><p>輸出</p><pre>NUM 7
+MOD
+NUM 3
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw_scanner-change-3"><summary>03 非法字元印 ERROR 後繼續：改前／改後與測例</summary><div>
+<p>default 不再結束程式，改印 ERROR 與該字元，再讀下一個字元。</p>
+<p>第 30 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            default: return 1;</pre></div><div><p>改後（對照修改）</p><pre class="after">            default: cout &lt;&lt; &quot;ERROR &quot; &lt;&lt; char(c) &lt;&lt; &#x27;\n&#x27;; break;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>1$2</pre></div><div><p>輸出</p><pre>NUM 1
+ERROR $
+NUM 2
+</pre></div></div>
+</div></details>
+</article>
+<article id="hw_parser"><h2>10 作業 ParserTest：Recursive-Descent Parser</h2>
+<h3>題目內容</h3>
+<p class="basis">課程作業原題（ParserTest）。題目要求使用 Recursive-Descent Parsing（ch02 ppt p.20 起）撰寫，否則不予計分；測試檔換行皆為 \n。</p>
+<p>從 stdin 讀入程式，依 token 定義與文法檢查。合法時逐行印出 token 種類與原字串（以一個空白分隔、換行結尾）；不合法只印 invalid input，不可輸出任何 token。Terminal：ID [A-Za-z_][A-Za-z0-9_]*；STRLIT &quot;[^&quot;]*&quot;；LBR \(；RBR \)；DOT \.。Productions：program → stmts；stmts → stmt stmts | λ；stmt → primary | STRLIT | λ；primary → ID primary_tail；primary_tail → DOT ID primary_tail | LBR stmt RBR primary_tail | λ。</p>
+<dl>
+<dt>輸入規格</dt><dd>整份 stdin 到 EOF；token 之間可有任意空白與換行。STRLIT 的 [^&quot;]* 可含空白與換行。</dd>
+<dt>輸出規格</dt><dd>合法：每個 token 一行「種類 原字串」。不合法：只印一行 invalid input。空輸入合法（stmts → λ），不輸出任何東西。</dd>
+<dt>限制與適用範圍</dt><dd>先完整檢查再重掃輸出，所以不合法時不會漏印 token。primary_tail 的右遞迴寫成 while 迴圈，stmt 仍遞迴處理括號內部。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/10-作業ParserTest/parser.cpp"><code>parser.cpp</code></a> <small>（10-作業ParserTest/parser.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror parser.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<h4>題目範例 01</h4><div class="sample"><div><p>輸入</p><pre>&quot;test_string&quot;
+Test_ID
+</pre></div><div><p>輸出</p><pre>STRLIT &quot;test_string&quot;
+ID Test_ID
+</pre></div></div>
+<h4>題目範例 02</h4><div class="sample"><div><p>輸入</p><pre>illiga!id
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<h4>題目範例 03</h4><div class="sample"><div><p>輸入</p><pre>Str. length()
+</pre></div><div><p>輸出</p><pre>ID Str
+DOT .
+ID length
+LBR (
+RBR )
+</pre></div></div>
+<h4>題目範例 04</h4><div class="sample"><div><p>輸入</p><pre>printf(&quot;HelloWorld&quot;)
+</pre></div><div><p>輸出</p><pre>ID printf
+LBR (
+STRLIT &quot;HelloWorld&quot;
+RBR )
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre></pre></div><div><p>輸出</p><pre>stdout：空
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>f(g(x)).y
+</pre></div><div><p>輸出</p><pre>ID f
+LBR (
+ID g
+LBR (
+ID x
+RBR )
+RBR )
+DOT .
+ID y
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre>&quot;abc
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>a.
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<h4>邊界測例 05</h4><div class="sample"><div><p>輸入</p><pre>(a)
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<h4>邊界測例 06</h4><div class="sample"><div><p>輸入</p><pre>&quot;a
+b&quot;
+</pre></div><div><p>輸出</p><pre>STRLIT &quot;a
+b&quot;
+</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>next_token 是 Scanner，token 記目前種類，[start, pos) 是原字串。stmt 依目前 token 選產生式：STRLIT 直接 match；ID 之後重複吃 DOT ID 或 LBR stmt RBR；都不是時走 λ，但 λ 後面只能是 RBR 或 EOF。main 以 while 實作 stmts，最後必須停在 END；全部合法才把 pos 歸零重掃並輸出。</p><ul><li>Str. length()：ID Str → DOT → match(ID length) → LBR → stmt 看到 RBR 走 λ → match(RBR) → END，合法。</li><li>illiga!id：ID illiga 之後是 INVALID(!)，stmt 回到 main，迴圈停下時 token 不是 END → invalid input。</li><li>a.：DOT 後 match(ID) 遇到 END 失敗；(a)：開頭 LBR 不能開始 stmt，main 迴圈不進入，token ≠ END。</li><li>&quot;abc 沒有結尾引號：Scanner 回傳 INVALID，整份輸入 invalid。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>括號內允許逗號分隔多個 stmt</td><td>7；31；54；62</td><td><a href="#hw_parser-change-1">修改範例 01（後文）</a></td></tr><tr><td>只判斷合法：輸出 YES / NO</td><td>62；73–80</td><td><a href="#hw_parser-change-2">修改範例 02（後文）</a></td></tr><tr><td>STRLIT 不可跨行</td><td>26</td><td><a href="#hw_parser-change-3">修改範例 03（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="hw_parser-change-1"><summary>01 括號內允許逗號分隔多個 stmt：改前／改後與測例</summary><div>
+<p>新增 COMMA token；LBR 之後改成 stmt (COMMA stmt)* 再 match(RBR)。enum 與 names 順序要一致。注意 stmt 可為 λ，f(a,) 仍會被接受。</p>
+<p>第 7 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>enum Token { ID, STRLIT, LBR, RBR, DOT, END, INVALID };</pre></div><div><p>改後（對照修改）</p><pre class="after">enum Token { ID, STRLIT, LBR, RBR, DOT, COMMA, END, INVALID };</pre></div></div>
+<p>第 31 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    else if (c == &#x27;.&#x27;) token = DOT;</pre></div><div><p>改後（對照修改）</p><pre class="after">    else if (c == &#x27;.&#x27;) token = DOT;
+    else if (c == &#x27;,&#x27;) token = COMMA;</pre></div></div>
+<p>第 54 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (!stmt() || !match(RBR)) return false;</pre></div><div><p>改後（對照修改）</p><pre class="after">            if (!stmt()) return false;
+            while (token == COMMA) { next_token(); if (!stmt()) return false; }
+            if (!match(RBR)) return false;</pre></div></div>
+<p>第 62 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    const char* names[] = {&quot;ID&quot;, &quot;STRLIT&quot;, &quot;LBR&quot;, &quot;RBR&quot;, &quot;DOT&quot;};</pre></div><div><p>改後（對照修改）</p><pre class="after">    const char* names[] = {&quot;ID&quot;, &quot;STRLIT&quot;, &quot;LBR&quot;, &quot;RBR&quot;, &quot;DOT&quot;, &quot;COMMA&quot;};</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>f(a, &quot;b&quot;).g()</pre></div><div><p>輸出</p><pre>ID f
+LBR (
+ID a
+COMMA ,
+STRLIT &quot;b&quot;
+RBR )
+DOT .
+ID g
+LBR (
+RBR )
+</pre></div></div>
+<div class="sample"><div><p>輸入</p><pre>f(,a)</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw_parser-change-2"><summary>02 只判斷合法：輸出 YES / NO：改前／改後與測例</summary><div>
+<p>刪除 names（否則 -Werror 會報未使用變數），輸出區塊改成一行。</p>
+<p>第 62 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    const char* names[] = {&quot;ID&quot;, &quot;STRLIT&quot;, &quot;LBR&quot;, &quot;RBR&quot;, &quot;DOT&quot;};</pre></div><div><p>改後（對照修改）</p><pre class="after">（刪除；不要貼這段提示文字）</pre></div></div>
+<p>第 73–80 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    if (!valid || token != END) {
+        cout &lt;&lt; &quot;invalid input\n&quot;;
+    } else {
+        // 全部合法後才從頭重掃並輸出 token。
+        pos = 0;
+        for (next_token(); token != END; next_token())
+            cout &lt;&lt; names[token] &lt;&lt; &#x27; &#x27; &lt;&lt; src.substr(start, pos - start) &lt;&lt; &#x27;\n&#x27;;
+    }</pre></div><div><p>改後（對照修改）</p><pre class="after">    cout &lt;&lt; (valid &amp;&amp; token == END ? &quot;YES\n&quot; : &quot;NO\n&quot;);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>a.b(&quot;c&quot;)</pre></div><div><p>輸出</p><pre>YES
+</pre></div></div>
+<div class="sample"><div><p>輸入</p><pre>a..b</pre></div><div><p>輸出</p><pre>NO
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw_parser-change-3"><summary>03 STRLIT 不可跨行：改前／改後與測例</summary><div>
+<p>找結尾引號時同時找換行；先遇到換行就視為未結束的字串（INVALID）。</p>
+<p>第 26 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        size_t end = src.find(&#x27;&quot;&#x27;, pos);</pre></div><div><p>改後（對照修改）</p><pre class="after">        size_t end = src.find_first_of(&quot;\&quot;\n&quot;, pos);
+        if (end != string::npos &amp;&amp; src[end] == &#x27;\n&#x27;) end = string::npos;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>&quot;a
+b&quot;
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<div class="sample"><div><p>輸入</p><pre>&quot;a b&quot;
+</pre></div><div><p>輸出</p><pre>STRLIT &quot;a b&quot;
 </pre></div></div>
 </div></details>
 </article>

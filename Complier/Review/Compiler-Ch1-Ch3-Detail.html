@@ -1,0 +1,1283 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compiler Ch1–3｜完整考場列印指南</title><style>
+
+*{box-sizing:border-box}body{max-width:1100px;margin:28px auto;padding:0 24px;color:#222;background:#fff;font:15px/1.7 system-ui,"PingFang TC","Microsoft JhengHei",sans-serif}h1{font:30px/1.3 Georgia,"Noto Serif TC",serif;margin:0 0 12px}nav{display:flex;flex-wrap:wrap;gap:8px 18px;margin:20px 0}a{color:inherit;text-decoration:underline;text-underline-offset:3px}article{border-top:2px solid #888;padding:24px 0}h2{font-size:21px;margin:0 0 12px}h3{font-size:17px;margin:20px 0 8px}h4{font-size:15px;margin:10px 0}.basis{border-left:3px solid #555;padding:10px 16px;background:#f0f0f0}.file{margin:12px 0}code,pre{font-family:ui-monospace,"Menlo",monospace;font-size:13px}pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;padding:10px 12px;background:#f4f4f4;border:1px solid #ddd}code{overflow-wrap:anywhere}p{margin:8px 0}dl{margin:12px 0}dt{font-weight:600;margin-top:10px}dd{margin-left:0}.logic{display:grid;grid-template-columns:minmax(0,1fr) 480px;gap:20px;align-items:start}.diagram-container{width:100%;max-width:100%;min-width:0;overflow-x:auto}svg{display:block;width:100%;min-width:480px}.node{font:600 12px "Geist","Noto Sans TC","PingFang TC",sans-serif;fill:#222}.sub{font:9px "Geist Mono",ui-monospace,monospace;fill:#555}.legend{font:12px "Geist","Noto Sans TC","PingFang TC",sans-serif;fill:#555}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid #ddd;text-align:left;vertical-align:top;padding:9px 10px}th{background:#eee}.line-note{font-size:13px;color:#555}.sample{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}.sample p{font-size:13px;margin:0 0 4px}.edit{border-top:1px solid #ccc;padding:16px 0;break-inside:avoid}.changes{display:grid;grid-template-columns:1fr 1fr;gap:12px}.after{border-color:#555}details{margin:10px 0}summary{cursor:pointer;font-weight:600;padding:8px 0}details:not([open])>div{display:none}li{margin:5px 0}
+@media(max-width:850px){body{padding:0 16px}.logic,.sample,.changes{grid-template-columns:minmax(0,1fr)}th,td{min-width:100px}}
+@page{size:A4;margin:12mm}@media print{body{margin:0;padding:0;max-width:none;font-size:10pt;background:#fff}h1{font-size:18pt}nav{display:none}article{padding:12px 0}h2{font-size:14pt}h3{font-size:11pt}h4{font-size:10pt}.basis{padding:6px 10px}.logic{grid-template-columns:minmax(0,1fr) 80mm;gap:6mm}.diagram-container,.table-wrap{overflow-x:visible}svg{min-width:0}.node{font-size:16px}.sub{font-size:12px}table{font-size:9pt}code,pre{font-size:8pt}.line-note{font-size:8pt}.sample,.changes{grid-template-columns:1fr 1fr;gap:3mm}a{text-decoration:none}pre{padding:6px}.edit{break-inside:avoid}}
+
+
+@page{size:A4;margin:13mm 13mm 16mm}
+body{background:#fff;color:#111;max-width:1100px;font-family:"PingFang TC","Noto Sans CJK TC",sans-serif}
+.front{border-bottom:1px solid #aaa;margin-bottom:24px;padding-bottom:20px}details>div{display:block!important}
+.qa{break-inside:avoid}summary{cursor:default}.basis{background:#f5f5f5}
+@media print{body{font-size:10.5pt;line-height:1.6}article,.front{break-before:page;break-after:auto;border:0;padding:0;margin:0}
+.front:first-child{break-before:auto}h1{font-size:21pt}h2{font-size:15pt}h3{font-size:11.5pt}
+table{font-size:9pt;line-height:1.5}th,td{padding:6px 7px}thead{display:table-header-group}tr{break-inside:avoid}
+p,li{orphans:3;widows:3}h2,h3,h4,summary{break-after:avoid}pre,code{font-size:8.5pt;line-height:1.5}
+.sample,.changes{display:grid;grid-template-columns:1fr 1fr;gap:4mm;break-inside:avoid}
+.sample>div,.changes>div{min-width:0}.edit{padding:8px 0;break-inside:avoid}summary{font-size:10.5pt}
+.logic{grid-template-columns:minmax(0,1fr) 76mm}.line-note{font-size:9pt}.diagram-container{overflow:visible}a{color:#111}}
+
+</style></head><body>
+<section class="front" id="index"><h1>Compiler Ch1–3｜考場列印手冊</h1>
+<p class="basis">黑白 A4 完整版 · 2026-10-14 · 八份註解程式＋兩題作業（Scanner／Parser）的選檔／改題指南＋Ch1–3 三章完整速查表。</p>
+<p>程式直接帶原始 .cpp；紙本用來找題型、看推導、核對輸入輸出及修改位置。本冊保留八題與兩題作業的完整題意、
+基本測例、手動追蹤、46 個修改範例的改前／改後與執行結果，不需展開才能閱讀。</p>
+<h2>A｜先選題，再開檔</h2><table><thead><tr><th>題型</th><th>Code 檔案（相對 Complier/Code/）</th><th>PDF 頁</th></tr></thead><tbody><tr><td>HTML 標籤配對</td><td><code>01-HTML標籤配對/html_check.cpp</code></td><td>8</td></tr><tr><td>遞迴下降運算式</td><td><code>02-遞迴下降運算式/expression.cpp</code></td><td>13</td></tr><tr><td>Scanner：沿用現有短程式</td><td><code>03-Scanner與註解/lexer.cpp</code></td><td>17</td></tr><tr><td>NFA 直接判定字串</td><td><code>04-NFA判定字串/nfa_check.cpp</code></td><td>22</td></tr><tr><td>HW5 固定四狀態 DFA</td><td><code>05-HW5固定DFA/hw5_check.cpp</code></td><td>28</td></tr><tr><td>ac 邊解析邊產 dc</td><td><code>06-ac產dc/ac_dc.cpp</code></td><td>32</td></tr><tr><td>Stack VM：沿用現有短程式</td><td><code>07-StackVM/stack_vm.cpp</code></td><td>38</td></tr><tr><td>LL(1)：較低優先補充</td><td><code>08-LL1/ll1.cpp</code></td><td>43</td></tr><tr><td>作業 ScannerTest：算式 Scanner</td><td><code>09-作業ScannerTest/scanner.cpp</code></td><td>HTML 09</td></tr><tr><td>作業 ParserTest：Recursive-Descent Parser</td><td><code>10-作業ParserTest/parser.cpp</code></td><td>HTML 10</td></tr></tbody></table><p><b>快速入口：</b>版本／模式 p.3；Linux／I/O p.4；除錯 p.5；小考英文短答 p.6</p>
+<p class="line-note">相同檔名也可能有不同版本：02-遞迴下降運算式/expression.cpp 是短版求值；
+12-運算式parser完整版/expression.cpp 是完整版本，預設 postfix。以本表完整相對路徑選檔。
+09、10 兩題作業目前只收在本 HTML，PDF 尚未重建，因此沒有 PDF 頁碼。</p>
+<h2>如何使用這本手冊</h2><ol>
+<li>圈出輸出要求：合法判定、Token、Tree、AST、Postfix、DFA 表、目標碼，或執行結果。</li>
+<li>先看該題輸入規格與範圍，再用配套 .in／.expected 跑一次原版。</li>
+<li>按原檔行號找到修改區塊；每個變體獨立套用，多項合併後重新找位置。</li>
+<li>以題目樣例確認輸出，再加空字串、邊界、非法字元、巢狀與長輸入等測例。</li>
+<li>需要手算時查章節附錄；教材頁碼、教材解答與補充標示照原版保留。</li></ol>
+<p>程式長行在紙本僅作視覺折行，修改時以 .cpp 原檔對照。PDF 最底端 Print handbook N / TOTAL 是本冊連續頁碼；附錄原有 01 / 06 等是各章自身編號。
+此 HTML 僅含前半部程式指南，三章完整內容已合併於 PDF。</p></section>
+<section class="front" id="chapter-index"><h2>章節內容索引：三章完整保留</h2>
+<p>現有教材伴讀速查表全部納入；來源 PPT／教材頁碼與補充辨析保留在各頁。
+HTML parser 的歷屆線索未附原卷，因此程式題標明模擬規格。
+FIRST／FOLLOW／LL(1) 保留為較低優先延伸，正式範圍尚未確認。</p><table><thead><tr><th>原章節頁</th><th>內容</th><th>本冊 PDF 頁</th></tr></thead><tbody><tr><td>Ch1 · 原第 1 頁</td><td>編譯器定義與目標碼</td><td>48</td></tr><tr><td>Ch1 · 原第 2 頁</td><td>Compiler／Interpreter 與編譯流程</td><td>49</td></tr><tr><td>Ch1 · 原第 3 頁</td><td>Scanner C 實作與前後端</td><td>50</td></tr><tr><td>Ch1 · 原第 4 頁</td><td>Bootstrapping 與 T 圖</td><td>51</td></tr><tr><td>Ch1 · 原第 5 頁</td><td>Optimizer：矩陣乘法</td><td>52</td></tr><tr><td>Ch1 · 原第 6 頁</td><td>HW 4／8／11 與短答</td><td>53</td></tr><tr><td>Ch1 · 原第 7 頁</td><td>名詞速查與自測</td><td>54</td></tr><tr><td>Ch2 · 原第 1 頁</td><td>詞法、Token 與英文短答</td><td>55</td></tr><tr><td>Ch2 · 原第 2 頁</td><td>15 條 ac 文法、Predict 與 Parser</td><td>56</td></tr><tr><td>Ch2 · 原第 3 頁</td><td>推導、Parse Tree 與 AST</td><td>57</td></tr><tr><td>Ch2 · 原第 4 頁</td><td>Symbol Table、型別與錯誤</td><td>58</td></tr><tr><td>Ch2 · 原第 5 頁</td><td>dc 產碼與 Stack Trace</td><td>59</td></tr><tr><td>Ch2 · 原第 6 頁</td><td>HW 1／2／3 與 Scanner 擴充</td><td>60</td></tr><tr><td>Ch3 · 原第 1 頁</td><td>中英術語與階段速查</td><td>61</td></tr><tr><td>Ch3 · 原第 2 頁</td><td>六類題目解題步驟</td><td>62</td></tr><tr><td>Ch3 · 原第 3 頁</td><td>CFG 與概念英文短答</td><td>63</td></tr><tr><td>Ch3 · 原第 4 頁</td><td>AST 畫法與優先序</td><td>64</td></tr><tr><td>Ch3 · 原第 5 頁</td><td>RE、Identifier 與 Exponent</td><td>65</td></tr><tr><td>Ch3 · 原第 6 頁</td><td>DFA／NFA 與 Scanner 行為</td><td>66</td></tr><tr><td>Ch3 · 原第 7 頁</td><td>RE→NFA 與 (bc)*d</td><td>67</td></tr><tr><td>Ch3 · 原第 8 頁</td><td>NFA→DFA 子集構造</td><td>68</td></tr><tr><td>Ch3 · 原第 9 頁</td><td>(a|b)*abb 構造與追蹤</td><td>69</td></tr><tr><td>Ch3 · 原第 10 頁</td><td>HW5(a) 完整表與短答</td><td>70</td></tr></tbody></table>
+<p class="line-note">教材已有疑義：Ch2 p.34 未附引用圖、p.43 解答與型別規則的差異、
+Scanner 小數位數及科學記號規則的差異，均沿用既有辨析。不要把補充版本當成教材逐字原解。</p></section>
+<section class="front" id="versions"><h2>同一題型，輸出要求不同就換版本</h2>
+<p>以下路徑相對 Complier/Code/。短版能辨識字串，不代表它也會畫樹或列 DFA 表。
+評測若不傳命令列參數，將 main 的預設模式改成題目需要的模式。</p><table><thead><tr><th>題目要求</th><th>原檔路徑</th><th>模式／關鍵設定</th></tr></thead><tbody><tr><td>HTML 只判斷合法</td><td><code>01-HTML標籤配對/html_check.cpp</code></td><td>無參數；VALID／INVALID</td></tr><tr><td>HTML Token／Tree／Text</td><td><code>11-HTML-parser完整版/html_parser.cpp</code></td><td>--tokens／--tree／--text；預設 --check</td></tr><tr><td>每行算式求值／Postfix／AST</td><td><code>02-遞迴下降運算式/expression.cpp</code></td><td>MODE：eval／postfix／ast</td></tr><tr><td>深巢狀／迭代式算式 Parser</td><td><code>12-運算式parser完整版/expression.cpp</code></td><td>--postfix（預設）／--ast／--eval</td></tr><tr><td>C-like Token、字串、註解</td><td><code>03-Scanner與註解/lexer.cpp</code></td><td>keywords／ops 清單可改</td></tr><tr><td>作業：算式 Token（NUM／PLUS…RPR）</td><td><code>09-作業ScannerTest/scanner.cpp</code></td><td>無參數；NUM 開頭 0 只吃一位</td></tr><tr><td>作業：ID／STRLIT／DOT 遞迴下降檢查</td><td><code>10-作業ParserTest/parser.cpp</code></td><td>無參數；非法只印 invalid input</td></tr><tr><td>教材 ac Scanner／Parse Tree／AST</td><td><code>14-ac作業完整版/ac_homework.cpp</code></td><td>--tokens／--parse-tree／--ast／--typed-ast</td></tr><tr><td>ac 型別檢查／產 dc</td><td><code>06-ac產dc/ac_dc.cpp</code></td><td>只產 dc，不直接印數值</td></tr><tr><td>ac 完整型別／摺疊／產碼</td><td><code>14-ac作業完整版/ac_homework.cpp</code></td><td>--check／--dc（預設）；可加 --fold</td></tr><tr><td>給 NFA，僅判字串</td><td><code>04-NFA判定字串/nfa_check.cpp</code></td><td>無參數；# 是 epsilon</td></tr><tr><td>給 NFA，產 DFA 表／集合追蹤</td><td><code>13-NFA轉DFA完整版/nfa_to_dfa.cpp</code></td><td>--table／--trace；預設 --check</td></tr><tr><td>固定 HW5(a)／(d) 字串辨識</td><td><code>05-HW5固定DFA/hw5_check.cpp</code></td><td>HW5A=true／false</td></tr><tr><td>固定 HW5 原 NFA→subset DFA</td><td><code>15-HW5-NFA-DFA作業完整版/automata_homework.cpp</code></td><td>5a --table／5d --table</td></tr><tr><td>Stack 指令執行</td><td><code>07-StackVM/stack_vm.cpp</code></td><td>PRINT 會 pop；不是 dc</td></tr><tr><td>通用 FIRST／FOLLOW／LL(1)</td><td><code>08-LL1/ll1.cpp</code></td><td>預設表格；--check 判 Token 序列</td></tr></tbody></table>
+<h3>HTML parser 先判斷題意</h3><ul>
+<li><b>合法判定：</b>START 入 stack，END 配 top，EOF 為空；數量相同不保證巢狀正確。</li>
+<li><b>列 Token：</b>分辨 START／END／TEXT／COMMENT；是否檢查配對看題目要求。</li>
+<li><b>輸出樹：</b>stack 的 top 是新節點的 parent，要保留 children 與文字次序。</li>
+<li><b>抽文字：</b>是否保留空白、跳過 script／style、解碼 entity、替 br 換行？現有 --text 串接來源 TEXT，未做這些轉換。</li>
+<li><b>邊界：</b>引號內 &gt; 不切 Tag；註解另找 --&gt;；void 不入 stack。
+本模擬子集以 &lt;x/&gt; 自閉合，不等於完整瀏覽器的 HTML 規則。</li></ul>
+<p class="basis">程式的 I/O 與支援範圍就是使用條件。mock 題型可用來改題，實際輸入輸出仍按考卷。</p></section>
+<section class="front" id="io"><h2>讀題與跨平台輸入輸出：逐項核對</h2><table><thead><tr><th>核對項目</th><th>先圈題目敘述</th><th>本程式的易錯處</th></tr></thead><tbody><tr><td>案例界線</td><td>首行 T／每行一案／整份 EOF 一案／sentinel</td><td>跨行 HTML、ac 不可誤用每行一案。</td></tr><tr><td>空白與空行</td><td>空行是 epsilon 案例，還是忽略？空白是內容，還是分隔？</td><td>NFA／HW5 空行要測；expression 空白行目前是錯誤。</td></tr><tr><td>State 編號</td><td>0..n-1，還是 1..n？</td><td>1 起算要同步改 valid 與容器大小。</td></tr><tr><td>大小寫</td><td>Tag、Keyword、Instruction 是否區分大小寫？</td><td>只改允許的字元；literal 不可整份轉小寫。</td></tr><tr><td>數字</td><td>整數除法／浮點；小數位數／有效位數；e／E</td><td>fixed+setprecision(2) 是兩位小數；不加 fixed 是有效位數。</td></tr><tr><td>輸出格式</td><td>YES／NO、Case 編號、分隔空白、EOF Token</td><td>不印提示字、debug、額外的樹或表。</td></tr><tr><td>錯誤案例</td><td>印指定文字、拒絕單案，還是終止全部？</td><td>多份原檔暫存 stdout，任一案錯誤會取消整份輸出。</td></tr><tr><td>複雜度</td><td>長度、巢狀深度、State 上限、Time Limit</td><td>短 expression 深度上限 256；subset DFA 可能指數膨脹。</td></tr></tbody></table>
+<h3>Linux／DOMjudge 編譯與執行</h3><pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror html_check.cpp -o main
+./main &lt; input.txt &gt; actual.txt
+diff -u expected.txt actual.txt</pre>
+<p>每份都有自己的 main()，選一份編譯，不要把所有 .cpp 同時連結。
+使用標準 C++17；不加入 windows.h、conio.h、getch、gets、system("pause") 或 system("cls")。</p>
+<h3>getline 與 CRLF</h3><p>getline 吃掉 LF，但最後可能留下 CR。
+以下為片段，未單獨編譯；每次讀到一行後去掉<b>末尾</b> CR，不刪內容中所有空白。</p>
+<pre>while (getline(cin, line)) {
+    if (!line.empty() &amp;&amp; line.back() == '\r') line.pop_back();
+    // 處理一個案例；是否略過空行依題意。
+}</pre>
+<p>混用 cin &gt;&gt; T 和 getline 時，先讀完 T 所在行的剩餘內容，再讀第一案。
+若空行代表合法案例，不用 cin &gt;&gt; ws，它會吞掉空行。</p>
+<h3>模式、輸出與原碼行號</h3><p>行號對應 2026-10-14 含中文註解的原檔，八份共 806 行。
+每個變體從原版獨立套用；插入程式後後面行號會位移，可搜尋「改前」字串重新定位。
+範例裡 stdout：空／stderr／exit 1 是手冊說明，不是要印在 stdout 的文字。</p></section>
+<section class="front" id="diagnosis"><h2>出錯時依症狀找位置</h2><table><thead><tr><th>現象</th><th>先檢查</th><th>最小定位方式</th></tr></thead><tbody><tr><td>編譯錯誤</td><td>先看第一個診斷：include、括號、引號、型別、選檔。</td><td>原檔通過後，一次改一個區塊；使用 C++17。</td></tr><tr><td>輸出多了／少了行</td><td>檢查 T 與 EOF 是否混用、空行是否被跳過。</td><td>stdout 只留指定內容；Case 編號按題意起算。</td></tr><tr><td>小數答案不同</td><td>有效位數、fixed、小數位數與整數除法。</td><td>ac 精確十進位字串不可先轉 double 再印。</td></tr><tr><td>配對／巢狀失敗</td><td>stack top、引號、void 與 raw text。</td><td>測交錯關閉與含 &gt; 的屬性。</td></tr><tr><td>運算順序不同</td><td>優先序、結合性與 stack pop 順序。</td><td>100-30-1=69；8/2/2=2；先 pop 右 b 再左 a。</td></tr><tr><td>NFA 判定不同</td><td>初始 closure；move 後再 closure；讀完才看 final。</td><td>測空字串、epsilon cycle、final 有外出邊。</td></tr><tr><td>Runtime Error</td><td>空 stack／越界／未定義變數／零除／深遞迴。</td><td>先測最小合法輸入，再測允許邊界。</td></tr><tr><td>Time Limit</td><td>迴圈是否推進游標，epsilon 是否重複進 todo。</td><td>AST 字串拼接可能 O(n²)；深／長算式換完整迭代版。</td></tr></tbody></table>
+<h3>提交前的測例清單</h3><ol>
+<li>全部題目樣例，逐 byte 比對輸出；空白、最後換行與 Case 字樣都要對。</li>
+<li>最短合法例、空輸入／空案例，以及同類的最短非法例。</li>
+<li>一層與多層巢狀；不平衡、交錯關閉；引號與 escaped quote。</li>
+<li>最高優先序、同級左結合、負 operand、零值與整數／浮點混合。</li>
+<li>多案連續輸入；每案游標、stack、輸出與深度等狀態要重設。</li>
+<li>LF 與 CRLF 各測一次；只有空白的尾端也按題目規格處理。</li></ol>
+<p class="basis">八份原檔已通過 610 項 native 檢查與 sanitizer；40 個修改範例另有 82 次樣例檢查。
+這次只編製文件，核對來源與報告的 SHA-256，沒有修改程式，也未新增 DOMjudge Accepted 證據。</p></section>
+<section class="front" id="quiz"><h2>小考原題與可直接作答的英文</h2><p>第一次五題原文由使用者提供；英文答案是既有筆記依教材整理的參考答案，非教師公布的逐字解答。第二次小考只提供題意，AST 的原程式未附。</p><div class="qa"><h3>Quiz 1 · 1｜Compiler 與 Interpreter</h3><p><b>原題：</b>What is the difference between compiler and interpreter ?</p><p class="basis">A compiler translates a source program into a target program, which is then executed. An interpreter executes a source program or its intermediate representation using input data and directly produces results. The main distinction is translation into a target program versus execution of the program.</p><p>Compiler 產出目標程式；Interpreter 執行程式而產出結果。不要用「一定逐行」或「完全不翻譯」當定義。</p></div><div class="qa"><h3>Quiz 1 · 2｜Token 是什麼</h3><p><b>原題：</b>Explain what a token is ?</p><p class="basis">A token is a basic lexical unit recognized by the scanner, such as a keyword, identifier, literal, operator, or punctuation symbol. A token has a kind and may carry an attribute, such as an identifier name or a literal value. The actual character sequence forming a token is called its lexeme.</p><p>Token kind 是類別，lexeme 是來源字串，attribute 是附帶資訊；int sum = 12; 有五個來源 tokens。</p></div><div class="qa"><h3>Quiz 1 · 3｜Windows x86 的 C 程式能否在 Linux x86 執行</h3><p><b>原題：</b>A program written in C can be compile and execute in Win (x86) , is it also work in Linux (x86) ?</p><p class="basis">Not necessarily. A Windows x86 executable normally cannot run directly on Linux x86, because the executable format, operating-system interfaces, ABI, and runtime libraries may differ. The C source code can be recompiled and linked for Linux if it is portable and its dependencies are available. Windows-specific code must be ported first.</p><p>分清原始碼與二進位執行檔。相同 x86 不等於相同 OS、ABI 或函式庫；可攜原碼在 Linux 重新編譯。</p></div><div class="qa"><h3>Quiz 1 · 4｜取得可在 ARM 執行的 javac</h3><p><b>原題：</b>We have a java compiler written in C on X86, how can we get a javac for arm device ?</p><p class="basis">Use a C cross-compiler that runs on x86 and generates code for the ARM device. Compile the C source of the Java compiler and link it with the appropriate ARM target libraries to produce an ARM executable of javac. Transfer it and its required runtime dependencies to the ARM device. Alternatively, build the same C source with a native C compiler on ARM.</p><p>用在 x86 執行、產生 ARM 程式的 C 交叉編譯器，編譯 javac 的 C 原碼。產出的 javac 在 ARM 跑，仍將 Java 翻成 bytecode；不是把 javac 的 bytecode 後端改成 ARM。</p></div><div class="qa"><h3>Quiz 1 · 5｜Grammatical error 與 Semantic error</h3><p><b>原題：</b>Explain grammatical error and Semantic error</p><p class="basis">A grammatical error, also called a syntax error, violates the grammar of a language, such as a missing expression or an unmatched parenthesis. A semantic error violates the language&#x27;s meaning rules even when the syntax is valid, such as using an undeclared identifier or calling a non-function object. The parser checks syntax, while the semantic analyzer checks static semantic constraints such as names and types.</p><p>Parser 檢查排列是否符合文法；語意分析檢查宣告、名稱與型別。a=; 是缺 operand；使用未宣告變數是語意錯誤。</p></div><div class="qa"><h3>Quiz 2 · 1｜Why use CFG?</h3><p><b>原題：</b>Why use CFG (context free grammer) instead of others ?</p><p class="basis">A context-free grammar can describe recursive and nested syntax, such as balanced parentheses and nested statements, beyond the expressive power of regular expressions. Its productions also provide structure for parsing and AST construction. Semantic constraints, such as declarations and types, are checked separately.</p><p>補充參考答案：RE 適合 Token 模式；CFG 可描述遞迴與任意巢狀結構，又能交給 Parser 建樹。CFG 不能取代名稱／型別檢查。更多例子見 Ch3 附錄。</p></div><div class="qa"><h3>Quiz 2 · 2｜畫短程式的 AST</h3><p><b>原題：</b>wrtie down the AST for a short code</p><p>原程式未提供；以下另編練習：<code>a+b*c</code> → <code>(+ a (* b c))</code>；<code>100-30-1</code> → <code>(- (- 100 30) 1)</code>。</p><ol><li>辨認最外層低優先序的運算子，作為根。</li><li>依優先序、括號與結合性切左右子樹。</li><li>AST 保留有意義的運算／宣告／敘述，不保留文法輔助節點與括號 token。</li><li>若要求 decorated AST，查 symbol table，由葉往根標型別，必要時加 int2float。</li></ol></div></section>
+<article id="html_check"><h2>01 HTML 標籤配對</h2>
+<h3>題目內容</h3>
+<p class="basis">歷屆 HTML parser 是使用者提供的線索，未提供原考卷；以下是完整模擬題。</p>
+<p>請撰寫程式讀入一份 HTML fragment，判斷所有非 void、非自閉合元素是否正確巢狀。開始標籤必須依相反順序關閉；END 名稱須與最內層未關閉元素相同。名稱不分 ASCII 大小寫。支援 boolean、單雙引號與無引號屬性、註解、短 DOCTYPE html；script/style/textarea/title 內容讀到匹配 END。多個根元素與空 fragment 均合法。</p>
+<dl>
+<dt>輸入規格</dt><dd>stdin 全部內容到 EOF 是一個案例，可能跨行。普通元素必須顯式關閉；本模擬題將 &lt;x/&gt; 視為自閉合。無額外案例數 T。</dd>
+<dt>輸出規格</dt><dd>合法印 VALID，否則印 INVALID，每次只印一行；這兩種分類都正常結束。</dd>
+<dt>限制與適用範圍</dt><dd>不是完整 browser DOM：不恢復錯誤、不省略 end tag、不解碼 entity、不檢查內容模型。這裡的「合法」指指定子集。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/01-HTML標籤配對/html_check.cpp"><code>html_check.cpp</code></a> <small>（01-HTML標籤配對/html_check.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror html_check.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<div class="sample"><div><p>輸入</p><pre>&lt;div id=&quot;main&quot;&gt;&lt;p title=&quot;a&gt;b&quot;&gt;Hello &lt;b&gt;world&lt;/b&gt;&lt;/p&gt;&lt;br&gt;&lt;img src=x&gt;&lt;!--ok--&gt;&lt;/div&gt;
+</pre></div><div><p>輸出</p><pre>VALID
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>（空輸入）</pre></div><div><p>輸出</p><pre>VALID
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>&lt;P&gt;x&lt;/p&gt;&lt;br&gt;</pre></div><div><p>輸出</p><pre>VALID
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre>&lt;a&gt;&lt;b&gt;&lt;/a&gt;&lt;/b&gt;</pre></div><div><p>輸出</p><pre>INVALID
+</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>&lt;p a=&quot;a&gt;b&quot;&gt;x&lt;/p&gt;</pre></div><div><p>輸出</p><pre>VALID
+</pre></div></div>
+<h4>邊界測例 05</h4><div class="sample"><div><p>輸入</p><pre>&lt;p a=x/&gt;</pre></div><div><p>輸出</p><pre>INVALID
+</pre></div></div>
+<h4>邊界測例 06</h4><div class="sample"><div><p>輸入</p><pre>&lt;p a=x /&gt;</pre></div><div><p>輸出</p><pre>VALID
+</pre></div></div>
+<h4>邊界測例 07</h4><div class="sample"><div><p>輸入</p><pre>&lt;!-- unclosed</pre></div><div><p>輸出</p><pre>INVALID
+</pre></div></div>
+<h4>邊界測例 08</h4><div class="sample"><div><p>輸入</p><pre>&lt;script&gt;if(a&lt;b){}&lt;/SCRIPT &gt;</pre></div><div><p>輸出</p><pre>VALID
+</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<div class="logic"><div><p>START 入 stack；END 必須匹配頂端才 pop；EOF 時 stack 必須空。void 與自閉合標籤不入 stack；屬性引號內的 &gt; 不結束標籤，註解與 raw text 另行跳過。</p><ul><li>&lt;a&gt;&lt;b&gt;x&lt;/b&gt;&lt;/a&gt;：[] → [a] → [a,b] → [a] → []，接受。</li><li>&lt;a&gt;&lt;b&gt;&lt;/a&gt;&lt;/b&gt;：讀 &lt;/a&gt; 時 top 是 b，立即拒絕。</li><li>&lt;p title=&quot;a&gt;b&quot;&gt;x&lt;/p&gt;：引號中的 &gt; 不切開 tag。</li><li>&lt;p a=x/&gt; 沒有關 p；&lt;p a=x /&gt; 則已自閉合。</li></ul></div><div class="diagram-container"><svg viewBox="0 0 480 364" role="img" aria-labelledby="short-html_check-title short-html_check-desc"><title id="short-html_check-title">讀入一份可跨行 HTML，判斷標籤是否正確巢狀，輸出 VALID / INVALID。</title><desc id="short-html_check-desc">START 入 stack；END 必須匹配頂端才 pop；EOF 時 stack 必須空。void 與自閉合標籤不入 stack；屬性引號內的 &gt; 不結束標籤，註解與 raw text 另行跳過。</desc><defs><marker id="short-html_check-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker><marker id="short-html_check-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker><marker id="short-html_check-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker></defs><rect width="480" height="364" fill="#fff"/><line x1="240" y1="88" x2="240" y2="128" stroke="#555"/><polygon points="236,120 244,120 240,128" fill="#555"/><line x1="240" y1="176" x2="240" y2="216" stroke="#555"/><polygon points="236,208 244,208 240,216" fill="#555"/><rect x="80" y="40" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="40" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="61" text-anchor="middle">讀取標籤</text><text class="sub" x="240" y="77" text-anchor="middle">START / END</text><rect x="80" y="128" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="128" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="149" text-anchor="middle">入棧或配對出棧</text><text class="sub" x="240" y="165" text-anchor="middle">push / top / pop</text><rect x="80" y="216" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="216" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="237" text-anchor="middle">檢查未關閉標籤</text><text class="sub" x="240" y="253" text-anchor="middle">EOF: stack.empty()</text><line x1="40" y1="296" x2="440" y2="296" stroke="#ddd"/><text class="legend" x="40" y="316">方框：處理步驟　箭頭：執行順序或呼叫關係</text></svg></div></div>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>輸出 YES / NO</td><td>127</td><td><a href="#html_check-change-1">修改範例 01（後文）</a></td></tr><tr><td>一行一案</td><td>121–127</td><td><a href="#html_check-change-2">修改範例 02（後文）</a></td></tr><tr><td>XML 式：br 等也須配對關閉</td><td>32–33</td><td><a href="#html_check-change-3">修改範例 03（後文）</a></td></tr><tr><td>求最大巢狀深度</td><td>11；101；127</td><td><a href="#html_check-change-4">修改範例 04（後文）</a></td></tr><tr><td>首行 T，其後一行一案</td><td>121–127</td><td><a href="#html_check-change-5">修改範例 05（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="html_check-change-1"><summary>01 輸出 YES / NO：改前／改後與測例</summary><div>
+<p>將 &quot;VALID\n&quot; / &quot;INVALID\n&quot; 改成 &quot;YES\n&quot; / &quot;NO\n&quot;。</p>
+<p>第 127 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    cout &lt;&lt; (valid ? &quot;VALID\n&quot; : &quot;INVALID\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">    cout &lt;&lt; (valid ? &quot;YES\n&quot; : &quot;NO\n&quot;);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>&lt;p/&gt;</pre></div><div><p>輸出</p><pre>YES
+</pre></div></div>
+</div></details>
+<details open class="edit" id="html_check-change-2"><summary>02 一行一案：改前／改後與測例</summary><div>
+<p>以此區塊替換這段；跨行一案時保留原版：
+while (getline(cin, s)) {
+    p = 0; bool valid = false;
+    try { valid = check(); } catch (const runtime_error&amp;) {}
+    cout &lt;&lt; (valid ? &quot;VALID\n&quot; : &quot;INVALID\n&quot;);
+}
+if (cin.bad()) return 1;</p>
+<p>第 121–127 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    s.assign(istreambuf_iterator&lt;char&gt;(cin), {});
+    // 讀取裝置失敗與文件語法非法不同：前者才用 exit 1。
+    if (cin.bad()) { cerr &lt;&lt; &quot;input error\n&quot;; return 1; }
+    bool valid = false;
+    // 語法錯誤也是分類結果 INVALID，所以這裡捕捉例外，不把它當程式崩潰。
+    try { valid = check(); } catch (const runtime_error&amp;) {}
+    cout &lt;&lt; (valid ? &quot;VALID\n&quot; : &quot;INVALID\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">while (getline(cin, s)) {
+    p = 0; bool valid = false;
+    try { valid = check(); } catch (const runtime_error&amp;) {}
+    cout &lt;&lt; (valid ? &quot;VALID\n&quot; : &quot;INVALID\n&quot;);
+}
+if (cin.bad()) return 1;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>&lt;p/&gt;
+&lt;p&gt;
+</pre></div><div><p>輸出</p><pre>VALID
+INVALID
+</pre></div></div>
+</div></details>
+<details open class="edit" id="html_check-change-3"><summary>03 XML 式：br 等也須配對關閉：改前／改後與測例</summary><div>
+<p>將兩行名單改成 const set&lt;string&gt; empty{};；&lt;br/&gt; 仍自閉合。</p>
+<p>第 32–33 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    const set&lt;string&gt; empty{&quot;area&quot;,&quot;base&quot;,&quot;br&quot;,&quot;col&quot;,&quot;embed&quot;,&quot;hr&quot;,&quot;img&quot;,&quot;input&quot;,
+                            &quot;link&quot;,&quot;meta&quot;,&quot;source&quot;,&quot;track&quot;,&quot;wbr&quot;};</pre></div><div><p>改後（對照修改）</p><pre class="after">const set&lt;string&gt; empty{};</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>&lt;br&gt;&lt;/br&gt;</pre></div><div><p>輸出</p><pre>VALID
+</pre></div></div>
+</div></details>
+<details open class="edit" id="html_check-change-4"><summary>04 求最大巢狀深度：改前／改後與測例</summary><div>
+<p>在 p 宣告後加 size_t deepest = 0;
+push 後加 if (stack.size() &gt; deepest) deepest = stack.size();
+輸出行改為 if (valid) cout &lt;&lt; deepest &lt;&lt; &quot;\n&quot;; else cout &lt;&lt; &quot;INVALID\n&quot;;
+若同時改一行一案，每案開頭還需 deepest = 0;。</p>
+<p>第 11 行：在此行後插入</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>size_t p = 0;</pre></div><div><p>改後（對照修改）</p><pre class="after">size_t deepest = 0;</pre></div></div>
+<p>第 101 行：在此行後插入</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        stack.push_back(tag);</pre></div><div><p>改後（對照修改）</p><pre class="after">if (stack.size() &gt; deepest) deepest = stack.size();</pre></div></div>
+<p>第 127 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    cout &lt;&lt; (valid ? &quot;VALID\n&quot; : &quot;INVALID\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">if (valid) cout &lt;&lt; deepest &lt;&lt; &quot;\n&quot;; else cout &lt;&lt; &quot;INVALID\n&quot;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>&lt;a&gt;&lt;b&gt;&lt;/b&gt;&lt;/a&gt;</pre></div><div><p>輸出</p><pre>2
+</pre></div></div>
+</div></details>
+<details open class="edit" id="html_check-change-5"><summary>05 首行 T，其後一行一案：改前／改後與測例</summary><div>
+<p>第 121–127 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    s.assign(istreambuf_iterator&lt;char&gt;(cin), {});
+    // 讀取裝置失敗與文件語法非法不同：前者才用 exit 1。
+    if (cin.bad()) { cerr &lt;&lt; &quot;input error\n&quot;; return 1; }
+    bool valid = false;
+    // 語法錯誤也是分類結果 INVALID，所以這裡捕捉例外，不把它當程式崩潰。
+    try { valid = check(); } catch (const runtime_error&amp;) {}
+    cout &lt;&lt; (valid ? &quot;VALID\n&quot; : &quot;INVALID\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">int T; if (!(cin &gt;&gt; T) || T &lt; 0) return 1;
+getline(cin, s);
+if (s.find_first_not_of(&quot; \t\r&quot;) != string::npos) return 1;
+for (int tc = 0; tc &lt; T; ++tc) {
+    if (!getline(cin, s)) return 1;
+    p = 0; bool valid = false;
+    try { valid = check(); } catch (const runtime_error&amp;) {}
+    cout &lt;&lt; (valid ? &quot;VALID\n&quot; : &quot;INVALID\n&quot;);
+}
+if (cin.bad()) return 1;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2
+&lt;p/&gt;
+&lt;p&gt;
+</pre></div><div><p>輸出</p><pre>VALID
+INVALID
+</pre></div></div>
+</div></details>
+</article>
+<article id="expression"><h2>02 遞迴下降運算式</h2>
+<h3>題目內容</h3>
+<p class="basis">Ch2 recursive descent / AST 的延伸模擬題；乘除、括號與一元正負不在原 ac 文法。</p>
+<p>請讀入每行運算式，依通常優先序計算結果，或依題目指定改為 postfix / AST。一元正負優先於乘除，乘除優先於加減；同級二元左結合。括號可覆寫優先序。number 允許 .5、10.、十進位小數及 e/E 科學記號；ID 符合 [A-Za-z_][A-Za-z_0-9]*。求值模式不允許變數。</p>
+<dl>
+<dt>輸入規格</dt><dd>每行一個完整運算式到 EOF，沒有 T；完全空輸入是零案例，但空白行本身是非法運算式。</dd>
+<dt>輸出規格</dt><dd>預設 eval：每行印 15 位有效數字的 long double 結果。postfix：以一個空白分隔 token。一元正負用 pos/neg。ast：印前序括號表示。</dd>
+<dt>限制與適用範圍</dt><dd>嵌套括號／一元鏈最多 256；不支援 %、^、函式或隱含乘法。非法字元、缺 operand、零除、非有限值：stdout 空、stderr 訊息、exit 1。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/02-遞迴下降運算式/expression.cpp"><code>expression.cpp</code></a> <small>（02-遞迴下降運算式/expression.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror expression.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<div class="sample"><div><p>輸入</p><pre>(2+3)*4
+100-30-1
+8/2/2
+-2*-3
+.5 + 1e-2
+</pre></div><div><p>輸出</p><pre>20
+69
+2
+6
+0.51
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>1+2*3</pre></div><div><p>輸出</p><pre>7
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>(2+3)*4</pre></div><div><p>輸出</p><pre>20
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre>100-30-1</pre></div><div><p>輸出</p><pre>69
+</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>8/2/2</pre></div><div><p>輸出</p><pre>2
+</pre></div></div>
+<h4>邊界測例 05</h4><div class="sample"><div><p>輸入</p><pre>-2*-3</pre></div><div><p>輸出</p><pre>6
+</pre></div></div>
+<h4>邊界測例 06</h4><div class="sample"><div><p>輸入</p><pre>.5+1e-2</pre></div><div><p>輸出</p><pre>0.51
+</pre></div></div>
+<h4>邊界測例 07</h4><div class="sample"><div><p>輸入</p><pre>1/0</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：invalid expression
+exit 1</pre></div></div>
+<h4>邊界測例 08</h4><div class="sample"><div><p>輸入</p><pre>2(3)</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：invalid expression
+exit 1</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<div class="logic"><div><p>expr 迴圈處理 + -，呼叫 term；term 迴圈處理 * /，呼叫 unary。unary 讀數字、變數或括號；同級二元由左往右合併。eval 不接受變數；括號／一元鏈嵌套上限 256。</p><ul><li>100-30-1：先 100-30，再 -1，結果 69。</li><li>a+b*c：AST 是 (+ a (* b c))；postfix 是 a b c * +。</li><li>-2*-3：讀 2 → neg → 3 → neg → *，結果 6。</li><li>2(3) 並非隱含乘法，會因多餘內容拒絕。</li></ul></div><div class="diagram-container"><svg viewBox="0 0 480 364" role="img" aria-labelledby="short-expression-title short-expression-desc"><title id="short-expression-title">每行一個運算式，求值、轉 postfix 或輸出 AST；含括號、+ - * / 與一元正負。</title><desc id="short-expression-desc">expr 迴圈處理 + -，呼叫 term；term 迴圈處理 * /，呼叫 unary。unary 讀數字、變數或括號；同級二元由左往右合併。eval 不接受變數；括號／一元鏈嵌套上限 256。</desc><defs><marker id="short-expression-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker><marker id="short-expression-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker><marker id="short-expression-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker></defs><rect width="480" height="364" fill="#fff"/><line x1="240" y1="88" x2="240" y2="128" stroke="#555"/><polygon points="236,120 244,120 240,128" fill="#555"/><line x1="240" y1="176" x2="240" y2="216" stroke="#555"/><polygon points="236,208 244,208 240,216" fill="#555"/><rect x="80" y="40" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="40" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="61" text-anchor="middle">處理加減：低優先序</text><text class="sub" x="240" y="77" text-anchor="middle">expr -&gt; term</text><rect x="80" y="128" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="128" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="149" text-anchor="middle">處理乘除：高優先序</text><text class="sub" x="240" y="165" text-anchor="middle">term -&gt; unary</text><rect x="80" y="216" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="216" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="237" text-anchor="middle">處理一元、括號與葉節點</text><text class="sub" x="240" y="253" text-anchor="middle">unary -&gt; expr / value</text><line x1="40" y1="296" x2="440" y2="296" stroke="#ddd"/><text class="legend" x="40" y="316">方框：處理步驟　箭頭：執行順序或呼叫關係</text></svg></div></div>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>只輸出 postfix</td><td>12</td><td><a href="#expression-change-1">修改範例 01（後文）</a></td></tr><tr><td>只輸出 AST</td><td>12</td><td><a href="#expression-change-2">修改範例 02（後文）</a></td></tr><tr><td>固定小數點後 2 位</td><td>106</td><td><a href="#expression-change-3">修改範例 03（後文）</a></td></tr><tr><td>所有模式均禁止變數</td><td>51</td><td><a href="#expression-change-4">修改範例 04（後文）</a></td></tr><tr><td>每次除法結果向零截斷</td><td>85</td><td><a href="#expression-change-5">修改範例 05（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="expression-change-1"><summary>01 只輸出 postfix：改前／改後與測例</summary><div>
+<p>const string MODE = &quot;postfix&quot;;</p>
+<p>第 12 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>const string MODE = &quot;eval&quot;;</pre></div><div><p>改後（對照修改）</p><pre class="after">const string MODE = &quot;postfix&quot;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>a+b*c</pre></div><div><p>輸出</p><pre>a b c * +
+</pre></div></div>
+</div></details>
+<details open class="edit" id="expression-change-2"><summary>02 只輸出 AST：改前／改後與測例</summary><div>
+<p>const string MODE = &quot;ast&quot;;</p>
+<p>第 12 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>const string MODE = &quot;eval&quot;;</pre></div><div><p>改後（對照修改）</p><pre class="after">const string MODE = &quot;ast&quot;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>a+b*c</pre></div><div><p>輸出</p><pre>(+ a (* b c))
+</pre></div></div>
+</div></details>
+<details open class="edit" id="expression-change-3"><summary>03 固定小數點後 2 位：改前／改後與測例</summary><div>
+<p>ostringstream out; out &lt;&lt; fixed &lt;&lt; setprecision(2);</p>
+<p>第 106 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    ostringstream out; out &lt;&lt; setprecision(15);</pre></div><div><p>改後（對照修改）</p><pre class="after">ostringstream out; out &lt;&lt; fixed &lt;&lt; setprecision(2);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>1/4</pre></div><div><p>輸出</p><pre>0.25
+</pre></div></div>
+</div></details>
+<details open class="edit" id="expression-change-4"><summary>04 所有模式均禁止變數：改前／改後與測例</summary><div>
+<p>在這行後插入 if (id) fail();；eval 原本已禁止。</p>
+<p>第 51 行：在此行後插入</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    bool id = letter(c);</pre></div><div><p>改後（對照修改）</p><pre class="after">if (id) fail();</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>x+1</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：invalid expression
+exit 1</pre></div></div>
+</div></details>
+<details open class="edit" id="expression-change-5"><summary>05 每次除法結果向零截斷：改前／改後與測例</summary><div>
+<p>第 85 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        if (op == &#x27;/&#x27;) { if (b.number == 0) fail(); a.number /= b.number; }</pre></div><div><p>改後（對照修改）</p><pre class="after">        if (op == &#x27;/&#x27;) { if (b.number == 0) fail(); a.number = trunc(a.number / b.number); }</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>-7/2</pre></div><div><p>輸出</p><pre>-3
+</pre></div></div>
+</div></details>
+</article>
+<article id="lexer"><h2>03 Scanner：沿用現有短程式</h2>
+<h3>題目內容</h3>
+<p class="basis">Ch3 scanner / longest match 的延伸模擬題。教材 HW3 要擴充 ac 的 f/float、i/int、scientific number；本份是一般 C-like token 題，規格不同。</p>
+<p>請對一份類 C 程式做詞彙分析，依序列出 keyword、identifier、number、string、char、operator 與 punctuation。忽略空白、單行 // 註解及非巢狀 /* */ 註解。先讀完整 identifier 再查保留字，operator 採最長匹配。quoted literal 中的註解符號不可當作註解，跳脫引號不得提早終止 literal。</p>
+<dl>
+<dt>輸入規格</dt><dd>整份 stdin 到 EOF；ID 可含底線；number 允許 .5、10.、e/E。keyword 名單及 operator 名單以檔案常數為準。</dd>
+<dt>輸出規格</dt><dd>每個 token 一行：類型、空白、std::quoted 包裝的原始 lexeme；最後一行 EOF。</dd>
+<dt>限制與適用範圍</dt><dd>不是完整 C/C++ lexer：沒有 preprocessing、raw string、數字 suffix 或完整字元 escape 語意；CHAR 只允許單 byte / 單簡單 escape。遇未閉註解／引號或非法 byte，exit 1 且 stdout 空。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/03-Scanner與註解/lexer.cpp"><code>lexer.cpp</code></a> <small>（03-Scanner與註解/lexer.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror lexer.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<div class="sample"><div><p>輸入</p><pre>int sum=12; // skip
+float x=1.2e-3; /*skip*/ sum+=2; print(&quot;a&gt;b&quot;);
+</pre></div><div><p>輸出</p><pre>KW &quot;int&quot;
+ID &quot;sum&quot;
+OP &quot;=&quot;
+NUM &quot;12&quot;
+PUNCT &quot;;&quot;
+KW &quot;float&quot;
+ID &quot;x&quot;
+OP &quot;=&quot;
+NUM &quot;1.2e-3&quot;
+PUNCT &quot;;&quot;
+ID &quot;sum&quot;
+OP &quot;+=&quot;
+NUM &quot;2&quot;
+PUNCT &quot;;&quot;
+KW &quot;print&quot;
+PUNCT &quot;(&quot;
+STRING &quot;\&quot;a&gt;b\&quot;&quot;
+PUNCT &quot;)&quot;
+PUNCT &quot;;&quot;
+EOF
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>intx &gt;&gt;= 2</pre></div><div><p>輸出</p><pre>ID &quot;intx&quot;
+OP &quot;&gt;&gt;=&quot;
+NUM &quot;2&quot;
+EOF
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>int x; // hi
+</pre></div><div><p>輸出</p><pre>KW &quot;int&quot;
+ID &quot;x&quot;
+PUNCT &quot;;&quot;
+EOF
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre>&quot;//x&quot;</pre></div><div><p>輸出</p><pre>STRING &quot;\&quot;//x\&quot;&quot;
+EOF
+</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>1e+</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：error: missing exponent digits
+exit 1</pre></div></div>
+<h4>邊界測例 05</h4><div class="sample"><div><p>輸入</p><pre>/* unfinished</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：error: unclosed block comment
+exit 1</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>依序判定空白、註解、ID、number、literal、operator。讀完整 ID 才查 keyword；多字元 operator 由長到短比對；字串內的註解符號不當成註解。</p><ul><li>intx：先讀四個字元，查 keyword 失敗，因此為 ID，不拆 int + x。</li><li>a&gt;&gt;=2：&gt;&gt;= 先於 &gt;&gt; / &gt;，只有一個 operator token。</li><li>&quot;//x&quot;：整段是 STRING，// 不觸發註解。</li><li>-1e-2：前面的 - 是 OP，指數內的 - 是 NUM 的一部分。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>增加保留字</td><td>23</td><td><a href="#lexer-change-1">修改範例 01（後文）</a></td></tr><tr><td>增加多字元運算子</td><td>25</td><td><a href="#lexer-change-2">修改範例 02（後文）</a></td></tr><tr><td>lexeme 不加引號</td><td>87</td><td><a href="#lexer-change-3">修改範例 03（後文）</a></td></tr><tr><td>不要印 EOF</td><td>90</td><td><a href="#lexer-change-4">修改範例 04（後文）</a></td></tr><tr><td>不區分 keyword，全部列為 ID</td><td>44</td><td><a href="#lexer-change-5">修改範例 05（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="lexer-change-1"><summary>01 增加保留字：改前／改後與測例</summary><div>
+<p>在 keywords 名單加入 &quot;switch&quot;, &quot;case&quot; 等題目指定字。</p>
+<p>第 23 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        const std::set&lt;std::string&gt; keywords{&quot;int&quot;,&quot;float&quot;,&quot;double&quot;,&quot;char&quot;,&quot;bool&quot;,&quot;void&quot;,&quot;if&quot;,&quot;else&quot;,&quot;while&quot;,&quot;for&quot;,&quot;return&quot;,&quot;print&quot;};</pre></div><div><p>改後（對照修改）</p><pre class="after">        const std::set&lt;std::string&gt; keywords{&quot;switch&quot;,&quot;case&quot;,&quot;int&quot;,&quot;float&quot;,&quot;double&quot;,&quot;char&quot;,&quot;bool&quot;,&quot;void&quot;,&quot;if&quot;,&quot;else&quot;,&quot;while&quot;,&quot;for&quot;,&quot;return&quot;,&quot;print&quot;};</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>switch case</pre></div><div><p>輸出</p><pre>KW &quot;switch&quot;
+KW &quot;case&quot;
+EOF
+</pre></div></div>
+</div></details>
+<details open class="edit" id="lexer-change-2"><summary>02 增加多字元運算子：改前／改後與測例</summary><div>
+<p>在 ops 名單加入所需運算子；維持較長字串先列。這裡只分詞，不增加 parser 的運算規則。</p>
+<p>第 25 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        const std::vector&lt;std::string&gt; ops{&quot;&lt;&lt;=&quot;,&quot;&gt;&gt;=&quot;,&quot;++&quot;,&quot;--&quot;,&quot;==&quot;,&quot;!=&quot;,&quot;&lt;=&quot;,&quot;&gt;=&quot;,&quot;&amp;&amp;&quot;,&quot;||&quot;,&quot;+=&quot;,&quot;-=&quot;,&quot;*=&quot;,&quot;/=&quot;,&quot;%=&quot;,&quot;&lt;&lt;&quot;,&quot;&gt;&gt;&quot;,&quot;-&gt;&quot;,&quot;&amp;=&quot;,&quot;|=&quot;,&quot;^=&quot;,&quot;::&quot;};</pre></div><div><p>改後（對照修改）</p><pre class="after">        const std::vector&lt;std::string&gt; ops{&quot;&lt;&lt;=&quot;,&quot;&gt;&gt;=&quot;,&quot;**&quot;,&quot;++&quot;,&quot;--&quot;,&quot;==&quot;,&quot;!=&quot;,&quot;&lt;=&quot;,&quot;&gt;=&quot;,&quot;&amp;&amp;&quot;,&quot;||&quot;,&quot;+=&quot;,&quot;-=&quot;,&quot;*=&quot;,&quot;/=&quot;,&quot;%=&quot;,&quot;&lt;&lt;&quot;,&quot;&gt;&gt;&quot;,&quot;-&gt;&quot;,&quot;&amp;=&quot;,&quot;|=&quot;,&quot;^=&quot;,&quot;::&quot;};</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>a**b</pre></div><div><p>輸出</p><pre>ID &quot;a&quot;
+OP &quot;**&quot;
+ID &quot;b&quot;
+EOF
+</pre></div></div>
+</div></details>
+<details open class="edit" id="lexer-change-3"><summary>03 lexeme 不加引號：改前／改後與測例</summary><div>
+<p>output &lt;&lt; kind &lt;&lt; &#x27; &#x27; &lt;&lt; s.substr(start, p - start) &lt;&lt; &#x27;\n&#x27;;</p>
+<p>第 87 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            output &lt;&lt; kind &lt;&lt; &#x27; &#x27; &lt;&lt; std::quoted(s.substr(start, p - start)) &lt;&lt; &#x27;\n&#x27;;</pre></div><div><p>改後（對照修改）</p><pre class="after">output &lt;&lt; kind &lt;&lt; &#x27; &#x27; &lt;&lt; s.substr(start, p - start) &lt;&lt; &#x27;\n&#x27;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>int x</pre></div><div><p>輸出</p><pre>KW int
+ID x
+EOF
+</pre></div></div>
+</div></details>
+<details open class="edit" id="lexer-change-4"><summary>04 不要印 EOF：改前／改後與測例</summary><div>
+<p>刪除這一行。</p>
+<p>第 90 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        output &lt;&lt; &quot;EOF\n&quot;;</pre></div><div><p>改後（對照修改）</p><pre class="after">（刪除；不要貼這段提示文字）</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>int</pre></div><div><p>輸出</p><pre>KW &quot;int&quot;
+</pre></div></div>
+</div></details>
+<details open class="edit" id="lexer-change-5"><summary>05 不區分 keyword，全部列為 ID：改前／改後與測例</summary><div>
+<p>第 44 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>                kind = keywords.count(s.substr(start, p - start)) ? &quot;KW&quot; : &quot;ID&quot;;</pre></div><div><p>改後（對照修改）</p><pre class="after">kind = &quot;ID&quot;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>int x</pre></div><div><p>輸出</p><pre>ID &quot;int&quot;
+ID &quot;x&quot;
+EOF
+</pre></div></div>
+</div></details>
+</article>
+<article id="nfa_check"><h2>04 NFA 直接判定字串</h2>
+<h3>題目內容</h3>
+<p class="basis">Ch3 epsilon-closure 與 NFA 的字串判定模擬題；input 格式由這份手冊定義。</p>
+<p>給定帶 epsilon edge 的 NFA，請對每個完整輸入字串判定是否接受。NFA 在同一時刻可同時位於多個 state，且不用消耗字元也可沿 epsilon edge 移動。每讀一個字元，對全部當前 state 做 move，再做 epsilon-closure。所有字元用完後，只要集合含至少一個接受 state 就接受。</p>
+<dl>
+<dt>輸入規格</dt><dd>先讀 n m start k；再讀 k 個 final state；再讀 alphabet；接著 m 條 from symbol to。state 是 0..n-1；# 是 epsilon。其後每行一個字串，空行是 epsilon 案例。</dd>
+<dt>輸出規格</dt><dd>每案一行 ACCEPT / REJECT。非法 alphabet 字元直接拒絕該字串；非法 NFA 描述則 stderr、exit 1。</dd>
+<dt>限制與適用範圍</dt><dd>1&lt;=n&lt;=256、0&lt;=m&lt;=65536；alphabet 非空、無重複、不能含 #；只接受單 byte 符號。本份不輸出 subset DFA 表。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/04-NFA判定字串/nfa_check.cpp"><code>nfa_check.cpp</code></a> <small>（04-NFA判定字串/nfa_check.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror nfa_check.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<div class="sample"><div><p>輸入</p><pre>6 7 0 1
+5
+bcd
+0 # 1
+0 # 4
+1 b 2
+2 c 3
+3 # 1
+3 # 4
+4 d 5
+d
+bcd
+bcbcd
+
+bc
+bd
+bcdd
+</pre></div><div><p>輸出</p><pre>ACCEPT
+ACCEPT
+ACCEPT
+REJECT
+REJECT
+REJECT
+REJECT
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>3 2 0 1
+2
+a
+0 # 1
+1 a 2
+a
+
+aa
+z
+</pre></div><div><p>輸出</p><pre>ACCEPT
+REJECT
+REJECT
+REJECT
+</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<div class="logic"><div><p>初始集合是 start 的 ε-closure。每讀一字元，先 move 再 ε-closure；讀完才檢查是否含接受狀態。空行代表空字串。這份只判定字串；要 DFA 表須用 nfa_to_dfa.cpp。</p><ul><li>0 --#→ 1 --a→ 2(final)：初始 {0,1}；讀 a 後 {2}，接受。</li><li>epsilon cycle：set 去重，只有新 state 進 todo，所以 closure 不會卡住。</li><li>先碰 final 再走死：必須等字串讀完，不能中途接受。</li></ul></div><div class="diagram-container"><svg viewBox="0 0 480 364" role="img" aria-labelledby="short-nfa_check-title short-nfa_check-desc"><title id="short-nfa_check-title">讀 NFA 轉移表及多行字串，判定每個完整字串是否被接受。</title><desc id="short-nfa_check-desc">初始集合是 start 的 ε-closure。每讀一字元，先 move 再 ε-closure；讀完才檢查是否含接受狀態。空行代表空字串。這份只判定字串；要 DFA 表須用 nfa_to_dfa.cpp。</desc><defs><marker id="short-nfa_check-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker><marker id="short-nfa_check-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker><marker id="short-nfa_check-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#555"/></marker></defs><rect width="480" height="364" fill="#fff"/><line x1="240" y1="88" x2="240" y2="128" stroke="#555"/><polygon points="236,120 244,120 240,128" fill="#555"/><line x1="240" y1="176" x2="240" y2="216" stroke="#555"/><polygon points="236,208 244,208 240,216" fill="#555"/><rect x="80" y="40" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="40" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="61" text-anchor="middle">建立初始可達集合</text><text class="sub" x="240" y="77" text-anchor="middle">closure({start})</text><rect x="80" y="128" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="128" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="149" text-anchor="middle">逐字更新狀態集合</text><text class="sub" x="240" y="165" text-anchor="middle">closure(move(states,c))</text><rect x="80" y="216" width="320" height="48" rx="6" fill="#fff"/><rect x="80" y="216" width="320" height="48" rx="6" fill="#fff" stroke="#222"/><text class="node" x="240" y="237" text-anchor="middle">檢查接受狀態交集</text><text class="sub" x="240" y="253" text-anchor="middle">EOF: states &amp; finals</text><line x1="40" y1="296" x2="440" y2="296" stroke="#ddd"/><text class="legend" x="40" y="316">方框：處理步驟　箭頭：執行順序或呼叫關係</text></svg></div></div>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>state 編號從 1 開始</td><td>31；40</td><td><a href="#nfa_check-change-1">修改範例 01（後文）</a></td></tr><tr><td>epsilon 用 @</td><td>20；37；44</td><td><a href="#nfa_check-change-2">修改範例 02（後文）</a></td></tr><tr><td>輸出 YES / NO</td><td>68</td><td><a href="#nfa_check-change-3">修改範例 03（後文）</a></td></tr><tr><td>印初始及每讀一字元後的 state 集合</td><td>55；63</td><td><a href="#nfa_check-change-4">修改範例 04（後文）</a></td></tr><tr><td>忽略字串前後空白</td><td>53</td><td><a href="#nfa_check-change-5">修改範例 05（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="nfa_check-change-1"><summary>01 state 編號從 1 開始：改前／改後與測例</summary><div>
+<p>valid 行改成 auto valid = [n](int state) { return state &gt;= 1 &amp;&amp; state &lt;= n; };
+resize 行改成 edges.resize(n + 1);；輸入 start、finals、edges 皆維持 1-based。</p>
+<p>第 31 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        auto valid = [n](int state) { return state &gt;= 0 &amp;&amp; state &lt; n; };</pre></div><div><p>改後（對照修改）</p><pre class="after">auto valid = [n](int state) { return state &gt;= 1 &amp;&amp; state &lt;= n; };</pre></div></div>
+<p>第 40 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        edges.resize(n);</pre></div><div><p>改後（對照修改）</p><pre class="after">edges.resize(n + 1);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2 1 1 1
+2
+a
+1 a 2
+a
+b
+</pre></div><div><p>輸出</p><pre>ACCEPT
+REJECT
+</pre></div></div>
+</div></details>
+<details open class="edit" id="nfa_check-change-2"><summary>02 epsilon 用 @：改前／改後與測例</summary><div>
+<p>這三行的 &#x27;#&#x27; 與 &quot;#&quot; 改成 &#x27;@&#x27; 與 &quot;@&quot;。</p>
+<p>第 20 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        for (int to : edges[from][&#x27;#&#x27;]) if (states.insert(to).second) todo.push_back(to);</pre></div><div><p>改後（對照修改）</p><pre class="after">        for (int to : edges[from][&#x27;@&#x27;]) if (states.insert(to).second) todo.push_back(to);</pre></div></div>
+<p>第 37 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        if (!(cin &gt;&gt; alphabet) || alphabet.find(&#x27;#&#x27;) != string::npos ||</pre></div><div><p>改後（對照修改）</p><pre class="after">        if (!(cin &gt;&gt; alphabet) || alphabet.find(&#x27;@&#x27;) != string::npos ||</pre></div></div>
+<p>第 44 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>                (symbol != &quot;#&quot; &amp;&amp; alphabet.find(symbol[0]) == string::npos)) fail();</pre></div><div><p>改後（對照修改）</p><pre class="after">                (symbol != &quot;@&quot; &amp;&amp; alphabet.find(symbol[0]) == string::npos)) fail();</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>3 2 0 1
+2
+a
+0 @ 1
+1 a 2
+a
+</pre></div><div><p>輸出</p><pre>ACCEPT
+</pre></div></div>
+</div></details>
+<details open class="edit" id="nfa_check-change-3"><summary>03 輸出 YES / NO：改前／改後與測例</summary><div>
+<p>將 &quot;ACCEPT\n&quot; / &quot;REJECT\n&quot; 改成 &quot;YES\n&quot; / &quot;NO\n&quot;。</p>
+<p>第 68 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            cout &lt;&lt; (accepted ? &quot;ACCEPT\n&quot; : &quot;REJECT\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">            cout &lt;&lt; (accepted ? &quot;YES\n&quot; : &quot;NO\n&quot;);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2 1 0 1
+1
+a
+0 a 1
+a
+</pre></div><div><p>輸出</p><pre>YES
+</pre></div></div>
+</div></details>
+<details open class="edit" id="nfa_check-change-4"><summary>04 印初始及每讀一字元後的 state 集合：改前／改後與測例</summary><div>
+<p>第 55 行：在此行後插入</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            States states = closure({start});</pre></div><div><p>改後（對照修改）</p><pre class="after">for (int state : states) cout &lt;&lt; state &lt;&lt; &#x27; &#x27;;
+cout &lt;&lt; &#x27;\n&#x27;;</pre></div></div>
+<p>第 63 行：在此行後插入</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>                states = closure(next);</pre></div><div><p>改後（對照修改）</p><pre class="after">for (int state : states) cout &lt;&lt; state &lt;&lt; &#x27; &#x27;;
+cout &lt;&lt; &#x27;\n&#x27;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>3 2 0 1
+2
+a
+0 # 1
+1 a 2
+a
+</pre></div><div><p>輸出</p><pre>0 1&#32;
+2&#32;
+ACCEPT
+</pre></div></div>
+</div></details>
+<details open class="edit" id="nfa_check-change-5"><summary>05 忽略字串前後空白：改前／改後與測例</summary><div>
+<p>第 53 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (!word.empty() &amp;&amp; word.back() == &#x27;\r&#x27;) word.pop_back();</pre></div><div><p>改後（對照修改）</p><pre class="after">size_t first = word.find_first_not_of(&quot; \t\r&quot;);
+word = first == string::npos ? &quot;&quot; : word.substr(first, word.find_last_not_of(&quot; \t\r&quot;) - first + 1);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2 1 0 1
+1
+a
+0 a 1
+  a&#32;
+</pre></div><div><p>輸出</p><pre>ACCEPT
+</pre></div></div>
+</div></details>
+</article>
+<article id="hw5_check"><h2>05 HW5 固定四狀態 DFA</h2>
+<h3>題目內容</h3>
+<p class="basis">教材原題（Ch3 PPT p.55、p.58）：Write NFA, and then DFA that recognizes the tokens defined by the following regular expression；5(d)=(bc)*d，5(a)=(a|(bc)*d)+。以下字串 I/O 是另外定義的程式練習。</p>
+<p>請以 DFA 判定字串是否屬於 5(a) 或 5(d) 的語言。5(a) 是一段或多段 a 或 (bc)*d 的串接；5(d) 是零次或多次 bc 後接單一 d。所有字元必須用完才可接受。原作業若要求畫 NFA / subset DFA，另外用 automata_homework.cpp 的 --table；本短版只給辨識結果。</p>
+<dl>
+<dt>輸入規格</dt><dd>HW5A=true 選 5(a)，改 false 選 5(d)。其後每行一個字串到 EOF，沒有 T；空行代表空字串。</dd>
+<dt>輸出規格</dt><dd>每案印 ACCEPT / REJECT。大小寫敏感，僅題目語言內的字母可接受。</dd>
+<dt>限制與適用範圍</dt><dd>不支援任意正則表示式輸入；這是固定兩個語言的四個可達 state 加 dead state。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/05-HW5固定DFA/hw5_check.cpp"><code>hw5_check.cpp</code></a> <small>（05-HW5固定DFA/hw5_check.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror hw5_check.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<div class="sample"><div><p>輸入</p><pre>
+a
+d
+ad
+bcd
+bcbcd
+abcbcdad
+b
+bc
+abca
+bcdd
+</pre></div><div><p>輸出</p><pre>REJECT
+ACCEPT
+ACCEPT
+ACCEPT
+ACCEPT
+ACCEPT
+ACCEPT
+REJECT
+REJECT
+REJECT
+ACCEPT
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>
+a
+d
+ad
+bcd
+bc
+dd
+z
+</pre></div><div><p>輸出</p><pre>REJECT
+ACCEPT
+ACCEPT
+ACCEPT
+ACCEPT
+REJECT
+ACCEPT
+REJECT
+</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>state 0 起始、1 剛讀 b、2 剛讀 bc、3 接受、-1 死狀態。1 只能接 c；2 只能接 b 或 d；HW5(a) 的 3 可接下一組，HW5(d) 的 3 再讀字元就拒絕。</p><ul><li>5(a)：a、d、ad、bcd、dd 接受；bc、空字串拒絕。</li><li>5(d)：d、bcd、bcbcd 接受；a、dd、bc 拒絕。</li><li>bcd：0 --b→ 1 --c→ 2 --d→ 3；最後在 3，接受。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>改解 HW5(d)</td><td>6</td><td><a href="#hw5_check-change-1">修改範例 01（後文）</a></td></tr><tr><td>輸出 YES / NO</td><td>30</td><td><a href="#hw5_check-change-2">修改範例 02（後文）</a></td></tr><tr><td>HW5(a) 外層 + 改成 *</td><td>30</td><td><a href="#hw5_check-change-3">修改範例 03（後文）</a></td></tr><tr><td>ASCII 大小寫不敏感</td><td>13</td><td><a href="#hw5_check-change-4">修改範例 04（後文）</a></td></tr><tr><td>輸出 Case 1: 結果</td><td>9；30</td><td><a href="#hw5_check-change-5">修改範例 05（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="hw5_check-change-1"><summary>01 改解 HW5(d)：改前／改後與測例</summary><div>
+<p>const bool HW5A = false;</p>
+<p>第 6 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>const bool HW5A = true;</pre></div><div><p>改後（對照修改）</p><pre class="after">const bool HW5A = false;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>d
+dd
+bcd
+</pre></div><div><p>輸出</p><pre>ACCEPT
+REJECT
+ACCEPT
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw5_check-change-2"><summary>02 輸出 YES / NO：改前／改後與測例</summary><div>
+<p>將 &quot;ACCEPT\n&quot; / &quot;REJECT\n&quot; 改成 &quot;YES\n&quot; / &quot;NO\n&quot;。</p>
+<p>第 30 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        cout &lt;&lt; (state == 3 ? &quot;ACCEPT\n&quot; : &quot;REJECT\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">        cout &lt;&lt; (state == 3 ? &quot;YES\n&quot; : &quot;NO\n&quot;);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>a
+b
+</pre></div><div><p>輸出</p><pre>YES
+NO
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw5_check-change-3"><summary>03 HW5(a) 外層 + 改成 *：改前／改後與測例</summary><div>
+<p>HW5A 保持 true；輸出條件 state == 3 改成 (state == 3 || word.empty())，使空字串也接受。</p>
+<p>第 30 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        cout &lt;&lt; (state == 3 ? &quot;ACCEPT\n&quot; : &quot;REJECT\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">        cout &lt;&lt; ((state == 3 || word.empty()) ? &quot;ACCEPT\n&quot; : &quot;REJECT\n&quot;);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>
+a
+bc
+</pre></div><div><p>輸出</p><pre>ACCEPT
+ACCEPT
+REJECT
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw5_check-change-4"><summary>04 ASCII 大小寫不敏感：改前／改後與測例</summary><div>
+<p>第 13 行：在此行後插入</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        if (!word.empty() &amp;&amp; word.back() == &#x27;\r&#x27;) word.pop_back();</pre></div><div><p>改後（對照修改）</p><pre class="after">for (char&amp; c : word) if (c &gt;= &#x27;A&#x27; &amp;&amp; c &lt;= &#x27;Z&#x27;) c += &#x27;a&#x27; - &#x27;A&#x27;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>BCD
+A
+</pre></div><div><p>輸出</p><pre>ACCEPT
+ACCEPT
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw5_check-change-5"><summary>05 輸出 Case 1: 結果：改前／改後與測例</summary><div>
+<p>第 9 行：在此行後插入</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    string word;</pre></div><div><p>改後（對照修改）</p><pre class="after">int case_no = 0;</pre></div></div>
+<p>第 30 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        cout &lt;&lt; (state == 3 ? &quot;ACCEPT\n&quot; : &quot;REJECT\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">        cout &lt;&lt; &quot;Case &quot; &lt;&lt; ++case_no &lt;&lt; &quot;: &quot; &lt;&lt; (state == 3 ? &quot;ACCEPT\n&quot; : &quot;REJECT\n&quot;);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>a
+b
+</pre></div><div><p>輸出</p><pre>Case 1: ACCEPT
+Case 2: REJECT
+</pre></div></div>
+</div></details>
+</article>
+<article id="ac_dc"><h2>06 ac 邊解析邊產 dc</h2>
+<h3>題目內容</h3>
+<p class="basis">教材原題（Ch2 PPT p.39–46）：HW1 對 i x x=100 x=x+30+1 p x 建 parse tree；HW2(a) 建 AST、(b) 判斷語意與所需語言變更、(c) 顯示產碼；HW3 讓 f/float、i/int 均可宣告，number 可帶 optionally signed exponent。本檔只解產碼與型別檢查部分。</p>
+<p>請把 ac 程式編譯為 dc stack code。所有宣告在敘述前，型別為 int / float；identifier 為一個小寫字母，i/f/p 是保留字。敘述為 id=val{(+|-)val} 或 p id。val 為 variable 或非負 number。加減左結合。檢查重複宣告、未宣告及 float→int 指定；int→float 可提升。科學記號用精確字串移動小數點轉為 dc 可讀的小數。</p>
+<dl>
+<dt>輸入規格</dt><dd>整份 stdin 到 EOF；沒有分號或 T。f 或 float、i 或 int 均可。小數的點後必須有數字，指數字母限 lowercase e，可有正負。</dd>
+<dt>輸出規格</dt><dd>只印 dc target code，不直接印數值答案。非法 ac 時 stdout 空、stderr 訊息、exit 1。</dd>
+<dt>限制與適用範圍</dt><dd>帶 . 或 e 的 number 在本實作一律 float；exponent 絕對值與 mantissa 長度 &lt;=10000。無乘除、括號、unary、註解。短版無 parse tree / AST / folding，這些要求使用 ac_homework.cpp。教材對 HW2(b) 的 No 與型別規則有疑義，詳見既有作業校讀。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/06-ac產dc/ac_dc.cpp"><code>ac_dc.cpp</code></a> <small>（06-ac產dc/ac_dc.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror ac_dc.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<div class="sample"><div><p>輸入</p><pre>i x
+x=100
+x=x+30+1
+p x
+</pre></div><div><p>輸出</p><pre>100
+sx
+0 k
+lx
+30
++
+1
++
+sx
+0 k
+lx
+p
+si
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>i x x=2 px</pre></div><div><p>輸出</p><pre>2
+sx
+0 k
+lx
+p
+si
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>f x x=1e-2 px</pre></div><div><p>輸出</p><pre>0.01
+sx
+0 k
+lx
+p
+si
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre>i x x=1.2</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：invalid ac program
+exit 1</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>p x</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：invalid ac program
+exit 1</pre></div></div>
+<h4>邊界測例 05</h4><div class="sample"><div><p>輸入</p><pre>i x i x</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：invalid ac program
+exit 1</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>scan 成 token；宣告填 types；value 回傳 leaf code 與是否 float。解析加減時直接輸出 postfix；int→float 印 5 k，assign 印 s&lt;變數&gt;，print 印 l&lt;變數&gt;/p/si。要樹或常數摺疊，用 ac_homework.cpp。</p><ul><li>x=100：100 → sx → 0 k；p x：lx → p → si。</li><li>i a f b b=a+3.2：la → 5 k → 3.2 → +；提升必須在對應 operand 後。</li><li>123e-22 → 0.0000000000000000000123，不能先轉 double 再印。</li><li>i x x=1e0：數值雖為 1，來源型別是 float，所以拒絕指定給 int。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>只允許 i / f 短宣告</td><td>43；44；45</td><td><a href="#ac_dc-change-1">修改範例 01（後文）</a></td></tr><tr><td>科學記號也接受 E</td><td>35；57；98</td><td><a href="#ac_dc-change-2">修改範例 02（後文）</a></td></tr><tr><td>浮點運算 scale 改成 10</td><td>128；131；136</td><td><a href="#ac_dc-change-3">修改範例 03（後文）</a></td></tr><tr><td>合法程式只輸出 OK</td><td>140</td><td><a href="#ac_dc-change-4">修改範例 04（後文）</a></td></tr><tr><td>assignment 後不要產生 scale reset</td><td>138</td><td><a href="#ac_dc-change-5">修改範例 05（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="ac_dc-change-1"><summary>01 只允許 i / f 短宣告：改前／改後與測例</summary><div>
+<p>刪除 float / int 完整字的兩行判定；第三行開頭 else if 改成 if。</p>
+<p>第 43 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (kind == &#x27;f&#x27; &amp;&amp; s.compare(start, 5, &quot;float&quot;) == 0) j = start + 5;</pre></div><div><p>改後（對照修改）</p><pre class="after">（刪除；不要貼這段提示文字）</pre></div></div>
+<p>第 44 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            else if (kind == &#x27;i&#x27; &amp;&amp; s.compare(start, 3, &quot;int&quot;) == 0) j = start + 3;</pre></div><div><p>改後（對照修改）</p><pre class="after">（刪除；不要貼這段提示文字）</pre></div></div>
+<p>第 45 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            else if ((kind &gt;= &#x27;a&#x27; &amp;&amp; kind &lt;= &#x27;z&#x27;) || kind == &#x27;=&#x27; || kind == &#x27;+&#x27; || kind == &#x27;-&#x27;) {}</pre></div><div><p>改後（對照修改）</p><pre class="after">            if ((kind &gt;= &#x27;a&#x27; &amp;&amp; kind &lt;= &#x27;z&#x27;) || kind == &#x27;=&#x27; || kind == &#x27;+&#x27; || kind == &#x27;-&#x27;) {}</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>i x x=1 px</pre></div><div><p>輸出</p><pre>1
+sx
+0 k
+lx
+p
+si
+</pre></div></div>
+</div></details>
+<details open class="edit" id="ac_dc-change-2"><summary>02 科學記號也接受 E：改前／改後與測例</summary><div>
+<p>條件改成 if (j &lt; s.size() &amp;&amp; (s[j] == &#x27;e&#x27; || s[j] == &#x27;E&#x27;)) {
+find 改成 text.find_first_of(&quot;eE&quot;);
+find_first_of(&quot;.e&quot;) 改成 find_first_of(&quot;.eE&quot;)。</p>
+<p>第 35 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (j &lt; s.size() &amp;&amp; s[j] == &#x27;e&#x27;) {</pre></div><div><p>改後（對照修改）</p><pre class="after">if (j &lt; s.size() &amp;&amp; (s[j] == &#x27;e&#x27; || s[j] == &#x27;E&#x27;)) {</pre></div></div>
+<p>第 57 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    size_t e = text.find(&#x27;e&#x27;);</pre></div><div><p>改後（對照修改）</p><pre class="after">size_t e = text.find_first_of(&quot;eE&quot;);</pre></div></div>
+<p>第 98 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    return {decimal(text) + &quot;\n&quot;, text.find_first_of(&quot;.e&quot;) != string::npos};</pre></div><div><p>改後（對照修改）</p><pre class="after">    return {decimal(text) + &quot;\n&quot;, text.find_first_of(&quot;.eE&quot;) != string::npos};</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>f x x=1E-2 px</pre></div><div><p>輸出</p><pre>0.01
+sx
+0 k
+lx
+p
+si
+</pre></div></div>
+</div></details>
+<details open class="edit" id="ac_dc-change-3"><summary>03 浮點運算 scale 改成 10：改前／改後與測例</summary><div>
+<p>三行的 &quot;5 k\n&quot; 都改成 &quot;10 k\n&quot;；assignment 的 &quot;0 k\n&quot; 保留。</p>
+<p>第 128 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>                if (!left.second &amp;&amp; right.second) out &lt;&lt; &quot;5 k\n&quot;;</pre></div><div><p>改後（對照修改）</p><pre class="after">                if (!left.second &amp;&amp; right.second) out &lt;&lt; &quot;10 k\n&quot;;</pre></div></div>
+<p>第 131 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>                if (left.second &amp;&amp; !right.second) out &lt;&lt; &quot;5 k\n&quot;;</pre></div><div><p>改後（對照修改）</p><pre class="after">                if (left.second &amp;&amp; !right.second) out &lt;&lt; &quot;10 k\n&quot;;</pre></div></div>
+<p>第 136 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (target_float &amp;&amp; !left.second) out &lt;&lt; &quot;5 k\n&quot;;</pre></div><div><p>改後（對照修改）</p><pre class="after">            if (target_float &amp;&amp; !left.second) out &lt;&lt; &quot;10 k\n&quot;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>f x x=1 px</pre></div><div><p>輸出</p><pre>1
+10 k
+sx
+0 k
+lx
+p
+si
+</pre></div></div>
+</div></details>
+<details open class="edit" id="ac_dc-change-4"><summary>04 合法程式只輸出 OK：改前／改後與測例</summary><div>
+<p>第 140 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        cout &lt;&lt; out.str(); return cout ? 0 : 1;</pre></div><div><p>改後（對照修改）</p><pre class="after">cout &lt;&lt; &quot;OK\n&quot;; return cout ? 0 : 1;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>i x x=2 px</pre></div><div><p>輸出</p><pre>OK
+</pre></div></div>
+</div></details>
+<details open class="edit" id="ac_dc-change-5"><summary>05 assignment 後不要產生 scale reset：改前／改後與測例</summary><div>
+<p>第 138 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            out &lt;&lt; &#x27;s&#x27; &lt;&lt; target &lt;&lt; &quot;\n0 k\n&quot;;</pre></div><div><p>改後（對照修改）</p><pre class="after">            out &lt;&lt; &#x27;s&#x27; &lt;&lt; target &lt;&lt; &quot;\n&quot;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>i x x=2 px</pre></div><div><p>輸出</p><pre>2
+sx
+lx
+p
+si
+</pre></div></div>
+</div></details>
+</article>
+<article id="stack_vm"><h2>07 Stack VM：沿用現有短程式</h2>
+<h3>題目內容</h3>
+<p class="basis">Ch1 interpreter / Ch2 dc 產碼的延伸模擬題；指令名稱由本題定義，不是 GNU dc。</p>
+<p>請執行 stack-based 虛擬機指令。PUSH number 把常數入 stack；STORE name pop 並保存；LOAD name 複製變數值。ADD/SUB/MUL/DIV 先取右 operand b，再取左 a，計算 a op b。NEG 取反，DUP 複製頂端，PRINT pop 並輸出。未知指令、未定義變數、underflow、零除或非有限值均視為錯誤。</p>
+<dl>
+<dt>輸入規格</dt><dd>每行一條指令到 EOF；空行忽略。PUSH/LOAD/STORE 恰有一個參數，其餘沒有參數；變數名採一般 ID 規則。</dd>
+<dt>輸出規格</dt><dd>每次 PRINT 一行，15 位有效數字。整份成功後才發出累積輸出；任何錯誤 stdout 空、stderr 訊息、exit 1。</dd>
+<dt>限制與適用範圍</dt><dd>long double，非任意精度；沒有跳躍、條件、函式或字串。EOF 可留未使用 stack；PRINT 與 dc p 的 pop 規則不同。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/07-StackVM/stack_vm.cpp"><code>stack_vm.cpp</code></a> <small>（07-StackVM/stack_vm.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror stack_vm.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<div class="sample"><div><p>輸入</p><pre>PUSH 100
+STORE x
+LOAD x
+PUSH 30
+PUSH 1
+ADD
+ADD
+STORE x
+LOAD x
+PRINT
+</pre></div><div><p>輸出</p><pre>131
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>PUSH 8
+PUSH 2
+SUB
+PRINT
+</pre></div><div><p>輸出</p><pre>6
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>PUSH 2
+DUP
+MUL
+NEG
+PRINT
+</pre></div><div><p>輸出</p><pre>-4
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre>PUSH 1
+PUSH 0
+DIV
+PRINT
+</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：error: division by zero
+exit 1</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>LOAD x
+</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：error: undefined variable x
+exit 1</pre></div></div>
+<h4>邊界測例 05</h4><div class="sample"><div><p>輸入</p><pre>PRINT
+</pre></div><div><p>輸出</p><pre>stdout：空
+stderr：error: stack underflow
+exit 1</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>vector 當 stack，map 存變數。二元先 pop 右 b，再 pop 左 a，算 a op b；STORE 與 PRINT 都 pop。空 stack、未定義 LOAD、零除均報錯。</p><ul><li>PUSH 8 / PUSH 2 / SUB / PRINT：8-2=6，不能算成 2-8。</li><li>PUSH 2 / DUP / MUL / NEG / PRINT：2*2 再取負，得 -4。</li><li>PRINT 後 stack 少一項；若題目要求保留，要改成 peek。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>PRINT 保留 stack 頂端</td><td>54</td><td><a href="#stack_vm-change-1">修改範例 01（後文）</a></td></tr><tr><td>固定小數點後 2 位</td><td>29</td><td><a href="#stack_vm-change-2">修改範例 02（後文）</a></td></tr><tr><td>PRINT 指令改名為 OUT</td><td>54</td><td><a href="#stack_vm-change-3">修改範例 03（後文）</a></td></tr><tr><td>指令名稱忽略 ASCII 大小寫</td><td>38</td><td><a href="#stack_vm-change-4">修改範例 04（後文）</a></td></tr><tr><td>PRINT 不移除值，DUP 後連續列印</td><td>54</td><td><a href="#stack_vm-change-5">修改範例 05（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="stack_vm-change-1"><summary>01 PRINT 保留 stack 頂端：改前／改後與測例</summary><div>
+<p>} else if (op == &quot;PRINT&quot;) {
+    if (stack.empty()) throw std::runtime_error(&quot;stack underflow&quot;);
+    const auto value = stack.back();
+    output &lt;&lt; (value == 0 ? 0 : value) &lt;&lt; &#x27;\n&#x27;;
+}</p>
+<p>第 54 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            } else if (op == &quot;PRINT&quot;) { const auto value = pop(); output &lt;&lt; (value == 0 ? 0 : value) &lt;&lt; &#x27;\n&#x27;; }</pre></div><div><p>改後（對照修改）</p><pre class="after">} else if (op == &quot;PRINT&quot;) {
+    if (stack.empty()) throw std::runtime_error(&quot;stack underflow&quot;);
+    const auto value = stack.back();
+    output &lt;&lt; (value == 0 ? 0 : value) &lt;&lt; &#x27;\n&#x27;;
+}</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>PUSH 2
+PRINT
+PRINT
+</pre></div><div><p>輸出</p><pre>2
+2
+</pre></div></div>
+</div></details>
+<details open class="edit" id="stack_vm-change-2"><summary>02 固定小數點後 2 位：改前／改後與測例</summary><div>
+<p>把 output &lt;&lt; std::setprecision(15); 改成 output &lt;&lt; std::fixed &lt;&lt; std::setprecision(2);。</p>
+<p>第 29 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        std::ostringstream output; output.imbue(std::locale::classic()); output &lt;&lt; std::setprecision(15);</pre></div><div><p>改後（對照修改）</p><pre class="after">        std::ostringstream output; output.imbue(std::locale::classic()); output &lt;&lt; std::fixed &lt;&lt; std::setprecision(2);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>PUSH .25
+PRINT
+</pre></div><div><p>輸出</p><pre>0.25
+</pre></div></div>
+</div></details>
+<details open class="edit" id="stack_vm-change-3"><summary>03 PRINT 指令改名為 OUT：改前／改後與測例</summary><div>
+<p>把該行 op == &quot;PRINT&quot; 改成 op == &quot;OUT&quot;。</p>
+<p>第 54 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            } else if (op == &quot;PRINT&quot;) { const auto value = pop(); output &lt;&lt; (value == 0 ? 0 : value) &lt;&lt; &#x27;\n&#x27;; }</pre></div><div><p>改後（對照修改）</p><pre class="after">            } else if (op == &quot;OUT&quot;) { const auto value = pop(); output &lt;&lt; (value == 0 ? 0 : value) &lt;&lt; &#x27;\n&#x27;; }</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>PUSH 8
+OUT
+</pre></div><div><p>輸出</p><pre>8
+</pre></div></div>
+</div></details>
+<details open class="edit" id="stack_vm-change-4"><summary>04 指令名稱忽略 ASCII 大小寫：改前／改後與測例</summary><div>
+<p>第 38 行：在此行後插入</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (!(input &gt;&gt; op)) continue;</pre></div><div><p>改後（對照修改）</p><pre class="after">for (char&amp; c : op) if (c &gt;= &#x27;a&#x27; &amp;&amp; c &lt;= &#x27;z&#x27;) c -= &#x27;a&#x27; - &#x27;A&#x27;;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>push 2
+print
+</pre></div><div><p>輸出</p><pre>2
+</pre></div></div>
+</div></details>
+<details open class="edit" id="stack_vm-change-5"><summary>05 PRINT 不移除值，DUP 後連續列印：改前／改後與測例</summary><div>
+<p>第 54 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            } else if (op == &quot;PRINT&quot;) { const auto value = pop(); output &lt;&lt; (value == 0 ? 0 : value) &lt;&lt; &#x27;\n&#x27;; }</pre></div><div><p>改後（對照修改）</p><pre class="after">} else if (op == &quot;PRINT&quot;) {
+    if (stack.empty()) throw std::runtime_error(&quot;stack underflow&quot;);
+    const auto value = stack.back();
+    output &lt;&lt; (value == 0 ? 0 : value) &lt;&lt; &#x27;\n&#x27;;
+}</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>PUSH 2
+DUP
+PRINT
+PRINT
+</pre></div><div><p>輸出</p><pre>2
+2
+</pre></div></div>
+</div></details>
+</article>
+<article id="ll1"><h2>08 LL(1)：較低優先補充</h2>
+<h3>題目內容</h3>
+<p class="basis">predict 的通用延伸模擬題；正式 FIRST/FOLLOW 術語預告於 Ch4，不能視為已確認 Ch1–3 考題。</p>
+<p>給定 CFG，請計算各 nonterminal 的 FIRST / FOLLOW、各 production 的 SELECT，並建立 LL(1) 解析表。FIRST / FOLLOW 必須反覆傳播至固定點。RHS 可空時將 LHS 的 FOLLOW 加入 SELECT。同格若有多條 production，列出 conflict，判定非 LL(1)。無衝突時另可用 predictive stack 判定 token 序列。</p>
+<dl>
+<dt>輸入規格</dt><dd>先讀 P（1..1000），再讀 P 行 A -&gt; X Y。每行只含一條 alternative；# 必須單獨表示 epsilon，$ 保留為 EOF。start 是第一個 LHS。--check 模式才讀其後每行空白分隔的 token sequence。</dd>
+<dt>輸出規格</dt><dd>預設列 FIRST/FOLLOW/SELECT、非空表格 cell、CONFLICT 與 LL1 YES/NO。--check 每案印 ACCEPT/REJECT；不由字串原始字元自動 tokenize。</dd>
+<dt>限制與適用範圍</dt><dd>不消除左遞迴、不做 left factoring，也不判定任意 CFG 是否無歧義；parse 步數 &lt;=1000000。有 LL(1) conflict 時不任選規則繼續。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/08-LL1/ll1.cpp"><code>ll1.cpp</code></a> <small>（08-LL1/ll1.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror ll1.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<div class="sample"><div><p>輸入</p><pre>4
+E -&gt; T R
+R -&gt; + T R
+R -&gt; #
+T -&gt; num
+</pre></div><div><p>輸出</p><pre>FIRST(E)={num} FOLLOW(E)={$}
+FIRST(R)={#,+} FOLLOW(R)={$}
+FIRST(T)={num} FOLLOW(T)={$,+}
+SELECT(1)={num}
+SELECT(2)={+}
+SELECT(3)={$}
+SELECT(4)={num}
+M[E,num]=1
+M[R,$]=3
+M[R,+]=2
+M[T,num]=4
+LL1 YES
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>2
+S -&gt; a S
+S -&gt; #
+</pre></div><div><p>輸出</p><pre>FIRST(S)={#,a} FOLLOW(S)={$}
+SELECT(1)={a}
+SELECT(2)={$}
+M[S,$]=2
+M[S,a]=1
+LL1 YES
+</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>FIRST 與 FOLLOW 反覆合併至固定點；nullable RHS 將 FOLLOW 加進 SELECT。用 SELECT 填表，同格多條規則就是 conflict；解析用 stack 與 lookahead 查表。# 單獨代表 ε。</p><ul><li>S -&gt; a S | #：FIRST(S)={#,a}、FOLLOW(S)={$}。</li><li>SELECT(S-&gt;#)={$}，所以 EOF 時才選 epsilon，而不是看到任何字元都選。</li><li>A -&gt; B C：若 C nullable，FOLLOW(A) 也要傳給 FOLLOW(B)。</li><li>展開 S -&gt; a S 時先 push S 再 push a，讓 a 先被處理。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>judge 不傳參數，只判定字串</td><td>35</td><td><a href="#ll1-change-1">修改範例 01（後文）</a></td></tr><tr><td>只印 FIRST 與 FOLLOW</td><td>96–103</td><td><a href="#ll1-change-2">修改範例 02（後文）</a></td></tr><tr><td>字串判定輸出 YES / NO</td><td>129</td><td><a href="#ll1-change-3">修改範例 03（後文）</a></td></tr><tr><td>指定 S 為 start，不使用第一個 LHS</td><td>68；112</td><td><a href="#ll1-change-4">修改範例 04（後文）</a></td></tr><tr><td>只輸出是否為 LL(1)</td><td>93–103</td><td><a href="#ll1-change-5">修改範例 05（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="ll1-change-1"><summary>01 judge 不傳參數，只判定字串：改前／改後與測例</summary><div>
+<p>const std::string mode = argc == 1 ? &quot;--check&quot; : argv[1];</p>
+<p>第 35 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        const std::string mode = argc == 1 ? &quot;--table&quot; : argv[1];</pre></div><div><p>改後（對照修改）</p><pre class="after">const std::string mode = argc == 1 ? &quot;--check&quot; : argv[1];</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2
+S -&gt; a S
+S -&gt; #
+a a
+
+b
+</pre></div><div><p>輸出</p><pre>ACCEPT
+ACCEPT
+REJECT
+</pre></div></div>
+</div></details>
+<details open class="edit" id="ll1-change-2"><summary>02 只印 FIRST 與 FOLLOW：改前／改後與測例</summary><div>
+<p>刪除這段 SELECT / table / LL1 輸出；FIRST/FOLLOW 兩行不刪，前面的集合計算不刪。</p>
+<p>第 96–103 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            for (std::size_t i = 0; i &lt; rules.size(); ++i) { std::cout &lt;&lt; &quot;SELECT(&quot; &lt;&lt; i + 1 &lt;&lt; &quot;)=&quot;; print_set(select[i]); std::cout &lt;&lt; &#x27;\n&#x27;; }
+            for (const auto&amp; cell : table) {
+                std::cout &lt;&lt; &quot;M[&quot; &lt;&lt; cell.first.first &lt;&lt; &#x27;,&#x27; &lt;&lt; cell.first.second &lt;&lt; &quot;]=&quot;;
+                for (std::size_t i = 0; i &lt; cell.second.size(); ++i) std::cout &lt;&lt; (i ? &quot;,&quot; : &quot;&quot;) &lt;&lt; cell.second[i] + 1;
+                if (cell.second.size() &gt; 1) std::cout &lt;&lt; &quot; CONFLICT&quot;;
+                std::cout &lt;&lt; &#x27;\n&#x27;;
+            }
+            std::cout &lt;&lt; (ll1 ? &quot;LL1 YES\n&quot; : &quot;LL1 NO\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">（刪除；不要貼這段提示文字）</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2
+S -&gt; a S
+S -&gt; #
+</pre></div><div><p>輸出</p><pre>FIRST(S)={#,a} FOLLOW(S)={$}
+</pre></div></div>
+</div></details>
+<details open class="edit" id="ll1-change-3"><summary>03 字串判定輸出 YES / NO：改前／改後與測例</summary><div>
+<p>將 &quot;ACCEPT\n&quot; / &quot;REJECT\n&quot; 改成 &quot;YES\n&quot; / &quot;NO\n&quot;。</p>
+<p>第 129 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>                std::cout &lt;&lt; (accepted &amp;&amp; pos == words.size() ? &quot;ACCEPT\n&quot; : &quot;REJECT\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">                std::cout &lt;&lt; (accepted &amp;&amp; pos == words.size() ? &quot;YES\n&quot; : &quot;NO\n&quot;);</pre></div></div>
+<p>此變體執行參數：<code>./main --check</code></p>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2
+S -&gt; a S
+S -&gt; #
+a
+b
+</pre></div><div><p>輸出</p><pre>YES
+NO
+</pre></div></div>
+</div></details>
+<details open class="edit" id="ll1-change-4"><summary>04 指定 S 為 start，不使用第一個 LHS：改前／改後與測例</summary><div>
+<p>第 68 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        follow[rules[0].lhs].insert(&quot;$&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">        follow[&quot;S&quot;].insert(&quot;$&quot;);</pre></div></div>
+<p>第 112 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>                words.push_back(&quot;$&quot;); std::vector&lt;std::string&gt; stack{&quot;$&quot;, rules[0].lhs}; std::size_t pos = 0, steps = 0;</pre></div><div><p>改後（對照修改）</p><pre class="after">                words.push_back(&quot;$&quot;); std::vector&lt;std::string&gt; stack{&quot;$&quot;, &quot;S&quot;}; std::size_t pos = 0, steps = 0;</pre></div></div>
+<p>此變體執行參數：<code>./main --check</code></p>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2
+A -&gt; b
+S -&gt; a
+a
+b
+</pre></div><div><p>輸出</p><pre>ACCEPT
+REJECT
+</pre></div></div>
+</div></details>
+<details open class="edit" id="ll1-change-5"><summary>05 只輸出是否為 LL(1)：改前／改後與測例</summary><div>
+<p>第 93–103 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            for (const auto&amp; nt : nonterminals) {
+                std::cout &lt;&lt; &quot;FIRST(&quot; &lt;&lt; nt &lt;&lt; &quot;)=&quot;; print_set(first[nt]); std::cout &lt;&lt; &quot; FOLLOW(&quot; &lt;&lt; nt &lt;&lt; &quot;)=&quot;; print_set(follow[nt]); std::cout &lt;&lt; &#x27;\n&#x27;;
+            }
+            for (std::size_t i = 0; i &lt; rules.size(); ++i) { std::cout &lt;&lt; &quot;SELECT(&quot; &lt;&lt; i + 1 &lt;&lt; &quot;)=&quot;; print_set(select[i]); std::cout &lt;&lt; &#x27;\n&#x27;; }
+            for (const auto&amp; cell : table) {
+                std::cout &lt;&lt; &quot;M[&quot; &lt;&lt; cell.first.first &lt;&lt; &#x27;,&#x27; &lt;&lt; cell.first.second &lt;&lt; &quot;]=&quot;;
+                for (std::size_t i = 0; i &lt; cell.second.size(); ++i) std::cout &lt;&lt; (i ? &quot;,&quot; : &quot;&quot;) &lt;&lt; cell.second[i] + 1;
+                if (cell.second.size() &gt; 1) std::cout &lt;&lt; &quot; CONFLICT&quot;;
+                std::cout &lt;&lt; &#x27;\n&#x27;;
+            }
+            std::cout &lt;&lt; (ll1 ? &quot;LL1 YES\n&quot; : &quot;LL1 NO\n&quot;);</pre></div><div><p>改後（對照修改）</p><pre class="after">std::cout &lt;&lt; (ll1 ? &quot;LL1 YES\n&quot; : &quot;LL1 NO\n&quot;);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>2
+S -&gt; a S
+S -&gt; #
+</pre></div><div><p>輸出</p><pre>LL1 YES
+</pre></div></div>
+</div></details>
+</article>
+<article id="hw_scanner"><h2>09 作業 ScannerTest：算式 Scanner</h2>
+<h3>題目內容</h3>
+<p class="basis">課程作業原題（ScannerTest）。Token 規則照題目表格；與 03 的 C-like lexer 不同，只有數字、四則運算子與括號。</p>
+<p>Scanner 先把 input text 依規則轉成 Token，Parser 才能處理。請依題目規則寫一個 Scanner，取得 Tokens 並印出。Terminal：NUM ( [1-9][0-9]* ) | 0；PLUS \+；MINUS \-；MUL \*；DIV \/；LPR \(；RPR \)。</p>
+<dl>
+<dt>輸入規格</dt><dd>整份 stdin 是一條運算式，中間可能夾雜空格或換行；測資不會有錯誤資料，長度在 1000 字元內（不含換行）。</dd>
+<dt>輸出規格</dt><dd>每個 token 一行：種類名稱；NUM 另加一個空白與數值，例如 NUM 0。每個 token 後接 \n。</dd>
+<dt>限制與適用範圍</dt><dd>逐字元串流讀取，不存整份輸入。NUM 開頭 0 只吃一位，所以 012 切成 NUM 0、NUM 12。非法字元不在題目範圍：已印的 token 保留，之後 exit 1。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/09-作業ScannerTest/scanner.cpp"><code>scanner.cpp</code></a> <small>（09-作業ScannerTest/scanner.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror scanner.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<h4>題目範例 01</h4><div class="sample"><div><p>輸入</p><pre>1+2</pre></div><div><p>輸出</p><pre>NUM 1
+PLUS
+NUM 2
+</pre></div></div>
+<h4>題目範例 02</h4><div class="sample"><div><p>輸入</p><pre>( 1+
+ - 2
+ )
+</pre></div><div><p>輸出</p><pre>LPR
+NUM 1
+PLUS
+MINUS
+NUM 2
+RPR
+</pre></div></div>
+<h4>題目範例 03</h4><div class="sample"><div><p>輸入</p><pre>   (
+(1  +
+
+ 2*   3
+ / 4   )
+ )
+</pre></div><div><p>輸出</p><pre>LPR
+LPR
+NUM 1
+PLUS
+NUM 2
+MUL
+NUM 3
+DIV
+NUM 4
+RPR
+RPR
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre>012</pre></div><div><p>輸出</p><pre>NUM 0
+NUM 12
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>1+2
+</pre></div><div><p>輸出</p><pre>NUM 1
+PLUS
+NUM 2
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre></pre></div><div><p>輸出</p><pre>stdout：空
+</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>1$2</pre></div><div><p>輸出</p><pre>NUM 1
+exit 1</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>一次讀一個字元 c：空白直接跳過；數字開始讀 NUM，其餘六個字元用 switch 對應名稱。讀 NUM 時會多讀一個字元才知道數字結束，所以那個字元留在 c，下一輪直接處理，不能再 cin.get()。</p><ul><li>10+0：讀 1 → 0 是數字繼續 → 讀到 + 結束，印 NUM 10；+ 已在 c，下一輪印 PLUS；0 開頭只吃一位，印 NUM 0。</li><li>012：0 開頭立即結束，印 NUM 0；c 是 1，下一輪讀成 NUM 12（照 RE 最長匹配）。</li><li>( 1+ 換行 - 2：空白與換行都跳過，不產生 token；- 是 MINUS，不和 2 合成負數。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>允許前導 0 的數字（NUM -&gt; [0-9]+）</td><td>17</td><td><a href="#hw_scanner-change-1">修改範例 01（後文）</a></td></tr><tr><td>增加 MOD（%）</td><td>28</td><td><a href="#hw_scanner-change-2">修改範例 02（後文）</a></td></tr><tr><td>非法字元印 ERROR 後繼續</td><td>30</td><td><a href="#hw_scanner-change-3">修改範例 03（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="hw_scanner-change-1"><summary>01 允許前導 0 的數字（NUM -&gt; [0-9]+）：改前／改後與測例</summary><div>
+<p>拿掉 num != &quot;0&quot; 的條件，任何數字都繼續讀到非數字為止。</p>
+<p>第 17 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (num != &quot;0&quot;) while (isdigit(c)) { num += char(c); c = cin.get(); }</pre></div><div><p>改後（對照修改）</p><pre class="after">            while (isdigit(c)) { num += char(c); c = cin.get(); }</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>012+3</pre></div><div><p>輸出</p><pre>NUM 012
+PLUS
+NUM 3
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw_scanner-change-2"><summary>02 增加 MOD（%）：改前／改後與測例</summary><div>
+<p>在 switch 多加一個 case；其他 token 不變。</p>
+<p>第 28 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            case &#x27;)&#x27;: cout &lt;&lt; &quot;RPR\n&quot;;   break;</pre></div><div><p>改後（對照修改）</p><pre class="after">            case &#x27;)&#x27;: cout &lt;&lt; &quot;RPR\n&quot;;   break;
+            case &#x27;%&#x27;: cout &lt;&lt; &quot;MOD\n&quot;;   break;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>7 % 3</pre></div><div><p>輸出</p><pre>NUM 7
+MOD
+NUM 3
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw_scanner-change-3"><summary>03 非法字元印 ERROR 後繼續：改前／改後與測例</summary><div>
+<p>default 不再結束程式，改印 ERROR 與該字元，再讀下一個字元。</p>
+<p>第 30 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            default: return 1;</pre></div><div><p>改後（對照修改）</p><pre class="after">            default: cout &lt;&lt; &quot;ERROR &quot; &lt;&lt; char(c) &lt;&lt; &#x27;\n&#x27;; break;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>1$2</pre></div><div><p>輸出</p><pre>NUM 1
+ERROR $
+NUM 2
+</pre></div></div>
+</div></details>
+</article>
+<article id="hw_parser"><h2>10 作業 ParserTest：Recursive-Descent Parser</h2>
+<h3>題目內容</h3>
+<p class="basis">課程作業原題（ParserTest）。題目要求使用 Recursive-Descent Parsing（ch02 ppt p.20 起）撰寫，否則不予計分；測試檔換行皆為 \n。</p>
+<p>從 stdin 讀入程式，依 token 定義與文法檢查。合法時逐行印出 token 種類與原字串（以一個空白分隔、換行結尾）；不合法只印 invalid input，不可輸出任何 token。Terminal：ID [A-Za-z_][A-Za-z0-9_]*；STRLIT &quot;[^&quot;]*&quot;；LBR \(；RBR \)；DOT \.。Productions：program → stmts；stmts → stmt stmts | λ；stmt → primary | STRLIT | λ；primary → ID primary_tail；primary_tail → DOT ID primary_tail | LBR stmt RBR primary_tail | λ。</p>
+<dl>
+<dt>輸入規格</dt><dd>整份 stdin 到 EOF；token 之間可有任意空白與換行。STRLIT 的 [^&quot;]* 可含空白與換行。</dd>
+<dt>輸出規格</dt><dd>合法：每個 token 一行「種類 原字串」。不合法：只印一行 invalid input。空輸入合法（stmts → λ），不輸出任何東西。</dd>
+<dt>限制與適用範圍</dt><dd>先完整檢查再重掃輸出，所以不合法時不會漏印 token。primary_tail 的右遞迴寫成 while 迴圈，stmt 仍遞迴處理括號內部。</dd>
+</dl>
+<p class="file"><b>Code 檔案名稱：</b><a href="../Code/10-作業ParserTest/parser.cpp"><code>parser.cpp</code></a> <small>（10-作業ParserTest/parser.cpp）</small></p>
+<pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror parser.cpp -o main
+./main &lt; input.txt</pre>
+<details open class="examples"><summary>題目範例與邊界測例</summary><div>
+<h4>題目範例 01</h4><div class="sample"><div><p>輸入</p><pre>&quot;test_string&quot;
+Test_ID
+</pre></div><div><p>輸出</p><pre>STRLIT &quot;test_string&quot;
+ID Test_ID
+</pre></div></div>
+<h4>題目範例 02</h4><div class="sample"><div><p>輸入</p><pre>illiga!id
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<h4>題目範例 03</h4><div class="sample"><div><p>輸入</p><pre>Str. length()
+</pre></div><div><p>輸出</p><pre>ID Str
+DOT .
+ID length
+LBR (
+RBR )
+</pre></div></div>
+<h4>題目範例 04</h4><div class="sample"><div><p>輸入</p><pre>printf(&quot;HelloWorld&quot;)
+</pre></div><div><p>輸出</p><pre>ID printf
+LBR (
+STRLIT &quot;HelloWorld&quot;
+RBR )
+</pre></div></div>
+<h4>邊界測例 01</h4><div class="sample"><div><p>輸入</p><pre></pre></div><div><p>輸出</p><pre>stdout：空
+</pre></div></div>
+<h4>邊界測例 02</h4><div class="sample"><div><p>輸入</p><pre>f(g(x)).y
+</pre></div><div><p>輸出</p><pre>ID f
+LBR (
+ID g
+LBR (
+ID x
+RBR )
+RBR )
+DOT .
+ID y
+</pre></div></div>
+<h4>邊界測例 03</h4><div class="sample"><div><p>輸入</p><pre>&quot;abc
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<h4>邊界測例 04</h4><div class="sample"><div><p>輸入</p><pre>a.
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<h4>邊界測例 05</h4><div class="sample"><div><p>輸入</p><pre>(a)
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<h4>邊界測例 06</h4><div class="sample"><div><p>輸入</p><pre>&quot;a
+b&quot;
+</pre></div><div><p>輸出</p><pre>STRLIT &quot;a
+b&quot;
+</pre></div></div>
+</div></details>
+<h3>邏輯與手動追蹤</h3>
+<p>next_token 是 Scanner，token 記目前種類，[start, pos) 是原字串。stmt 依目前 token 選產生式：STRLIT 直接 match；ID 之後重複吃 DOT ID 或 LBR stmt RBR；都不是時走 λ，但 λ 後面只能是 RBR 或 EOF。main 以 while 實作 stmts，最後必須停在 END；全部合法才把 pos 歸零重掃並輸出。</p><ul><li>Str. length()：ID Str → DOT → match(ID length) → LBR → stmt 看到 RBR 走 λ → match(RBR) → END，合法。</li><li>illiga!id：ID illiga 之後是 INVALID(!)，stmt 回到 main，迴圈停下時 token 不是 END → invalid input。</li><li>a.：DOT 後 match(ID) 遇到 END 失敗；(a)：開頭 LBR 不能開始 stmt，main 迴圈不進入，token ≠ END。</li><li>&quot;abc 沒有結尾引號：Scanner 回傳 INVALID，整份輸入 invalid。</li></ul>
+<h3>題目變動時：先查修改位置</h3>
+<p class="line-note">行號以含註解的 .cpp 原檔為準。每個變體獨立套用；多項一起改時，重新定位，不要沿用位移後的行號。表格列修改索引，詳細改前／改後與測例在後文列出。</p>
+<table><thead><tr><th>題目要求</th><th>原檔行號</th><th>完整改法</th></tr></thead><tbody><tr><td>括號內允許逗號分隔多個 stmt</td><td>7；31；54；62</td><td><a href="#hw_parser-change-1">修改範例 01（後文）</a></td></tr><tr><td>只判斷合法：輸出 YES / NO</td><td>62；73–80</td><td><a href="#hw_parser-change-2">修改範例 02（後文）</a></td></tr><tr><td>STRLIT 不可跨行</td><td>26</td><td><a href="#hw_parser-change-3">修改範例 03（後文）</a></td></tr></tbody></table>
+<details open class="edit" id="hw_parser-change-1"><summary>01 括號內允許逗號分隔多個 stmt：改前／改後與測例</summary><div>
+<p>新增 COMMA token；LBR 之後改成 stmt (COMMA stmt)* 再 match(RBR)。enum 與 names 順序要一致。注意 stmt 可為 λ，f(a,) 仍會被接受。</p>
+<p>第 7 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>enum Token { ID, STRLIT, LBR, RBR, DOT, END, INVALID };</pre></div><div><p>改後（對照修改）</p><pre class="after">enum Token { ID, STRLIT, LBR, RBR, DOT, COMMA, END, INVALID };</pre></div></div>
+<p>第 31 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    else if (c == &#x27;.&#x27;) token = DOT;</pre></div><div><p>改後（對照修改）</p><pre class="after">    else if (c == &#x27;.&#x27;) token = DOT;
+    else if (c == &#x27;,&#x27;) token = COMMA;</pre></div></div>
+<p>第 54 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>            if (!stmt() || !match(RBR)) return false;</pre></div><div><p>改後（對照修改）</p><pre class="after">            if (!stmt()) return false;
+            while (token == COMMA) { next_token(); if (!stmt()) return false; }
+            if (!match(RBR)) return false;</pre></div></div>
+<p>第 62 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    const char* names[] = {&quot;ID&quot;, &quot;STRLIT&quot;, &quot;LBR&quot;, &quot;RBR&quot;, &quot;DOT&quot;};</pre></div><div><p>改後（對照修改）</p><pre class="after">    const char* names[] = {&quot;ID&quot;, &quot;STRLIT&quot;, &quot;LBR&quot;, &quot;RBR&quot;, &quot;DOT&quot;, &quot;COMMA&quot;};</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>f(a, &quot;b&quot;).g()</pre></div><div><p>輸出</p><pre>ID f
+LBR (
+ID a
+COMMA ,
+STRLIT &quot;b&quot;
+RBR )
+DOT .
+ID g
+LBR (
+RBR )
+</pre></div></div>
+<div class="sample"><div><p>輸入</p><pre>f(,a)</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw_parser-change-2"><summary>02 只判斷合法：輸出 YES / NO：改前／改後與測例</summary><div>
+<p>刪除 names（否則 -Werror 會報未使用變數），輸出區塊改成一行。</p>
+<p>第 62 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    const char* names[] = {&quot;ID&quot;, &quot;STRLIT&quot;, &quot;LBR&quot;, &quot;RBR&quot;, &quot;DOT&quot;};</pre></div><div><p>改後（對照修改）</p><pre class="after">（刪除；不要貼這段提示文字）</pre></div></div>
+<p>第 73–80 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>    if (!valid || token != END) {
+        cout &lt;&lt; &quot;invalid input\n&quot;;
+    } else {
+        // 全部合法後才從頭重掃並輸出 token。
+        pos = 0;
+        for (next_token(); token != END; next_token())
+            cout &lt;&lt; names[token] &lt;&lt; &#x27; &#x27; &lt;&lt; src.substr(start, pos - start) &lt;&lt; &#x27;\n&#x27;;
+    }</pre></div><div><p>改後（對照修改）</p><pre class="after">    cout &lt;&lt; (valid &amp;&amp; token == END ? &quot;YES\n&quot; : &quot;NO\n&quot;);</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>a.b(&quot;c&quot;)</pre></div><div><p>輸出</p><pre>YES
+</pre></div></div>
+<div class="sample"><div><p>輸入</p><pre>a..b</pre></div><div><p>輸出</p><pre>NO
+</pre></div></div>
+</div></details>
+<details open class="edit" id="hw_parser-change-3"><summary>03 STRLIT 不可跨行：改前／改後與測例</summary><div>
+<p>找結尾引號時同時找換行；先遇到換行就視為未結束的字串（INVALID）。</p>
+<p>第 26 行：用改後取代此行／區塊</p>
+<div class="changes"><div><p>改前（原碼）</p><pre>        size_t end = src.find(&#x27;&quot;&#x27;, pos);</pre></div><div><p>改後（對照修改）</p><pre class="after">        size_t end = src.find_first_of(&quot;\&quot;\n&quot;, pos);
+        if (end != string::npos &amp;&amp; src[end] == &#x27;\n&#x27;) end = string::npos;</pre></div></div>
+<p>已試編並執行的變體測例：</p>
+<div class="sample"><div><p>輸入</p><pre>&quot;a
+b&quot;
+</pre></div><div><p>輸出</p><pre>invalid input
+</pre></div></div>
+<div class="sample"><div><p>輸入</p><pre>&quot;a b&quot;
+</pre></div><div><p>輸出</p><pre>STRLIT &quot;a b&quot;
+</pre></div></div>
+</div></details>
+</article>
+</body></html>

@@ -25,14 +25,14 @@ source_pages: "各章原有 PPT 頁碼保留在合併 PDF；本冊頁碼另列�
 | 跨平台與 I/O | 4 |
 | 除錯與提交前測例 | 5 |
 | 小考原題與英文參考答案 | 6 |
-| HTML 標籤配對 · [[Complier/Code/exam/short/html_check.cpp|原碼]] | 8 |
-| 遞迴下降運算式 · [[Complier/Code/exam/short/expression.cpp|原碼]] | 13 |
-| Scanner：沿用現有短程式 · [[Complier/Code/exam/lexer.cpp|原碼]] | 17 |
-| NFA 直接判定字串 · [[Complier/Code/exam/short/nfa_check.cpp|原碼]] | 22 |
-| HW5 固定四狀態 DFA · [[Complier/Code/exam/short/hw5_check.cpp|原碼]] | 28 |
-| ac 邊解析邊產 dc · [[Complier/Code/exam/short/ac_dc.cpp|原碼]] | 32 |
-| Stack VM：沿用現有短程式 · [[Complier/Code/exam/stack_vm.cpp|原碼]] | 38 |
-| LL(1)：較低優先補充 · [[Complier/Code/exam/ll1.cpp|原碼]] | 43 |
+| HTML 標籤配對 · [[Complier/Code/01-HTML標籤配對/html_check.cpp|原碼]] | 8 |
+| 遞迴下降運算式 · [[Complier/Code/02-遞迴下降運算式/expression.cpp|原碼]] | 13 |
+| Scanner：沿用現有短程式 · [[Complier/Code/03-Scanner與註解/lexer.cpp|原碼]] | 17 |
+| NFA 直接判定字串 · [[Complier/Code/04-NFA判定字串/nfa_check.cpp|原碼]] | 22 |
+| HW5 固定四狀態 DFA · [[Complier/Code/05-HW5固定DFA/hw5_check.cpp|原碼]] | 28 |
+| ac 邊解析邊產 dc · [[Complier/Code/06-ac產dc/ac_dc.cpp|原碼]] | 32 |
+| Stack VM：沿用現有短程式 · [[Complier/Code/07-StackVM/stack_vm.cpp|原碼]] | 38 |
+| LL(1)：較低優先補充 · [[Complier/Code/08-LL1/ll1.cpp|原碼]] | 43 |
 
 ## 三章速查表頁碼
 

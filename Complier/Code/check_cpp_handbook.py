@@ -8,7 +8,7 @@ from pathlib import Path
 import shlex
 import subprocess
 import tempfile
-import build_cpp_short_pack as pack
+import handbook_specs as pack
 from cpp_handbook_examples import PROMPTS, variants_for, apply_variant
 
 results=[];checks=0
