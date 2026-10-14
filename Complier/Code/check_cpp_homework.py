@@ -128,4 +128,19 @@ with tempfile.TemporaryDirectory(prefix="compiler-cpp-") as scratch:
     expect(parser, b"", b"")
     for bad in [b'"abc', b"a.", b"(a)", b"a(", b"a)"]:
         expect(parser, bad, b"invalid input\n")
-    print(f"PASS: 4 C++17 builds; {checks} checks; {total_words} NFA/DFA/regex words (length <= 8); dc={'verified' if dc else 'unavailable'}; sanitizer={'on' if '--sanitize' in sys.argv else 'off'}")
+    # 模擬題：README 的 Sample Input／Output 就是測例，題目與程式不會各說各話。
+    mocks = sorted(ROOT.glob("*-模擬*"))
+    mock_samples = 0
+    for folder in mocks:
+        source = next(folder.glob("*.cpp"))
+        binary = Path(scratch) / source.stem
+        subprocess.run([*compiler, *flags, str(source), "-o", str(binary)], check=True, timeout=120)
+        blocks = dict(re.findall(r"### Sample (\w+ \d+)\n\n```text\n(.*?)```", (folder / "README.md").read_text(), re.S))
+        for key, data in blocks.items():
+            if key.startswith("Input"):
+                wanted = blocks["Output" + key[5:]].encode()
+                for variant in [data, data.replace("\n", "\r\n")]:
+                    expect(binary, variant.encode(), wanted)
+                mock_samples += 1
+        expect(binary, source.with_suffix(".in").read_bytes(), source.with_suffix(".expected").read_bytes())
+    print(f"PASS: {4 + len(mocks)} C++17 builds; {mock_samples} mock samples; {checks} checks; {total_words} NFA/DFA/regex words (length <= 8); dc={'verified' if dc else 'unavailable'}; sanitizer={'on' if '--sanitize' in sys.argv else 'off'}")

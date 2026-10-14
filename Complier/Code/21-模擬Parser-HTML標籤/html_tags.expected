@@ -1,0 +1,8 @@
+OPEN html
+OPEN body
+OPEN p
+TEXT Hello World
+CLOSE p
+SELF br
+CLOSE body
+CLOSE html

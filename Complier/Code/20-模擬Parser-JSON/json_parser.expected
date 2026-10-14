@@ -1,0 +1,9 @@
+LCB {
+STRING "name"
+COLON :
+STRING "Amy"
+COMMA ,
+STRING "age"
+COLON :
+NUMBER 20
+RCB }

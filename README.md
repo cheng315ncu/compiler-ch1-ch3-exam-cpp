@@ -1,6 +1,6 @@
 # Compiler Ch1–3：考試 C++ 原碼與手冊
 
-繁體中文註解、標準 C++17、Linux／DOMjudge 輸入輸出；採直接函式與標準容器的 ponytail 寫法。共有 **15 份獨立程式**，包含八題優先使用的短版／簡單版本、兩題課程作業與完整功能版本。
+繁體中文註解、標準 C++17、Linux／DOMjudge 輸入輸出；採直接函式與標準容器的 ponytail 寫法。共有 **21 份獨立程式**，包含八題優先使用的短版／簡單版本、兩題課程作業、完整功能版本與六題模擬題。
 
 **每份程式各有一個資料夾**（`Complier/Code/NN-題型/`），裡面放 `.cpp`、`.in`、`.expected` 測例和 `README.md`：完整題意、輸入輸出、範例、手動追蹤、修改範例與該題筆記都在那份 README。看資料夾名稱就能找到題目。
 
@@ -30,6 +30,12 @@
 | [13-NFA轉DFA完整版](Complier/Code/13-NFA轉DFA完整版/README.md) | `nfa_to_dfa.cpp` | 完整功能 |
 | [14-ac作業完整版](Complier/Code/14-ac作業完整版/README.md) | `ac_homework.cpp` | 作業完整版 |
 | [15-HW5-NFA-DFA作業完整版](Complier/Code/15-HW5-NFA-DFA作業完整版/README.md) | `automata_homework.cpp` | 作業完整版 |
+| [16-模擬Scanner宣告敘述](Complier/Code/16-模擬Scanner宣告敘述/README.md) | `decl_scanner.cpp` | 模擬題 |
+| [17-模擬Scanner比較運算子與註解](Complier/Code/17-模擬Scanner比較運算子與註解/README.md) | `compare_scanner.cpp` | 模擬題 |
+| [18-模擬Parser四則運算](Complier/Code/18-模擬Parser四則運算/README.md) | `expr_parser.cpp` | 模擬題 |
+| [19-模擬Parser函式呼叫鏈](Complier/Code/19-模擬Parser函式呼叫鏈/README.md) | `call_parser.cpp` | 模擬題 |
+| [20-模擬Parser-JSON](Complier/Code/20-模擬Parser-JSON/README.md) | `json_parser.cpp` | 模擬題 |
+| [21-模擬Parser-HTML標籤](Complier/Code/21-模擬Parser-HTML標籤/README.md) | `html_tags.cpp` | 模擬題 |
 
 ## 優先使用的八份
 
@@ -50,6 +56,19 @@
 |---|---|---|
 | ScannerTest：算式 Token | [09-作業ScannerTest/scanner.cpp](Complier/Code/09-作業ScannerTest/scanner.cpp) | NUM／PLUS／MINUS／MUL／DIV／LPR／RPR；NUM 開頭 0 只吃一位 |
 | ParserTest：Recursive-Descent | [10-作業ParserTest/parser.cpp](Complier/Code/10-作業ParserTest/parser.cpp) | 合法才印「種類 原字串」；否則只印 invalid input |
+
+## 模擬題
+
+16–21 是照 ScannerTest／ParserTest 作業格式出的模擬題：Terminal RE 表、Productions、Input／Output Format、Sample。每份 README 就是題目，`.cpp` 是對應解答；README 裡的 Sample 由 `check_cpp_homework.py` 直接拿來測。
+
+| 題目 | 考點 |
+|---|---|
+| 16 宣告敘述 Scanner | keyword 讀完整字再查表；INUM 開頭 0；FNUM 兩字元 lookahead |
+| 17 比較運算子與註解 | longest match（`<=` 先於 `<`）；`//`、`/* */`；錯誤時只印 invalid input |
+| 18 四則運算 Parser | expr／term／factor 遞迴下降；必須停在 END |
+| 19 函式呼叫鏈 Parser | ParserTest 延伸：`a[0].b(c(1), "x");`、args 的 λ |
+| 20 JSON 子集 Parser | 巢狀 object／array；逗號後必須還有一項；keyword 完整比對 |
+| 21 HTML 標籤 Parser | 歷屆 HTML 題 × ParserTest：OPEN／CLOSE 名稱配對、TEXT 空白整理 |
 
 ## 需要完整功能時
 
@@ -110,6 +129,10 @@ Markdown 說明保留原 Obsidian wikilink 與教材頁碼；可直接閱讀，�
 
 HTML parser 是使用者提供的歷屆線索，未附原考卷；手冊完整題意／I/O 是模擬規格。Ch2／Ch3 作業、教材解答及補充另有標示。FIRST／FOLLOW／LL(1) 正式範圍尚未確認。
 
-原短版有 610 項檢查、完整考試版本有 151 項檢查、作業版本有 64 項檢查，40 個修改範例有 82 次樣例檢查。手冊報告收於 `Complier/Review/cpp-handbook-examples.json` 與 `cpp-print-handbook-validation.json`；此 repo 匯出後的實測另見 `repo-validation.json`。Linux x86-64 交叉編譯成功，Linux 實跑／DOMjudge Accepted 未驗證；本機 compiler 為 Apple Clang。
+原短版有 610 項檢查、完整考試版本有 151 項檢查、作業與模擬題有 132 項檢查，40 個修改範例有 82 次樣例檢查。手冊報告收於 `Complier/Review/cpp-handbook-examples.json` 與 `cpp-print-handbook-validation.json`；此 repo 匯出後的實測另見 `repo-validation.json`。Linux x86-64 交叉編譯成功，Linux 實跑／DOMjudge Accepted 未驗證；本機 compiler 為 Apple Clang。
 
-這是原課程知識庫的私人匯出副本；程式已改成一題一資料夾，測試腳本與手冊路徑已同步更新；只收錄這份 C++ 程式集相關檔案。`export-manifest.json` 列出來源 commit、檔案大小及 SHA-256，可核對原碼與文件未改動。
+這是原課程知識庫的匯出副本；程式已改成一題一資料夾，測試腳本與手冊路徑已同步更新；只收錄這份 C++ 程式集相關檔案。`export-manifest.json` 列出匯出當時的來源 commit、檔案大小及 SHA-256（重整成一題一資料夾之前的路徑）。
+
+## License
+
+[MIT](LICENSE)

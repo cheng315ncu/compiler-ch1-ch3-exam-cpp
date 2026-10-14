@@ -1,0 +1,9 @@
+ID console
+DOT .
+ID log
+LBR (
+STRLIT "hello"
+COMMA ,
+NUM 3
+RBR )
+SEMI ;

@@ -6,3 +6,5 @@ build/
 *.o
 *.out
 /main
+.serena/
+.codegraph/
