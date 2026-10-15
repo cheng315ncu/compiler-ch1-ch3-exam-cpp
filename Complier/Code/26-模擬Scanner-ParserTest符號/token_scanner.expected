@@ -1,0 +1,7 @@
+STRLIT "a
+b"
+ID x
+DOT
+ID y
+LBR
+RBR

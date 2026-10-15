@@ -105,17 +105,15 @@ int main(int argc, char** argv) {
             }
             cout << (ll1 ? "LL1 YES\n" : "LL1 NO\n");
         } else {
-            // 只能用無衝突的 LL(1) 表做這份 predictive parser。
+            // 只能用無衝突的 LL(1) 表做這份 predictive parser；無衝突代表無左遞迴，展開必定會停。
             if (!ll1) throw runtime_error("grammar has LL(1) conflicts");
             while (getline(cin, line)) {
                 istringstream input(line); vector<string> words; string word;
                 bool accepted = true;
                 while (input >> word) { if (word == "$" || word == "#" || nonterminals.count(word)) accepted = false; words.push_back(word); }
                 // 輸入自動補 EOF；解析 stack 初始是 $ 與 start，頂端在 vector 尾端。
-                words.push_back("$"); vector<string> stack{"$", rules[0].lhs}; size_t pos = 0, steps = 0;
+                words.push_back("$"); vector<string> stack{"$", rules[0].lhs}; size_t pos = 0;
                 while (accepted && !stack.empty()) {
-                    // ponytail: a finite study budget prevents pathological expansion; raise for larger judges.
-                    if (++steps > 1000000) throw runtime_error("parse exceeds 1000000 steps");
                     // vector 尾端就是 stack top；push RHS 的順序要反過來。
                     const auto top = stack.back(); stack.pop_back();
                     // terminal 必須匹配 lookahead，才前進輸入位置；nonterminal 只展開，不吃字元。

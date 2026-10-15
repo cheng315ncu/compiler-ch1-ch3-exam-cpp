@@ -1144,7 +1144,7 @@
     },
     {
       "stem": "ll1",
-      "source_sha256": "589a3f41f641c3de57ec2170caf711b9089c7dffadf76e5a06a16d8083ad8163",
+      "source_sha256": "92ec59c85035bd3c23119a668df12ba75cdf37c2bf703f370a8afa09a9dc2e92",
       "samples": [
         {
           "input": "2\nS -> a S\nS -> #\n",
@@ -1179,7 +1179,7 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "6fe9a667252f8c8de95a7cb3f401bdabe4d26c5769d5cb3bb12b4e42b7e5a12a"
+          "changed_sha256": "ceb7830c3ecb1b5fb5696241eeacb297d95194a14deb07c1a5ce952acac107e3"
         },
         {
           "title": "只印 FIRST 與 FOLLOW",
@@ -1201,14 +1201,14 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "ab1b69e330d70e9ef18fdf397348c014e7428613f04b834177b86f00d8826e49"
+          "changed_sha256": "674c2ad947060d5a67dbe621dc779de10c1728648f9b23dca4a111ecd2b4f182"
         },
         {
           "title": "字串判定輸出 YES / NO",
           "edits": [
             {
               "lines": [
-                132
+                130
               ],
               "action": "replace",
               "before": "                cout << (accepted && pos == words.size() ? \"ACCEPT\\n\" : \"REJECT\\n\");",
@@ -1224,7 +1224,7 @@
           "args": [
             "--check"
           ],
-          "changed_sha256": "13db0f9ab7ee5aa8ebfe49f528dd70f585d6ccfca544ad24520ac79d4f075f41"
+          "changed_sha256": "2178d489c1d6cdba1453ba2f3b42e53c556fea43846d253aae3b6ede6d0057fc"
         },
         {
           "title": "指定 S 為 start，不使用第一個 LHS",
@@ -1242,8 +1242,8 @@
                 115
               ],
               "action": "replace",
-              "before": "                words.push_back(\"$\"); vector<string> stack{\"$\", rules[0].lhs}; size_t pos = 0, steps = 0;",
-              "after": "                words.push_back(\"$\"); vector<string> stack{\"$\", \"S\"}; size_t pos = 0, steps = 0;"
+              "before": "                words.push_back(\"$\"); vector<string> stack{\"$\", rules[0].lhs}; size_t pos = 0;",
+              "after": "                words.push_back(\"$\"); vector<string> stack{\"$\", \"S\"}; size_t pos = 0;"
             }
           ],
           "example": {
@@ -1255,7 +1255,7 @@
           "args": [
             "--check"
           ],
-          "changed_sha256": "da6b9373fc6dfe3a8be4095de120bb3290f7cb7d33d537030bf8977ff5bb8f25"
+          "changed_sha256": "14e76fa82292c16db581178062e52cdac300bb69f14d972085d48829b25ca927"
         },
         {
           "title": "只輸出是否為 LL(1)",
@@ -1277,7 +1277,7 @@
             "exit": 0
           },
           "args": [],
-          "changed_sha256": "61c9a46d74d605d0c5f1e9336004a6d3b729c6ffeba70a9f1863e786ac487ea1"
+          "changed_sha256": "392c8b705b3dc7c29e9a67bc013eb613c7b6c04f570ab2518839731c387d0071"
         }
       ]
     }

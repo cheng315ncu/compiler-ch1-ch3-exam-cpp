@@ -1,12 +1,12 @@
 # Compiler Ch1–3：考試 C++ 原碼與手冊
 
-繁體中文註解、標準 C++17、Linux／DOMjudge 輸入輸出；採直接函式與標準容器的 ponytail 寫法。共有 **21 份獨立程式**，包含八題優先使用的短版／簡單版本、兩題課程作業、完整功能版本與六題模擬題。
+繁體中文註解、標準 C++17、Linux／DOMjudge 輸入輸出；採直接函式與標準容器的 ponytail 寫法。共有 **30 份獨立程式**，包含八題優先使用的短版／簡單版本、兩題課程作業、完整功能版本、十三題模擬題，以及文法改寫／遞迴下降產生、RE→NFA 兩個工具。
 
 **每份程式各有一個資料夾**（`Complier/Code/NN-題型/`），裡面放 `.cpp`、`.in`、`.expected` 測例和 `README.md`：完整題意、輸入輸出、範例、手動追蹤、修改範例與該題筆記都在那份 README。看資料夾名稱就能找到題目。
 
 ## 先讀這兩份
 
-- [10 頁 A4 考場速查（列印用）](Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.html)：選檔表、Scanner／Recursive Descent 骨架、文法→程式對照、FIRST／FOLLOW、NFA→DFA 表、dc 產碼、小考英文短答、21 題卡片（行號＋改法）。
+- [A4 上機考速查（列印用）](Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.html)（[PDF](Complier/Review/Compiler-Ch1-Ch3-Print-Handbook.pdf)）：選檔表、Scanner／Recursive Descent 骨架、文法→程式對照、FIRST／FOLLOW、NFA→DFA 表、dc 產碼、30 題卡片（行號＋改法）。
 - [完整程式指南 HTML](Complier/Review/Compiler-Ch1-Ch3-Detail.html)：完整題意、全部測例、流程圖、46 個改前／改後範例；03／07／08 的行號比現行原碼少 3 行。
 
 下載或 clone 後，用瀏覽器開啟 HTML 即可離線閱讀；GitHub 的 HTML 檔案頁顯示原始內容。列印設定為 A4、雙面、長邊翻頁、實際大小 100%。程式直接帶 `.cpp`。
@@ -36,6 +36,15 @@
 | [19-模擬Parser函式呼叫鏈](Complier/Code/19-模擬Parser函式呼叫鏈/README.md) | `call_parser.cpp` | 模擬題 |
 | [20-模擬Parser-JSON](Complier/Code/20-模擬Parser-JSON/README.md) | `json_parser.cpp` | 模擬題 |
 | [21-模擬Parser-HTML標籤](Complier/Code/21-模擬Parser-HTML標籤/README.md) | `html_tags.cpp` | 模擬題 |
+| [22-文法改寫與遞迴下降產生](Complier/Code/22-文法改寫與遞迴下降產生/README.md) | `rd_gen.cpp` | 工具（消左遞迴、left factoring、產 RD parser） |
+| [23-模擬Parser敘述與區塊](Complier/Code/23-模擬Parser敘述與區塊/README.md) | `stmt_parser.cpp` | 模擬題 |
+| [24-RE轉NFA](Complier/Code/24-RE轉NFA/README.md) | `re_to_nfa.cpp` | 工具（Thompson，輸出接 04／13） |
+| [25-模擬Scanner科學記號](Complier/Code/25-模擬Scanner科學記號/README.md) | `sci_scanner.cpp` | 模擬題 |
+| [26-模擬Scanner-ParserTest符號](Complier/Code/26-模擬Scanner-ParserTest符號/README.md) | `token_scanner.cpp` | 模擬題 |
+| [27-模擬Scanner複合運算子](Complier/Code/27-模擬Scanner複合運算子/README.md) | `op_scanner.cpp` | 模擬題 |
+| [28-模擬Parser-ac語言](Complier/Code/28-模擬Parser-ac語言/README.md) | `ac_parser.cpp` | 模擬題 |
+| [29-模擬Parser-RE語法](Complier/Code/29-模擬Parser-RE語法/README.md) | `re_parser.cpp` | 模擬題 |
+| [30-模擬Parser布林運算式](Complier/Code/30-模擬Parser布林運算式/README.md) | `bool_parser.cpp` | 模擬題 |
 
 ## 優先使用的八份
 
@@ -59,7 +68,7 @@
 
 ## 模擬題
 
-16–21 是照 ScannerTest／ParserTest 作業格式出的模擬題：Terminal RE 表、Productions、Input／Output Format、Sample。每份 README 就是題目，`.cpp` 是對應解答；README 裡的 Sample 由 `check_cpp_homework.py` 直接拿來測。
+16–21、23、25–30 是照 ScannerTest／ParserTest 作業格式出的模擬題：Terminal RE 表、Productions、Input／Output Format、Sample。每份 README 就是題目，`.cpp` 是對應解答；README 裡的 Sample 由 `check_cpp_homework.py` 直接拿來測。
 
 | 題目 | 考點 |
 |---|---|
@@ -69,6 +78,13 @@
 | 19 函式呼叫鏈 Parser | ParserTest 延伸：`a[0].b(c(1), "x");`、args 的 λ |
 | 20 JSON 子集 Parser | 巢狀 object／array；逗號後必須還有一項；keyword 完整比對 |
 | 21 HTML 標籤 Parser | 歷屆 HTML 題 × ParserTest：OPEN／CLOSE 名稱配對、TEXT 空白整理 |
+| 23 if／while／區塊 Parser | stmts 的 FIRST 迴圈、`{ }` 遞迴、dangling else 接最近的 if |
+| 25 科學記號 Scanner | `12e` → NUM 12、ID e：退回最後接受位置；`3.`、`.5` 非法 |
+| 26 ParserTest 符號 Scanner | ScannerTest 串流寫法切 ID／STRLIT／LBR／RBR／DOT；STRLIT 可跨行 |
+| 27 複合運算子 Scanner | 串流 `cin.peek()` longest match：`+++` → INC PLUS、`->`、`**`、`==` |
+| 28 ac 語言 Parser | 課本 Fig 2.1 的 15 條規則；id 單一字母、f／i／p 是 keyword |
+| 29 RE 語法 Parser | `*` > 串接 > `\|`；串接看 FIRST(factor) 決定是否繼續 |
+| 30 布林運算式 Parser | or／and／not 分層；keyword 完整比對；`==` 兩字元 |
 
 ## 需要完整功能時
 

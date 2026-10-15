@@ -1,0 +1,8 @@
+LPR (
+CHAR b
+CHAR c
+RPR )
+STAR *
+CHAR d
+OR |
+CHAR a

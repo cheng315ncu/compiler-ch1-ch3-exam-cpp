@@ -1,0 +1,54 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// token 來源：每行空白分隔；考試時把 tok()/match() 換成自己的 scanner。if 條件就是該規則的 SELECT。
+vector<string> toks; size_t pos = 0;
+string tok() { return pos < toks.size() ? toks[pos] : "$"; }
+bool match(const string& t) { if (tok() != t) return false; ++pos; return true; }
+bool parse_E();
+bool parse_E_p();
+bool parse_T();
+bool parse_T_p();
+bool parse_F();
+
+bool parse_E() {
+    if (tok() == "(" || tok() == "num") return parse_T() && parse_E_p();  // E -> T E'
+    return false;
+}
+
+bool parse_E_p() {
+    if (tok() == "+") return match("+") && parse_T() && parse_E_p();  // E' -> + T E'
+    if (tok() == "$" || tok() == ")") return true;  // E' -> #
+    return false;
+}
+
+bool parse_T() {
+    if (tok() == "(" || tok() == "num") return parse_F() && parse_T_p();  // T -> F T'
+    return false;
+}
+
+bool parse_T_p() {
+    if (tok() == "*") return match("*") && parse_F() && parse_T_p();  // T' -> * F T'
+    if (tok() == "$" || tok() == ")" || tok() == "+") return true;  // T' -> #
+    return false;
+}
+
+bool parse_F() {
+    if (tok() == "(") return match("(") && parse_E() && match(")");  // F -> ( E )
+    if (tok() == "num") return match("num");  // F -> num
+    return false;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        istringstream in(line); toks.clear(); pos = 0;
+        for (string w; in >> w;) toks.push_back(w);
+        // 一定要停在 $：只吃掉前綴不算接受。
+        cout << (parse_E() && tok() == "$" ? "ACCEPT\n" : "REJECT\n");
+    }
+}

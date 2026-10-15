@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Compiler Ch1–3 考場速查</title>
+<title>Compiler 上機考速查</title>
 <style>
 @page{size:A4;margin:9mm 9mm 10mm}
 *{box-sizing:border-box}
@@ -26,8 +26,8 @@ th{background:#e6e6e6}
 @media(max-width:760px){.cols{column-count:1}}
 </style></head><body>
 
-<h1>Compiler Ch1–3｜考場速查（列印版）</h1>
-<p class="n">用途：寫 code 時查骨架與陷阱、手算時查公式與表。完整題意、全部測例與改前／改後對照在 <code>Compiler-Ch1-Ch3-Detail.html</code>；每題的 README 在 <code>Complier/Code/NN-…/</code>。行號依 2026-10-15 的 .cpp；位移時搜尋關鍵字。</p>
+<h1>Compiler Ch1–3｜上機考速查（列印版）</h1>
+<p class="n">用途：上機寫 code 時查骨架、陷阱與各題改法；DFA／PREDICT 表用來核對程式輸出。完整題意、全部測例與改前／改後對照在 <code>Compiler-Ch1-Ch3-Detail.html</code>；每題的 README 在 <code>Complier/Code/NN-…/</code>。行號依 2026-10-15 的 .cpp；位移時搜尋關鍵字。</p>
 
 <h2>1｜看題 → 選檔</h2>
 <table>
@@ -40,11 +40,19 @@ th{background:#e6e6e6}
 <tr><td>算式 Parser 印 token／invalid input</td><td>18 <code>expr_parser.cpp</code></td><td>expr／term／factor；結尾必須 END</td></tr>
 <tr><td>C-like token、字串、註解</td><td>03 <code>lexer.cpp</code></td><td>keywords／ops 清單；最長匹配</td></tr>
 <tr><td>作業：NUM／PLUS…RPR 切 token</td><td>09 <code>scanner.cpp</code></td><td>串流讀字元；0 開頭只吃一位</td></tr>
+<tr><td>Scanner 切 ID／STRLIT／LBR／RBR／DOT</td><td>26 <code>token_scanner.cpp</code></td><td>串流；STRLIT 讀到下一個引號</td></tr>
+<tr><td><code>++ += -- -= -&gt; ** ==</code> 運算子</td><td>27 <code>op_scanner.cpp</code></td><td><code>cin.peek()</code> 看下一字元，符合才 get</td></tr>
 <tr><td>keyword＋INUM／FNUM 宣告句</td><td>16 <code>decl_scanner.cpp</code></td><td>先讀完整字再查 keyword；FNUM 點後要有數字</td></tr>
 <tr><td>比較運算子＋註解＋錯誤輸入</td><td>17 <code>compare_scanner.cpp</code></td><td>兩字元優先；錯誤時只印 invalid input</td></tr>
+<tr><td>小數／科學記號 NUM（<code>12e</code>）</td><td>25 <code>sci_scanner.cpp</code></td><td>每段整段成立才吃；退回最後接受位置</td></tr>
 <tr><td>作業：ID／STRLIT／DOT 遞迴下降</td><td>10 <code>parser.cpp</code></td><td>合法才重掃輸出；λ 只在 RBR／END 前</td></tr>
 <tr><td>呼叫鏈 <code>a[0].b(c(1),"x");</code></td><td>19 <code>call_parser.cpp</code></td><td>tail 迴圈；args 逗號；SEMI 結尾</td></tr>
 <tr><td>JSON 子集</td><td>20 <code>json_parser.cpp</code></td><td>value 看第一個 token；<code>[1,]</code> 不合法</td></tr>
+<tr><td>if／else／while／<code>{ }</code> 敘述</td><td>23 <code>stmt_parser.cpp</code></td><td>stmts 看 FIRST；else 接最近的 if</td></tr>
+<tr><td>ac 程式（Fig 2.1）只判語法</td><td>28 <code>ac_parser.cpp</code></td><td>Dcls／Stmts 兩個 while；結尾 END</td></tr>
+<tr><td>RE 本身的語法（<code>| * ( )</code>）</td><td>29 <code>re_parser.cpp</code></td><td>串接看 FIRST(factor)={CHAR, LPR}</td></tr>
+<tr><td>布林式 <code>or and not == &lt; &gt;</code></td><td>30 <code>bool_parser.cpp</code></td><td>or／and 兩層 while；not 遞迴</td></tr>
+<tr><td>給 RE，產 NFA（再接 04／13）</td><td>24 <code>re_to_nfa.cpp</code></td><td>第一行 RE；<code>| * + ? ( )</code>，<code>#</code>=λ</td></tr>
 <tr><td>給 NFA，判字串</td><td>04 <code>nfa_check.cpp</code></td><td><code>#</code> 是 ε；ACCEPT／REJECT</td></tr>
 <tr><td>給 NFA，產 DFA 表／集合追蹤</td><td>13 <code>nfa_to_dfa.cpp</code></td><td><code>--table --trace</code>，預設 <code>--check</code></td></tr>
 <tr><td>HW5(a)／(d) 字串辨識</td><td>05 <code>hw5_check.cpp</code></td><td>第 6 行 <code>HW5A</code> true／false</td></tr>
@@ -53,6 +61,7 @@ th{background:#e6e6e6}
 <tr><td>ac token／parse tree／AST／摺疊</td><td>14 <code>ac_homework.cpp</code></td><td><code>--tokens --parse-tree --ast --typed-ast --check --dc [--fold]</code></td></tr>
 <tr><td>Stack 指令執行</td><td>07 <code>stack_vm.cpp</code></td><td>PRINT 會 pop；先 pop 右 b 再左 a</td></tr>
 <tr><td>FIRST／FOLLOW／LL(1) 表</td><td>08 <code>ll1.cpp</code></td><td>預設表格；<code>--check</code> 判 token 序列</td></tr>
+<tr><td>消左遞迴／left factoring／產 RD parser</td><td>22 <code>rd_gen.cpp</code></td><td>預設印可編譯 C++；<code>--grammar</code> 可接 08</td></tr>
 </table>
 <div class="cols">
 <div><h3>編譯、執行、比對</h3>
@@ -206,14 +215,14 @@ cout &lt;&lt; (s == FINAL ? "ACCEPT\n" : "REJECT\n");   // 讀完才判</pre>
 <p>中途進 final 不能提早接受；字母表外的字元直接到 dead。</p></div>
 </div>
 
-<h2>3｜文法、FIRST／FOLLOW／PREDICT、LL(1)</h2>
+<h2>3｜文法、FIRST／FOLLOW、LL(1)、AST</h2>
 <div class="cols">
-<div><h3>算法（手算與 08 ll1.cpp 同一套）</h3>
+<div><h3>算法（08 ll1.cpp 實作同一套）</h3>
 <ul>
 <li><b>FIRST(α)</b>：α 第一個 terminal；若第一個符號可為 λ，繼續看下一個；全部可為 λ 則含 λ。</li>
 <li><b>FOLLOW(A)</b>：start 含 <code>$</code>；<code>B → α A β</code> 把 FIRST(β)−λ 加入 FOLLOW(A)；β 可為 λ（或 A 在尾端）時再加 FOLLOW(B)。反覆到沒有變化。</li>
 <li><b>PREDICT(A → α)</b> = FIRST(α) − {λ}；若 α ⇒* λ，再聯集 FOLLOW(A)。</li>
-<li><b>LL(1)</b>：同一 nonterminal 的各條 PREDICT 兩兩不相交。表格 M[A, t] 一格多條 = conflict。重疊不等於有歧義。</li>
+<li><b>LL(1)</b>：同一 nonterminal 的各條 PREDICT 兩兩不相交。表格 M[A, t] 一格多條 = conflict。</li>
 <li>Predictive stack：<code>$ S</code> 入棧；頂端 terminal 要等於 lookahead；nonterminal 查表後 RHS <b>反序</b> push（<code>S → a S</code> 先 push S 再 push a）。</li>
 </ul>
 <p class="n">例：<code>S → a S | λ</code>：FIRST(S)={a, λ}、FOLLOW(S)={$}、PREDICT(S→λ)={$}。<code>A → B C</code> 且 C 可為 λ：FOLLOW(A) ⊆ FOLLOW(B)。</p></div>
@@ -235,22 +244,17 @@ cout &lt;&lt; (s == FINAL ? "ACCEPT\n" : "REJECT\n");   // 讀完才判</pre>
 <tr><td>13–15</td><td>Val → id | inum | fnum</td><td>id ／ inum ／ fnum</td></tr>
 </table>
 <p class="n">ac token：f／i／p 是 floatdcl／intdcl／print；id 為單一小寫字母（扣 f i p，共 23 個）；inum <code>[0-9]+</code>；fnum <code>[0-9]+\.[0-9]+</code>。<code>b2</code> → id(b) inum(2)；<code>-5</code> → minus inum。</p></div>
-<div><h3>推導、Parse tree、AST</h3>
+<div><h3>Parse tree／AST 要印什麼（14 ac_homework）</h3>
 <table>
 <tr><th></th><th>保留</th><th>省略</th></tr>
-<tr><td>Derivation</td><td>每一步 sentential form 與用了哪條規則</td><td>—</td></tr>
 <tr><td>Parse tree</td><td>所有 nonterminal、terminal、λ、$；葉由左到右 = token 串</td><td>改寫先後</td></tr>
 <tr><td>AST</td><td>運算子、運算元、宣告／敘述順序</td><td>Dcls／Stmts／Val／Expr 包裝、括號、λ、$</td></tr>
 <tr><td>Decorated AST</td><td>AST＋型別，可插 int2float</td><td>只有要求型別時才加</td></tr>
 </table>
-<p>最左推導 <code>i a a=5 p a</code>：規則序列 <b>1,2,5,3,6,8,14,12,6,9,7</b>（11 步）。HW1 <code>i x x=100 x=x+30+1 p x</code>：<b>1,2,5,3,6,8,14,12,6,8,13,10,14,10,14,12,6,9,7</b>（19 步）。</p>
-<p>畫 AST：分敘述 → assign(目標, RHS) → 依括號／優先序／結合性拆 → 由樹還原括號驗算。<code>x=a+b*c</code> → <code>assign(x, plus(a, times(b,c)))</code>；<code>x-30-1</code> 左結合 → <code>minus(minus(x,30),1)</code>（69，右結合得 71）。教材 HW2 圖畫成 <code>plus(x, plus(30,1))</code>：題目要「依教材」就照畫。</p></div>
-<div><h3>RE vs CFG；為何用 CFG</h3>
-<p>RE 描述 token 形狀（有限狀態）；CFG 描述遞迴、任意深度巢狀的語法（如 <code>S → (S)S | λ</code>、<code>S → aSb | λ</code> 即 aⁿbⁿ，DFA 做不到）。宣告／型別不由 CFG 檢查，交給語意分析。</p>
-<p class="box">Context-free grammars can describe recursive and nested syntax, such as balanced parentheses, beyond regular expressions. Their productions give structure for parsing and AST construction; declaration and type constraints are checked separately.</p></div>
+<p><code>x=a+b*c</code> → <code>assign(x, plus(a, times(b,c)))</code>；<code>x-30-1</code> 左結合 → <code>minus(minus(x,30),1)</code>（69，右結合得 71）。</p></div>
 </div>
 
-<h2>4｜Scanner、RE、NFA → DFA</h2>
+<h2>4｜Scanner 規則、NFA → DFA 核對表</h2>
 <div class="cols">
 <div><h3>Scanner 規則</h3>
 <ul>
@@ -268,35 +272,17 @@ cout &lt;&lt; (s == FINAL ? "ACCEPT\n" : "REJECT\n");   // 讀完才判</pre>
 <tr><td><code>3.</code>／<code>.5</code></td><td>INUM 3 後 <code>.</code> 非法 ／ <code>.</code> 非法</td></tr>
 <tr><td><code>honeycone=5+10*num;</code></td><td>8 tokens：ID ASSIGN NUM PLUS NUM TIMES ID SEMI</td></tr>
 </table></div>
-<div><h3>RE 運算</h3>
-<table>
-<tr><th>形式</th><th>意義</th><th>陷阱</th></tr>
-<tr><td>A|B</td><td>聯集</td><td>a|bc 不收 abc</td></tr>
-<tr><td>AB</td><td>串接</td><td>AB ≠ BA</td></tr>
-<tr><td>A*</td><td>0 次以上</td><td>一定含 λ；∅* = {λ}</td></tr>
-<tr><td>A+</td><td>AA*</td><td>A 含 λ 時 A+ 也含 λ</td></tr>
-<tr><td>A?</td><td>A|λ</td><td></td></tr>
-<tr><td>Not(C)</td><td>Σ\C（單一字元集合）</td><td>不是語言補集</td></tr>
-</table>
-<p>優先序：() → * + ? → 串接 → |。λ ≠ ∅：L(λ)={λ}、L(∅)=∅；A∅=∅、A|∅=A。</p>
+<div><h3>常用 token RE</h3>
 <p>教材 identifier：<code>L(L|D)*(_(L|D)+)*</code>（拒 <code>_foo</code>、<code>foo_</code>、<code>foo__bar</code>）。題目給 <code>[A-Za-z_][A-Za-z0-9_]*</code> 就照題目。</p>
 <p>科學記號（HW3 補正）：<code>[0-9]+(\.[0-9]+)?(e[+-]?[0-9]+)?</code>；拒 <code>12e</code>、<code>1.2e-</code>、<code>.1</code>、<code>10.</code>、<code>3.e2</code>。教材解答漏了 e 可省、+ 號、點前多位。</p></div>
-<div><h3>RE → NFA（Thompson）</h3>
-<ul>
-<li>literal：<code>s ─a→ f</code>；λ：<code>s ─λ→ f</code>。</li>
-<li>A|B：新 start λ 分到 A、B；兩出口 λ 到新 final。</li>
-<li>AB：A 出口 λ 接 B 入口（只讀完 A 不算接受）。</li>
-<li>A*：新 s→f 的零次旁路＋A 出口回 A 入口的重複邊。A+：去掉零次旁路。A?：只有旁路。</li>
-<li>只把整體出口標接受；每條邊寫字元或 λ；標 start、F、Σ。</li>
-</ul></div>
 <div><h3>NFA → DFA（子集構造）</h3>
 <p class="box">S₀ = close({q₀})；δ<sub>D</sub>(S,c) = close(move(S,c))；S 接受 ⇔ S ∩ F ≠ ∅</p>
 <ol><li>close 包含自己，沿 λ 走到固定點（不是只走一步）。</li>
 <li>每個新集合依字母表順序算每個字元；相同集合沿用名稱（順序無關）。</li>
 <li>∅ 是拒絕 sink，完整表要列（若可達）。</li>
 <li>n 個 NFA state 最多 2ⁿ 個子集，只列可達的。</li>
-<li>驗算：λ、最短接受、近似錯例（讀完才判）。</li></ol>
-<p>最小化：先分 {接受}/{拒絕}，再依各字元後繼所屬組反覆細分到不變。「都拒絕」不代表可合併。</p></div>
+<li>測例：λ、最短接受、近似錯例（讀完才判）。</li></ol>
+<p class="n">下列表格可當 13 nfa_to_dfa／15 automata_homework 的輸出核對。</p></div>
 <div><h3>HW5(d)：(bc)*d　NFA start=1、F={6}</h3>
 <table class="mini"><tr><th>NFA</th><th>b</th><th>c</th><th>d</th><th>λ</th></tr>
 <tr><td>→1</td><td></td><td></td><td></td><td>2,5</td></tr><tr><td>2</td><td>3</td><td></td><td></td><td></td></tr>
@@ -306,7 +292,7 @@ cout &lt;&lt; (s == FINAL ? "ACCEPT\n" : "REJECT\n");   // 讀完才判</pre>
 <tr><td>→A</td><td>{1,2,5}</td><td>B</td><td>X</td><td>D</td></tr><tr><td>B</td><td>{3}</td><td>X</td><td>C</td><td>X</td></tr>
 <tr><td>C</td><td>{2,4,5}</td><td>B</td><td>X</td><td>D</td></tr><tr><td>★D</td><td>{6}</td><td>X</td><td>X</td><td>X</td></tr>
 <tr><td>X</td><td>∅</td><td>X</td><td>X</td><td>X</td></tr></table>
-<p class="n">bcd：A→B→C→D ✓；bc 停 C ✗；bcdd 到 X ✗。A、C 可合併 → 最小 4 states。05 hw5_check 的 state：0 起始、1 剛讀 b、2 剛讀 bc、3 接受、-1 dead。</p></div>
+<p class="n">bcd：A→B→C→D ✓；bc 停 C ✗；bcdd 到 X ✗。05 hw5_check 的 state：0 起始、1 剛讀 b、2 剛讀 bc、3 接受、-1 dead。</p></div>
 <div><h3>HW5(a)：(a|(bc)*d)+　NFA start=1、F={12}</h3>
 <table class="mini"><tr><th>DFA</th><th>NFA 集合</th><th>a</th><th>b</th><th>c</th><th>d</th></tr>
 <tr><td>→A</td><td>{1,2,3,6,7,10}</td><td>B</td><td>C</td><td>X</td><td>D</td></tr>
@@ -328,7 +314,7 @@ cout &lt;&lt; (s == FINAL ? "ACCEPT\n" : "REJECT\n");   // 讀完才判</pre>
 <tr><td>→A</td><td>{0,1,2,4,7}</td><td>B</td><td>C</td></tr><tr><td>B</td><td>{1,2,3,4,6,7,8}</td><td>B</td><td>D</td></tr>
 <tr><td>C</td><td>{1,2,4,5,6,7}</td><td>B</td><td>C</td></tr><tr><td>D</td><td>{1,2,4,5,6,7,9}</td><td>B</td><td>E</td></tr>
 <tr><td>★E</td><td>{1,2,4,5,6,7,10}</td><td>B</td><td>C</td></tr></table>
-<p class="n">無可達 ∅。最小化：A、C 合併 → 4 states（進度 λ／a／ab／abb）。abba 停 B ✗。</p></div>
+<p class="n">無可達 ∅。abb、aabb 接受；abba 停 B ✗。</p></div>
 </div>
 
 <h2>5｜語意、型別、dc 產碼</h2>
@@ -364,41 +350,7 @@ cout &lt;&lt; (s == FINAL ? "ACCEPT\n" : "REJECT\n");   // 讀完才判</pre>
 <p>二元：先 pop 右 b、再 pop 左 a，算 a op b（<code>PUSH 8 PUSH 2 SUB</code> = 6）。STORE、PRINT 都 pop；要保留就改 peek。underflow／未定義／零除 → stdout 空、exit 1。</p></div>
 </div>
 
-<h2>6｜Ch1 觀念與小考短答</h2>
-<div class="cols">
-<div><h3>管線（syntax-directed compiler）</h3>
-<table>
-<tr><th>階段</th><th>吃 → 吐</th></tr>
-<tr><td>Scanner</td><td>字元 → tokens（略過空白）</td></tr>
-<tr><td>Parser</td><td>tokens → AST（依 CFG）</td></tr>
-<tr><td>Type checker</td><td>AST → decorated AST（查宣告、型別）</td></tr>
-<tr><td>Translator</td><td>decorated AST → IR</td></tr>
-<tr><td>Optimizer</td><td>IR → 較好的 IR（可繞過）</td></tr>
-<tr><td>Code generator</td><td>IR → 目標碼</td></tr>
-</table>
-<p class="n">Symbol table 由後四階段讀寫。前端（分析，依來源語言）／後端（合成，依目標機器）：換 CPU 只重寫後端。目標碼三種：pure machine code（無 OS）、augmented machine code（呼叫 OS／runtime 例程）、virtual machine code（如 JVM bytecode）。</p></div>
-<div><h3>Bootstrapping：x86 的 C 編譯器 → ARM</h3>
-<ol><li>現有 X：C／x86／C（source／target／impl）。</li>
-<li>改原碼的 code generator → P′（C／ARM／C，尚未編譯）。</li>
-<li>X 編 P′ → cross-compiler X′（C／ARM／x86）。</li>
-<li>X′ 再編 P′ → C／ARM／ARM，才能在 ARM 上跑。</li></ol>
-<p class="n">VM 路線：先用現成 K 編譯器做出 L 的第一個實例，之後 K 退場。Optimizer 例：A=B×C 先 inline 再 loop fusion，消掉暫存 Result（前提：無 alias）。</p></div>
-<div><h3>小考英文短答</h3>
-<p><b>Compiler vs interpreter.</b> A compiler translates a source program into a target program, which is executed later. An interpreter executes the source program or its intermediate representation with input data and directly produces results.</p>
-<p><b>Token.</b> A token is a basic lexical unit recognized by the scanner, such as a keyword, identifier, literal, operator, or punctuation. It has a kind and may carry an attribute; the actual characters form its lexeme.</p>
-<p><b>Win x86 → Linux x86?</b> Not necessarily. The executable format, OS interfaces, ABI, and libraries differ, so the binary cannot run directly. Portable C source can be recompiled for Linux; Windows-specific code must be ported.</p>
-<p><b>javac for ARM.</b> Use a C cross-compiler on x86 that targets ARM to compile javac's C source, link ARM libraries, and move the executable to the device (or build natively on ARM). javac still emits bytecode.</p></div>
-<div>
-<p><b>Grammatical vs semantic error.</b> A syntax error violates the grammar, such as a missing operand or unmatched parenthesis. A semantic error violates meaning rules with valid syntax, such as an undeclared identifier or a type mismatch.</p>
-<p><b>Why CFG?</b> 見第 3 節方框。</p>
-<p><b>NFA vs DFA.</b> A DFA has one next state per state and symbol; an NFA may have several choices and epsilon moves. Both recognize regular languages; subset construction converts an NFA into an equivalent DFA.</p>
-<p><b>Epsilon closure.</b> The set of states reachable from a set through zero or more epsilon transitions, including the original states.</p>
-<p><b>Why last acceptance?</b> A longer candidate may fail after a shorter valid prefix; remembering the last accepting position lets the scanner return the longest valid token.</p>
-<p><b>Parse tree vs AST.</b> A parse tree records the full grammatical derivation; an AST omits grammar-only details and keeps the operations and operands needed later.</p>
-<p class="n">答題句型：Explain → 定義＋輸入輸出＋小例；Difference → “X …, whereas Y …”；Is it valid → lexically／syntactically／semantically 逐層說。</p></div>
-</div>
-
-<h2>7｜各程式卡片：I/O、核心、陷阱、常見改法（行號 → 改成）</h2>
+<h2>6｜各程式卡片：I/O、核心、陷阱、常見改法（行號 → 改成）</h2>
 <div class="cols">
 <div class="card"><b class="t">01 HTML 標籤配對</b> <code>html_check.cpp</code>
 <p>整份 EOF 一案 → VALID／INVALID。名稱不分大小寫；void、<code>&lt;x/&gt;</code> 不入 stack；script／style 讀到對應 END。</p>
@@ -446,8 +398,13 @@ cout &lt;&lt; (s == FINAL ? "ACCEPT\n" : "REJECT\n");   // 讀完才判</pre>
 <div class="card"><b class="t">08 LL(1)</b> <code>ll1.cpp</code>
 <p>P 行 <code>A -&gt; X Y</code>（# 單獨 = λ）；印 FIRST／FOLLOW／SELECT／M[A,t]／LL1 YES|NO；<code>--check</code> 每行 token 序列 → ACCEPT／REJECT。</p>
 <ul><li>38 judge 不傳參數也判字串：<code>argc == 1 ? "--check" : argv[1]</code></li>
-<li>132 YES/NO；96–106 只留需要的輸出（106 是 LL1 YES/NO）</li>
+<li>130 YES/NO；96–106 只留需要的輸出（106 是 LL1 YES/NO）</li>
 <li>指定 S 為 start：71 <code>follow["S"]</code>、115 <code>stack{"$", "S"}</code></li></ul></div>
+<div class="card"><b class="t">22 文法改寫＋RD 產生</b> <code>rd_gen.cpp</code>
+<p>輸入同 08。自動消左遞迴（直接＋間接）→ left factoring → 算 SELECT → 印完整 C++：每個 nonterminal 一個 <code>parse_X()</code>，每條規則一行 <code>if (SELECT) return …;</code>，<code>tok()</code>／<code>match()</code> 以字串比對，main 每行判 ACCEPT／REJECT。新 nonterminal 叫 <code>A'</code>（函式 <code>parse_A_p</code>）。SELECT 重疊 → stderr 印 CONFLICT、exit 1、不產碼。</p>
+<pre>./main --grammar &lt; g | ../08-LL1/main   # 看表
+./main &lt; g &gt; p.cpp                       # 產 parser</pre>
+<p class="n">套進考題：<code>tok() == "num"</code> → <code>token == NUM</code>、<code>match("num")</code> → <code>match(NUM)</code>，函式結構不動；main 改成第 2 節 D。不處理 nullable 前綴的隱藏左遞迴、dangling else。</p></div>
 <div class="card"><b class="t">09 作業 ScannerTest</b> <code>scanner.cpp</code>
 <p>NUM／PLUS／MINUS／MUL／DIV／LPR／RPR，每行一個，只有 NUM 帶值。輸入保證無錯。</p>
 <ul><li>17 前導 0 也連吃：<code>while (isdigit(c)) { num += char(c); c = cin.get(); }</code></li>
@@ -461,16 +418,28 @@ cout &lt;&lt; (s == FINAL ? "ACCEPT\n" : "REJECT\n");   // 讀完才判</pre>
 <li>26 STRLIT 不跨行：<code>find_first_of("\"\n", pos)</code>，遇 <code>\n</code> 視為 INVALID</li></ul></div>
 <div class="card"><b class="t">11–15 完整版（要樹、表、追蹤時才用）</b>
 <p>11 HTML token／tree／text；12 迭代算式（無深度上限）；13 任意 NFA → DFA 表與 trace；14 ac 全套（parse tree、AST、typed AST、fold、dc）；15 HW5 原 NFA → subset DFA 表。用法見第 1 節表格與各資料夾 README。</p></div>
-<div class="card"><b class="t">16–21 模擬題（README 即題目）</b>
+<div class="card"><b class="t">16–21、23、25–30 模擬題（README 即題目）</b>
 <ul><li>16 宣告 Scanner：INT／FLOAT／PRINT 先讀完整字；<code>007</code> → 三個 INUM；<code>3.</code> 非法（exit 1）。</li>
 <li>17 比較運算子：LE 先於 LT；<code>/* 未閉</code>、單獨 <code>!</code>／<code>/</code> → invalid input。</li>
 <li>18 四則 Parser：<code>1+*2</code>、<code>(1+2</code>、<code>012</code> invalid。</li>
 <li>19 呼叫鏈：<code>f()</code> 合法、<code>f(,1)</code>、缺 <code>;</code>、<code>a[b]</code> invalid。</li>
 <li>20 JSON：<code>[1,2,]</code>、<code>{"a" 1}</code>、<code>[01]</code>、<code>True</code> invalid。</li>
-<li>21 HTML tags：<code>&lt;b&gt;&lt;i&gt;x&lt;/b&gt;&lt;/i&gt;</code>、<code>a &gt; b</code>、未關 invalid；TEXT 壓縮空白。</li></ul></div>
+<li>21 HTML tags：<code>&lt;b&gt;&lt;i&gt;x&lt;/b&gt;&lt;/i&gt;</code>、<code>a &gt; b</code>、未關 invalid；TEXT 壓縮空白。</li>
+<li>23 敘述：<code>(!match(ELSE) || stmt())</code> 解 dangling else；<code>else x=1;</code>、<code>{</code> 未關 invalid；<code>iff</code> 是 ID。</li>
+<li>25 科學記號：<code>12e</code> → NUM 12、ID e；<code>1.2e-</code> → NUM 1.2、ID e、MINUS；<code>3.</code>、<code>.5</code> invalid；<code>12E3</code> → NUM 12、ID E3。</li>
+<li>26 符號 Scanner：輸出 <code>ID x</code>、<code>STRLIT "a b"</code>，其他只印種類；不查文法，<code>(a.</code> 照切。</li>
+<li>27 複合運算子：<code>+++</code> → INC PLUS；<code>**=</code> → POW ASSIGN；<code>012</code> → NUM 0、NUM 12。</li>
+<li>28 ac：<code>ab = 1</code>（兩個 ID）、<code>i a a = +5</code>、<code>i a p 5</code> invalid；不做型別檢查。</li>
+<li>29 RE：<code>a**</code> 合法；<code>a||b</code>、<code>()</code>、空輸入 invalid。</li>
+<li>30 布林：<code>order == 1</code> 合法（order 是 ID）；<code>a = 1</code>、<code>not a</code> invalid。</li></ul></div>
+<div class="card"><b class="t">24 RE → NFA（Thompson）</b> <code>re_to_nfa.cpp</code>
+<p>第一行 RE，輸出 04／13 的 NFA 格式，之後的測試字串原樣接上：</p>
+<pre>./main &lt; x.in | ../04-NFA判定字串/main            # ACCEPT／REJECT
+./main &lt; x.in | ../13-NFA轉DFA完整版/main --table  # DFA 表</pre>
+<p class="n">A* 加零次旁路與重複邊、A+ 只有重複邊、A? 只有旁路。只有 <code>#</code> 的 RE 字母表為空，04／13 會拒收。</p></div>
 </div>
 
-<h2>8｜出錯時依症狀找</h2>
+<h2>7｜出錯時依症狀找</h2>
 <div class="cols">
 <div><table>
 <tr><th>症狀</th><th>先查</th></tr>

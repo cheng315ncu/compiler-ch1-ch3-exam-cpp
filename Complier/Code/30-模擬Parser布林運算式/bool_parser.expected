@@ -1,0 +1,15 @@
+NOT not
+NOT not
+LPR (
+ID x
+GT >
+NUM 1
+RPR )
+OR or
+ID y
+LT <
+NUM 2
+AND and
+NUM 3
+EQ ==
+ID z

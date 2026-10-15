@@ -34,7 +34,7 @@ SPECS = [
       adapt="先 pop 右 b，再左 a，算 a op b；PRINT 若題目要求不 pop，就改讀 stack.back()。沿用原本直接執行流程，追加中文註解。"),
  dict(stem="ll1", title="LL(1)：較低優先補充", source_path=CODE/"08-LL1/ll1.cpp",
       contract="P 條產生式，一行 A -> X Y，# 單獨為 epsilon；預設印 FIRST/FOLLOW/SELECT、table 與 conflict。--check 判定其後每行 token sequence。",
-      limits="通用表格功能需要固定點、nullable suffix 與衝突檢查；保留原本固定點演算法，追加中文註解。P<=1000；parse<=1000000 步；不消除左遞迴或做 left factoring。正式 FIRST/FOLLOW 範圍未確認。",
+      limits="通用表格功能需要固定點、nullable suffix 與衝突檢查；保留原本固定點演算法，追加中文註解。P<=1000；不消除左遞迴或做 left factoring。正式 FIRST/FOLLOW 範圍未確認。",
       adapt="若已知題目固定文法，只寫對應 recursive descent 更好記；若要求任意 CFG 的 FIRST/FOLLOW，保留本版以免刪掉 nullable 的必要處理。DOMjudge 不傳 args 時固定 main 的 mode。"),
 ]
 # HTML only: four fields per problem; source lines are resolved at build time.

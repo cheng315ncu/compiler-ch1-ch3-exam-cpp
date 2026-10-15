@@ -61,7 +61,7 @@ PROMPTS = {
   statement='給定 CFG，請計算各 nonterminal 的 FIRST / FOLLOW、各 production 的 SELECT，並建立 LL(1) 解析表。FIRST / FOLLOW 必須反覆傳播至固定點。RHS 可空時將 LHS 的 FOLLOW 加入 SELECT。同格若有多條 production，列出 conflict，判定非 LL(1)。無衝突時另可用 predictive stack 判定 token 序列。',
   input='先讀 P（1..1000），再讀 P 行 A -> X Y。每行只含一條 alternative；# 必須單獨表示 epsilon，$ 保留為 EOF。start 是第一個 LHS。--check 模式才讀其後每行空白分隔的 token sequence。',
   output='預設列 FIRST/FOLLOW/SELECT、非空表格 cell、CONFLICT 與 LL1 YES/NO。--check 每案印 ACCEPT/REJECT；不由字串原始字元自動 tokenize。',
-  limits='不消除左遞迴、不做 left factoring，也不判定任意 CFG 是否無歧義；parse 步數 <=1000000。有 LL(1) conflict 時不任選規則繼續。',
+  limits='不消除左遞迴、不做 left factoring（要做用 22 rd_gen），也不判定任意 CFG 是否無歧義。有 LL(1) conflict 時不任選規則繼續。',
   trace=['S -> a S | #：FIRST(S)={#,a}、FOLLOW(S)={$}。','SELECT(S->#)={$}，所以 EOF 時才選 epsilon，而不是看到任何字元都選。','A -> B C：若 C nullable，FOLLOW(A) 也要傳給 FOLLOW(B)。','展開 S -> a S 時先 push S 再 push a，讓 a 先被處理。'],
   samples=[('2\nS -> a S\nS -> #\n','FIRST(S)={#,a} FOLLOW(S)={$}\nSELECT(1)={a}\nSELECT(2)={$}\nM[S,$]=2\nM[S,a]=1\nLL1 YES\n')]),
 }

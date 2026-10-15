@@ -1,0 +1,6 @@
+(a|b)*abb
+abb
+aabb
+abba
+
+b

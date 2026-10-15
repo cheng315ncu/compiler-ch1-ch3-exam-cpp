@@ -930,7 +930,7 @@ PRINT
 <dl>
 <dt>輸入規格</dt><dd>先讀 P（1..1000），再讀 P 行 A -&gt; X Y。每行只含一條 alternative；# 必須單獨表示 epsilon，$ 保留為 EOF。start 是第一個 LHS。--check 模式才讀其後每行空白分隔的 token sequence。</dd>
 <dt>輸出規格</dt><dd>預設列 FIRST/FOLLOW/SELECT、非空表格 cell、CONFLICT 與 LL1 YES/NO。--check 每案印 ACCEPT/REJECT；不由字串原始字元自動 tokenize。</dd>
-<dt>限制與適用範圍</dt><dd>不消除左遞迴、不做 left factoring，也不判定任意 CFG 是否無歧義；parse 步數 &lt;=1000000。有 LL(1) conflict 時不任選規則繼續。</dd>
+<dt>限制與適用範圍</dt><dd>不消除左遞迴、不做 left factoring（要做用 22 rd_gen），也不判定任意 CFG 是否無歧義。有 LL(1) conflict 時不任選規則繼續。</dd>
 </dl>
 <p class="file"><b>Code 檔案名稱：</b><a href="../Code/08-LL1/ll1.cpp"><code>ll1.cpp</code></a> <small>（08-LL1/ll1.cpp）</small></p>
 <pre>g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror ll1.cpp -o main

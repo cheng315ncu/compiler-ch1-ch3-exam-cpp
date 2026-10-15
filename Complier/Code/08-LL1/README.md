@@ -5,6 +5,7 @@
 | 程式 | [ll1.cpp](ll1.cpp) |
 | 類型 | 較低優先補充 |
 | 測例 | [ll1.in](ll1.in) → [ll1.expected](ll1.expected) |
+| 相關資料夾 | [22-文法改寫與遞迴下降產生](../22-文法改寫與遞迴下降產生/README.md)：先消左遞迴／left factoring，再產 RD parser |
 
 在本資料夾內編譯並跑測例：
 
@@ -21,7 +22,7 @@ g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror ll1.cpp -o main
 
 - **輸入規格**：先讀 P（1..1000），再讀 P 行 A -> X Y。每行只含一條 alternative；# 必須單獨表示 epsilon，$ 保留為 EOF。start 是第一個 LHS。--check 模式才讀其後每行空白分隔的 token sequence。
 - **輸出規格**：預設列 FIRST/FOLLOW/SELECT、非空表格 cell、CONFLICT 與 LL1 YES/NO。--check 每案印 ACCEPT/REJECT；不由字串原始字元自動 tokenize。
-- **限制與適用範圍**：不消除左遞迴、不做 left factoring，也不判定任意 CFG 是否無歧義；parse 步數 &lt;=1000000。有 LL(1) conflict 時不任選規則繼續。
+- **限制與適用範圍**：不消除左遞迴、不做 left factoring（要做用 22 rd_gen），也不判定任意 CFG 是否無歧義。有 LL(1) conflict 時不任選規則繼續。
 
 **Code 檔案名稱：**[`ll1.cpp`](ll1.cpp) （08-LL1/ll1.cpp）
 
